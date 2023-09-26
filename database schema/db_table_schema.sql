@@ -19,3 +19,10 @@ username varchar(255),
 best_time time,
 photo varbinary(max)
 );
+
+
+ALTER TABLE gamesxplayer
+ADD FOREIGN KEY (user_email) REFERENCES player(email);
+
+ALTER TABLE leaderboard
+ADD FOREIGN KEY (username) REFERENCES player(username);
