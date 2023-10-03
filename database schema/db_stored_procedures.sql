@@ -1,28 +1,43 @@
 
-CREATE PROCEDURE registerplayer
-@username varchar(255),
-@password varchar(255),
-@email varchar (255),
-@age int,
-@photo varbinary(max),
-@song varbinary(max)
-AS
-INSERT INTO [Eagle_Defender_DB].[dbo].[player]
-VALUES (@username, @password, @email, @age, @photo, @song);
-GO
+CREATE OR REPLACE FUNCTION register_player(
+username_in varchar,
+password_in varchar,
+email_in varchar,
+age_in integer,
+photo_in varchar,
+song_in varchar)
+RETURNS varchar as $$
+DECLARE
+	resultado varchar;
+BEGIN
+	BEGIN
+		INSERT INTO player (username, password, email, age, photo, song)
+		VALUES (username_in, password_in, email_in, age_in, photo_in, song_in);
+		resultado := 'done';
+	EXCEPTION
+		WHEN others THEN 
+			resultado := 'error';
+	END;
+	RETURN resultado;
+END;
+$$ LANGUAGE plpgsql;
 
-/*
-EXEC registerplayer N'JoseA4718', N'abcd', N'jose@email.com', 23, 0x12345, 0x12345*/
+CREATE OR REPLACE FUNCTION login_player(
+    email_in text,
+    pass_in text
+) 
+RETURNS TABLE (username varchar, password varchar, email varchar, age integer, photo varchar, song varchar) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT * 
+	FROM player 
+	WHERE player.email = email_in 
+	AND player.password = pass_in;
+END;
+$$ LANGUAGE plpgsql;
 
-CREATE PROCEDURE playerlogin
-@email varchar(255),
-@password varchar(255)
-AS
 SELECT * FROM player
-WHERE player.email = @email and player.password = @password
-
-EXEC playerlogin 'jose@email.com','acd'
-
-
+DROP FUNCTION login_player
+SELECT login_player('jose@email.com','abcd')
 
 
