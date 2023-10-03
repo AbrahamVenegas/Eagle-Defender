@@ -27,12 +27,20 @@ CREATE OR REPLACE FUNCTION login_player(
     pass_in text
 ) 
 RETURNS TABLE (username varchar, password varchar, email varchar, age integer, photo varchar, song varchar) AS $$
+DECLARE
+    user_exists boolean;
 BEGIN
-    RETURN QUERY
-    SELECT * 
-	FROM player 
-	WHERE player.email = email_in 
-	AND player.password = pass_in;
+    -- Verificar si el usuario existe
+    SELECT EXISTS (SELECT 1 FROM player WHERE player.email = email_in AND player.password = pass_in) INTO user_exists;
+
+    -- Si el usuario existe, devolver la información del usuario; si no, devolver valores predeterminados
+    IF user_exists THEN
+        RETURN QUERY
+        SELECT * FROM player WHERE player.email = email_in AND player.password = pass_in;
+    ELSE
+        RETURN QUERY
+        SELECT 'no'::varchar, 'no'::varchar, 'no'::varchar, 0, 'no'::varchar, 'no'::varchar;
+    END IF;
 END;
 $$ LANGUAGE plpgsql;
 
