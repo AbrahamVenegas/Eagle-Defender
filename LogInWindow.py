@@ -23,6 +23,7 @@ class LogInWindow:
         self.inputRect2 = pygame.Rect(15, 350, 350, 50)
         self.inputRect3 = pygame.Rect(415, 200, 350, 50)
         self.inputRect4 = pygame.Rect(415, 350, 350, 50)
+        self.inputRect5 = pygame.Rect(15, 450, 350, 50)
         self.p1UsernameRect = self.p1PasswordRect = None
         self.p2UsernameRect = self.p2PasswordRect = None
         self.color_passive = pygame.Color(178, 183, 191)
@@ -40,6 +41,7 @@ class LogInWindow:
             self.p1PasswordRect = pygame.draw.rect(self.screen, self.color_passive, self.inputRect2, 3)
             self.p2UsernameRect = pygame.draw.rect(self.screen, self.color_passive, self.inputRect3, 3)
             self.p2PasswordRect = pygame.draw.rect(self.screen, self.color_passive, self.inputRect4, 3)
+            self.logInButton = pygame.draw.rect(self.screen, self.color_passive, self.inputRect5)
             self.Player1LogIn()
             self.Player2LogIn()
 
@@ -69,6 +71,9 @@ class LogInWindow:
                     else:
                         self.p2PasswordFlag = False
 
+                    if self.logInButton.collidepoint(event.pos):
+                        print("hola")
+
                 if event.type == pygame.KEYDOWN:
                     if self.p1UsernameFlag:
                         if event.key == pygame.K_BACKSPACE:
@@ -97,6 +102,9 @@ class LogInWindow:
                         else:
                             self.p2Password += event.unicode
                             self.hiddenPassword2 += '*'
+
+                    if event.key == pygame.KMOD_ALT:
+                        print("hola")
 
             pygame.display.update()
 
