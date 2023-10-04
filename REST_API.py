@@ -32,8 +32,8 @@ def register_player():
             print(response)
     return response, 201
 
-@app.post("/api/login")
-def login_player():
+@app.post("/api/loginp1")
+def login_player_1():
     data = request.get_json()
     email = data["email"]
     password = data["password"]
@@ -51,18 +51,46 @@ def login_player():
                 user_data = tuple(user_data_list)
                 # user_data ahora es una tupla con los valores de la base de datos
                 '''
-                user_data[0] = SINGLETONPLAYER1.username
-                user_data[1] = SINGLETONPLAYER1.password
-                user_data[2] = SINGLETONPLAYER1.email
-                user_data[3] = SINGLETONPLAYER1.age
-                user_data[4] = SINGLETONPLAYER1.photo
-                user_data[5] = SINGLETONPLAYER1.song
+                user_data[0] = player1.username
+                user_data[1] = player1.password
+                user_data[2] = player1.email
+                user_data[3] = player1.age
+                user_data[4] = player1.photo
+                user_data[5] = player1.song
                 '''
                 return {"user_data": user_data}, 201
             else:
                 return {"error": "Credentials not valid"}, 401
 
-
+@app.post("/api/loginp2")
+def login_player_2():
+    data = request.get_json()
+    email = data["email"]
+    password = data["password"]
+    with conn:
+        with conn.cursor() as cursor:
+            cursor.execute(LOGIN_PLAYER, (email, password))
+            response = cursor.fetchone()[0]
+            print(response)
+            if response != "(no,no,no,0,no,no)":
+                # Elimina los paréntesis antes de evaluar la cadena como una tupla
+                response = response.strip('()')
+                # Convierte la cadena en una lista utilizando split(',')
+                user_data_list = response.split(',')
+                # Convierte la lista en una tupla
+                user_data = tuple(user_data_list)
+                # user_data ahora es una tupla con los valores de la base de datos
+                '''
+                user_data[0] = player2.username
+                user_data[1] = player2.password
+                user_data[2] = player2.email
+                user_data[3] = player2.age
+                user_data[4] = player2.photo
+                user_data[5] = player2.song
+                '''
+                return {"user_data": user_data}, 201
+            else:
+                return {"error": "Credentials not valid"}, 401
 
 
 if __name__ == '__main__':
