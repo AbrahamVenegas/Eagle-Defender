@@ -35,6 +35,7 @@ class LogInWindow:
         self.password = "Password:"
         self.LogIn1 = self.LogIn2 = False
         self.logIn1Failed = self.logIn2Failed = False
+        self.bothLoggedIn = False
 
     def Start(self):
         pygame.init()
@@ -231,6 +232,10 @@ class LogInWindow:
                 self.logIn2Failed = False
             elif response.status_code == 401:
                 self.logIn2Failed = True
+
+        if self.LogIn2 and self.LogIn1:
+            #Llamar a gamewindow
+            pass
 
 
 
