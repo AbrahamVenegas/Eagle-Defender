@@ -3,6 +3,7 @@ import pygame
 import requests
 from button import Button
 from StartWindow import StartWindow
+from GameWindow import GameWindow
 
 
 def GetFont(size):
@@ -34,6 +35,9 @@ class LogInWindow:
         self.username = "Email:"
         self.password = "Password:"
         self.LogIn1 = self.LogIn2 = False
+        self.logIn1Failed = self.logIn2Failed = False
+        self.bothLoggedIn = False
+        self.gameWindow = GameWindow()
 
     def Start(self):
         pygame.init()
@@ -159,6 +163,10 @@ class LogInWindow:
             Text1 = GetFont(30).render("LOGGED IN", True, (0, 0, 0))
             self.screen.blit(Text1, (50, 440))
 
+        if self.logIn1Failed:
+            Text = GetFont(14).render("INVALID EMAIL OR PASSWORD", True, (255, 0, 0))
+            self.screen.blit(Text, (20, 280))
+
         if usernameSurface.get_width() > self.p1UsernameRect.w:
             self.p1Username = self.p1Username[:-1]
         elif passwordSurface.get_width() > self.p1PasswordRect.w:
@@ -189,6 +197,10 @@ class LogInWindow:
             Text1 = GetFont(30).render("LOGGED IN", True, (0, 0, 0))
             self.screen.blit(Text1, (450, 440))
 
+        if self.logIn2Failed:
+            Text = GetFont(14).render("INVALID EMAIL OR PASSWORD", True, (255, 0, 0))
+            self.screen.blit(Text, (420, 280))
+
         if usernameSurface2.get_width() > self.p2UsernameRect.w:
             self.p2Username = self.p2Username[:-1]
         elif passwordSurface.get_width() > self.p2PasswordRect.w:
@@ -206,6 +218,10 @@ class LogInWindow:
             response = requests.post(urlp1, headers=headers, json=data)
             if response.status_code == 201:
                 self.LogIn1 = True
+                self.logIn1Failed = False
+
+            elif response.status_code == 401:
+                self.logIn1Failed = True
 
         elif player2:
             data = {
@@ -215,9 +231,9 @@ class LogInWindow:
             response = requests.post(urlp2, headers=headers, json=data)
             if response.status_code == 201:
                 self.LogIn2 = True
+                self.logIn2Failed = False
+            elif response.status_code == 401:
+                self.logIn2Failed = True
 
-
-
-
-if __name__ == "__main__":
-    LogInWindow()
+        if self.LogIn2 and self.LogIn1:
+            self.gameWindow.Start()
