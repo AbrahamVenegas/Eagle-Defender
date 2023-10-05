@@ -101,13 +101,13 @@ class RegisterWindow:
                         for i, active in enumerate(actives):
                             if active:
                                 if event.key == pygame.K_RETURN:
-                                    print(f"Text {i + 1}: {texts[i]}")
-                                    data = {f'text{i + 1}': texts[i] for i in range(4)}
-                                    save_to_file(data)
-                                    self.username = texts[0]
-                                    self.password = texts[1]
-                                    self.email = texts[2]
-                                    self.age = texts[3]
+                                    #print(f"Text {i + 1}: {texts[i]}")
+                                    #data = {f'text{i + 1}': texts[i] for i in range(4)}
+                                    #save_to_file(data)
+                                    #self.username = texts[0]
+                                    #self.password = texts[1]
+                                    #self.email = texts[2]
+                                    #self.age = texts[3]
                                     #self.photo = texts[4]
                                     #self.song = texts[5]
                                     print("Username:" + self.username)
@@ -119,9 +119,14 @@ class RegisterWindow:
                     # Check button clicks
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         if saveButton.CheckForInput(registerMousePosition):
-                            self.VerifyRegister()
                             data = {f'text{i + 1}': texts[i] for i in range(4)}
                             save_to_file(data)
+                            self.username = texts[0]
+                            self.password = texts[1]
+                            self.email = texts[2]
+                            self.age = texts[3]
+                            self.VerifyRegister()
+
                             startWindow = StartWindow._instance
                             startWindow.MainScreen()
                         elif photoButton.CheckForInput(registerMousePosition):
@@ -133,7 +138,7 @@ class RegisterWindow:
                             else:
                                 print("Ningún archivo seleccionado")
 
-                            self.VerifyRegister()
+                            #self.VerifyRegister()
                             data = {f'text{i + 1}': texts[i] for i in range(4)}
                             save_to_file(data)
                         elif songButton.CheckForInput(registerMousePosition):
@@ -145,7 +150,7 @@ class RegisterWindow:
                             else:
                                 print("Ningún archivo seleccionado")
 
-                            self.VerifyRegister()
+                            #self.VerifyRegister()
                             data = {f'text{i + 1}': texts[i] for i in range(4)}
                             save_to_file(data)
                         elif registerBack.CheckForInput(registerMousePosition):
@@ -209,7 +214,7 @@ class RegisterWindow:
             destinePath = os.path.join(songsFolder, archiveName)
             shutil.copy(selectedArchive, destinePath)
 
-        return selectedArchive
+        return os.path.basename(selectedArchive)  #Retorna solo el nombre del archivo
 
     def selectPhoto(self):
         root = tk.Tk()
@@ -227,4 +232,4 @@ class RegisterWindow:
             destinePath = os.path.join(imagesFolder, imageName)
             shutil.copy(selectedImage, destinePath)
 
-        return selectedImage
+        return os.path.basename(selectedImage)

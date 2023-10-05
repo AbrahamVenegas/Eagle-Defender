@@ -84,12 +84,12 @@ class GameWindow:
             p2NameRectangle = p2Name.get_rect(center=(630, 20))
             self.screen.blit(p2Name, p2NameRectangle)
 
-            p1Photo = pygame.image.load(self.player1.photo).convert()
+            p1Photo = pygame.image.load("priv/photos/" + self.player1.photo).convert()
             p1Photo = pygame.transform.scale(p1Photo, (50, 50))
             p1PhotoRectangle = p1Photo.get_rect(center=(50, 20))
             self.screen.blit(p1Photo, p1PhotoRectangle)
 
-            p2Photo = pygame.image.load(self.player2.photo).convert()
+            p2Photo = pygame.image.load("priv/photos/" + self.player2.photo).convert()
             p2Photo = pygame.transform.scale(p2Photo, (50, 50))
             p2PhotoRectangle = p2Photo.get_rect(center=(750, 20))
             self.screen.blit(p2Photo, p2PhotoRectangle)
@@ -105,13 +105,13 @@ class GameWindow:
                     if event.key == pygame.K_1:
                         pygame.mixer.music.stop()
                         self.songRoute = self.player1.song
-                        pygame.mixer.music.load(self.songRoute)
+                        pygame.mixer.music.load("priv/songs/" + self.songRoute)
                         pygame.mixer.music.play(-1)
 
                     if event.key == pygame.K_2:
                         pygame.mixer.music.stop()
                         self.songRoute = self.player2.song
-                        pygame.mixer.music.load(self.songRoute)
+                        pygame.mixer.music.load("priv/songs/" + self.songRoute)
                         pygame.mixer.music.play(-1)
 
             pygame.display.update()
