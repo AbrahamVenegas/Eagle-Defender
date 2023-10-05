@@ -2,25 +2,23 @@ import pygame
 import sys
 import json
 from button import Button
-from LogInWindow import LogInWindow
-#from HelpWindow import HelpWindow
 
 
 class StartWindow:
     _instance = None
     helpWindow = None
+    logInWindow = None
+    Screen = None
+    Background = pygame.image.load("assets/Background.png")
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
         return cls._instance
 
-    def __init__(self, helpWindow):
-        pygame.init()  # starts it
-        self.Screen = pygame.display.set_mode((1440, 810))  # To set the parameters of the window
+    def __init__(self, helpWindow, logInWindow):
         self.helpWindow = helpWindow
-        pygame.display.set_caption("Eagle Defender")  # Window Title
-        self.Background = pygame.image.load("assets/Background.png")  # Sets teh background of the Main Screen
+        self.logInWindow = logInWindow
 
     def GetFont(self, size):  # To return it in the desired size
         return pygame.font.Font("assets/font.ttf", size)
@@ -122,7 +120,12 @@ class StartWindow:
             pygame.display.update()
 
     def MainScreen(self):
-        while True:
+        running = True
+        pygame.init()  # starts it
+        self.Screen = pygame.display.set_mode((1440, 810))  # To set the parameters of the window
+        pygame.display.set_caption("Eagle Defender")  # Window Title
+
+        while running:
             self.Screen.blit(self.Background, (0, 0))
 
             menuMousePosition = pygame.mouse.get_pos()
@@ -157,7 +160,9 @@ class StartWindow:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if playButton.CheckForInput(menuMousePosition):
-                        LogIn = LogInWindow()
+                        running = False
+                        pygame.quit()
+                        self.logInWindow.Start()
                     if registerButton.CheckForInput(menuMousePosition):
                         self.RegisterScreen()
                     if leaderboardButton.CheckForInput(menuMousePosition):

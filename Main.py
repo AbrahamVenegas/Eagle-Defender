@@ -4,5 +4,6 @@ from HelpWindow import HelpWindow
 
 if __name__ == "__main__":
     helpWindow = HelpWindow()
-    startWindow = StartWindow(helpWindow)
+    logInWindow = LogInWindow()
+    startWindow = StartWindow(helpWindow, logInWindow)
     startWindow.MainScreen()

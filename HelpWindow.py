@@ -6,21 +6,21 @@ from StartWindow import StartWindow
 
 class HelpWindow:
     _instance = None
+    Screen = None
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
         return cls._instance
 
-    def __init__(self):
-        pygame.init()  # starts it
-        self.Screen = pygame.display.set_mode((1440, 810))  # To set the parameters of the window
-        pygame.display.set_caption("Eagle Defender")  # Window Title
-
     def GetFont(self, size):  # To return it in the desired size
         return pygame.font.Font("assets/font.ttf", size)
 
     def HelpScreen(self):
+        pygame.init()  # starts it
+        self.Screen = pygame.display.set_mode((1440, 810))  # To set the parameters of the window
+        pygame.display.set_caption("Eagle Defender")  # Window Title
+
         while True:
             pygame.display.set_caption("Ayuda")
             helpMousePosition = pygame.mouse.get_pos()
