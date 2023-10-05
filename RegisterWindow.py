@@ -4,6 +4,7 @@ from StartWindow import StartWindow
 import json
 import sys
 
+
 class RegisterWindow:
     Screen = None
 

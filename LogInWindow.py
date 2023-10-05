@@ -195,24 +195,28 @@ class LogInWindow:
             self.p2Password = self.p2Password[:-1]
 
     def VerifyLogIn(self, player1, player2):
-        url = "http://127.0.0.1:5000/api/login"
+        urlp1 = "http://127.0.0.1:5000/api/loginp1"
+        urlp2 = "http://127.0.0.1:5000/api/loginp2"
         headers = {'Content-Type': 'application/json'}
         if player1:
             data = {
                 "email": self.p1Username,
                 "password": self.p1Password
             }
-            self.LogIn1 = True
+            response = requests.post(urlp1, headers=headers, json=data)
+            if response.status_code == 201:
+                self.LogIn1 = True
+
         elif player2:
             data = {
                 "email": self.p2Username,
                 "password": self.p2Password
             }
-            self.LogIn2 = True
+            response = requests.post(urlp2, headers=headers, json=data)
+            if response.status_code == 201:
+                self.LogIn2 = True
 
-        response = requests.post(url, headers=headers, json=data)
-        if response.status_code == 201:
-            print("Logged in")
+
 
 
 if __name__ == "__main__":
