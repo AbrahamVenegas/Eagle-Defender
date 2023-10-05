@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import psycopg2
 import os
 import ast
+import json
 from dotenv import load_dotenv
 
 INSERT_PLAYER = "SELECT register_player(%s, %s, %s, %s, %s, %s)"
@@ -50,14 +51,18 @@ def login_player_1():
                 # Convierte la lista en una tupla
                 user_data = tuple(user_data_list)
                 # user_data ahora es una tupla con los valores de la base de datos
-                '''
-                user_data[0] = player1.username
-                user_data[1] = player1.password
-                user_data[2] = player1.email
-                user_data[3] = player1.age
-                user_data[4] = player1.photo
-                user_data[5] = player1.song
-                '''
+                data = {
+                    "username": user_data[0],
+                    "password": user_data[1],
+                    "email": user_data[2],
+                    "age": user_data[3],
+                    "photo": user_data[4],
+                    "song": user_data[5],
+                }
+                jsonRoute = "player1.json"
+                with open(jsonRoute, 'w') as f:
+                    json.dump(data, f)
+
                 return {"user_data": user_data}, 201
             else:
                 return {"error": "Credentials not valid"}, 401
@@ -80,14 +85,18 @@ def login_player_2():
                 # Convierte la lista en una tupla
                 user_data = tuple(user_data_list)
                 # user_data ahora es una tupla con los valores de la base de datos
-                '''
-                user_data[0] = player2.username
-                user_data[1] = player2.password
-                user_data[2] = player2.email
-                user_data[3] = player2.age
-                user_data[4] = player2.photo
-                user_data[5] = player2.song
-                '''
+                data = {
+                    "username": user_data[0],
+                    "password": user_data[1],
+                    "email": user_data[2],
+                    "age": user_data[3],
+                    "photo": user_data[4],
+                    "song": user_data[5],
+                }
+                jsonRoute = "player2.json"
+                with open(jsonRoute, 'w') as f:
+                    json.dump(data, f)
+
                 return {"user_data": user_data}, 201
             else:
                 return {"error": "Credentials not valid"}, 401
