@@ -3,6 +3,7 @@ import pygame
 import requests
 from button import Button
 from StartWindow import StartWindow
+from GameWindow import GameWindow
 
 
 def GetFont(size):
@@ -36,6 +37,7 @@ class LogInWindow:
         self.LogIn1 = self.LogIn2 = False
         self.logIn1Failed = self.logIn2Failed = False
         self.bothLoggedIn = False
+        self.gameWindow = GameWindow()
 
     def Start(self):
         pygame.init()
@@ -234,11 +236,4 @@ class LogInWindow:
                 self.logIn2Failed = True
 
         if self.LogIn2 and self.LogIn1:
-            #Llamar a gamewindow
-            pass
-
-
-
-
-if __name__ == "__main__":
-    LogInWindow()
+            self.gameWindow.Start()
