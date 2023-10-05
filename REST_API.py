@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import psycopg2
+from GameWindow import GameWindow
 import os
 import ast
 from dotenv import load_dotenv
@@ -50,14 +51,10 @@ def login_player_1():
                 # Convierte la lista en una tupla
                 user_data = tuple(user_data_list)
                 # user_data ahora es una tupla con los valores de la base de datos
-                '''
-                user_data[0] = player1.username
-                user_data[1] = player1.password
-                user_data[2] = player1.email
-                user_data[3] = player1.age
-                user_data[4] = player1.photo
-                user_data[5] = player1.song
-                '''
+
+                GameWindow.FillPlayer1Info(username=user_data[0], password=user_data[1], email=user_data[2], age=user_data[3],
+                                            photo=user_data[4], song=user_data[5])
+
                 return {"user_data": user_data}, 201
             else:
                 return {"error": "Credentials not valid"}, 401
