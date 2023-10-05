@@ -2,6 +2,7 @@ import pygame
 import sys
 import json
 from button import Button
+from LogInWindow import LogInWindow
 
 
 pygame.init()  # starts it
@@ -170,7 +171,7 @@ def MainScreen():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if playButton.CheckForInput(menuMousePosition):
-                    StartScreen()
+                    LogIn = LogInWindow()
                 if registerButton.CheckForInput(menuMousePosition):
                     RegisterScreen()
                 if leaderboardButton.CheckForInput(menuMousePosition):
