@@ -5,12 +5,22 @@
   </component>
   <component name="ChangeListManager">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     <list default="true" id="af4d4bce-7fe1-4fc9-9c02-d1bbfcf942ae" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/BORRAR.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/prueba.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StartWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/StartWindow.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/register_data.text" beforeDir="false" afterPath="$PROJECT_DIR$/register_data.text" afterDir="false" />
+=======
+    <list default="true" id="2997d568-e3bc-46bb-b2c1-62b67db69369" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/PRUEBA.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Eagle-Defender.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Eagle-Defender.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RegisterWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/RegisterWindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data.json" beforeDir="false" afterPath="$PROJECT_DIR$/data.json" afterDir="false" />
+>>>>>>> Stashed changes
     </list>
 =======
     <list default="true" id="ea66a372-8e20-44be-8490-2b84cc2b689d" name="Changes" comment="" />
@@ -58,6 +68,10 @@
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "Development",
     "ignore.virus.scanning.warn.message": "true",
+<<<<<<< Updated upstream
+=======
+    "last_opened_file_path": "C:/Users/Gustavo A/Desktop/TEC/Modelado/Eagle-Defender/REST_API.py",
+>>>>>>> Stashed changes
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -65,6 +79,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+<<<<<<< Updated upstream
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -97,6 +112,15 @@
 }</component>
   <component name="RunManager">
     <configuration name="StartWindow" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+=======
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Gustavo A\Desktop\TEC\Modelado\Eagle-Defender" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.Main">
+    <configuration name="LogInWindow" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+>>>>>>> Stashed changes
       <module name="Eagle-Defender" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -118,9 +142,65 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+<<<<<<< Updated upstream
     <recent_temporary>
       <list>
         <item itemvalue="Python.StartWindow" />
+=======
+    <configuration name="Main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Eagle-Defender" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="REST_API" type="PythonConfigurationType" factoryName="Python" singleton="false" nameIsGenerated="true">
+      <module name="Eagle-Defender" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.11" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/REST_API.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.REST_API" />
+      <item itemvalue="Python.LogInWindow" />
+      <item itemvalue="Python.Main" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.Main" />
+>>>>>>> Stashed changes
       </list>
     </recent_temporary>
   </component>
@@ -131,9 +211,23 @@
       <created>1695515923522</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
+<<<<<<< Updated upstream
       <updated>1695515923522</updated>
       <workItem from="1695515924719" duration="9740000" />
       <workItem from="1695706478361" duration="2164000" />
+>>>>>>> Stashed changes
+=======
+      <updated>1696174167860</updated>
+      <workItem from="1696174170178" duration="4799000" />
+      <workItem from="1696303589843" duration="5193000" />
+      <workItem from="1696309141578" duration="781000" />
+      <workItem from="1696342358972" duration="2797000" />
+      <workItem from="1696355540209" duration="121000" />
+      <workItem from="1696393855400" duration="206000" />
+      <workItem from="1696445432417" duration="3287000" />
+      <workItem from="1696461897194" duration="8729000" />
+      <workItem from="1696480563847" duration="703000" />
+      <workItem from="1696481304832" duration="10496000" />
 >>>>>>> Stashed changes
     </task>
     <servers />
@@ -143,6 +237,7 @@
   </component>
 <<<<<<< Updated upstream
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+<<<<<<< Updated upstream
     <SUITE FILE_PATH="coverage/Eagle_Defender$BORRAR.coverage" NAME="BORRAR Coverage Results" MODIFIED="1696442304534" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Eagle_Defender$StartWindow.coverage" NAME="StartWindow Coverage Results" MODIFIED="1696443474137" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Eagle_Defender$prueba.coverage" NAME="prueba Coverage Results" MODIFIED="1696441710538" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -153,6 +248,16 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Eagle_Defender$main.coverage" NAME="main Coverage Results" MODIFIED="1695517135532" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Eagle_Defender$StartWindow.coverage" NAME="StartWindow Coverage Results" MODIFIED="1695708007341" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+>>>>>>> Stashed changes
+=======
+    <SUITE FILE_PATH="coverage/Main_py$PRUEBA.coverage" NAME="PRUEBA Coverage Results" MODIFIED="1696488126620" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Eagle_Defender$Main.coverage" NAME="Main Coverage Results" MODIFIED="1696480299115" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Main_py$Main.coverage" NAME="Main Coverage Results" MODIFIED="1696491997497" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Eagle_Defender$StartWindow.coverage" NAME="StartWindow Coverage Results" MODIFIED="1696477619893" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Main_py$RegisterWindow.coverage" NAME="RegisterWindow Coverage Results" MODIFIED="1696488897177" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Eagle_Defender$LogInWindow.coverage" NAME="LogInWindow Coverage Results" MODIFIED="1696480119401" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Eagle_Defender$REST_API.coverage" NAME="REST_API Coverage Results" MODIFIED="1696480290871" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/Main_py$REST_API.coverage" NAME="REST_API Coverage Results" MODIFIED="1696491995427" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
 >>>>>>> Stashed changes
   </component>
 </project>
