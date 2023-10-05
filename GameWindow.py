@@ -38,6 +38,17 @@ class GameWindow:
         self.player1.photo = datos["photo"]
         self.player1.song = datos["song"]
 
+    def FillPlayer2Info(self):
+        with open("player2.json", "r") as jsonFile:
+            datos = json.load(jsonFile)
+
+        self.player2.username = datos["username"]
+        self.player2.password = datos["password"]
+        self.player2.email = datos["email"]
+        self.player2.age = datos["age"]
+        self.player2.photo = datos["photo"]
+        self.player2.song = datos["song"]
+
     def Start(self):
         pygame.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
@@ -45,7 +56,7 @@ class GameWindow:
         self.background = pygame.image.load("assets/Mapa2 grid.png")
         pygame.display.set_caption("Eagle Defender")
         self.FillPlayer1Info()
-        #llamar Fill2
+        self.FillPlayer2Info()
 
         while True:
             self.screen.blit(self.background, (0, 0))
@@ -58,13 +69,13 @@ class GameWindow:
             p2NameRectangle = p2Name.get_rect(center=(630, 20))
             self.screen.blit(p2Name, p2NameRectangle)
 
-            p1Photo = pygame.image.load("assets/photo.jpeg").convert()
+            p1Photo = pygame.image.load(self.player1.photo).convert()
             p1Photo = pygame.transform.scale(p1Photo, (50, 50))
             p1PhotoRectangle = p1Photo.get_rect(center=(50, 20))
             self.screen.blit(p1Photo, p1PhotoRectangle)
 
-            p2Photo = pygame.image.load("assets/photo.jpeg").convert()
-            p2Photo = pygame.transform.scale(p1Photo, (50, 50))
+            p2Photo = pygame.image.load(self.player2.photo).convert()
+            p2Photo = pygame.transform.scale(p2Photo, (50, 50))
             p2PhotoRectangle = p2Photo.get_rect(center=(750, 20))
             self.screen.blit(p2Photo, p2PhotoRectangle)
 
