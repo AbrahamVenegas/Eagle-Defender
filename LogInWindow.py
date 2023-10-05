@@ -2,6 +2,7 @@ import sys
 import pygame
 import requests
 from button import Button
+from StartWindow import StartWindow
 
 
 def GetFont(size):
@@ -9,35 +10,48 @@ def GetFont(size):
 
 
 class LogInWindow:
+    inputRect1 = None
+    inputRect2 = None
+    inputRect3 = None
+    inputRect4 = None
+    color_passive = None
+    inputColor = None
+    baseFont = None
+    background = None
+    rect = None
+    screen = None
 
     def __init__(self):
-        pygame.init()
         self.width = 800
         self.height = 576
-        self.screen = pygame.display.set_mode((self.width, self.height))
-        self.rect = pygame.image.load("assets/MediumRectangle.png")
         self.p1UsernameFlag = self.p1PasswordFlag = False
         self.p2UsernameFlag = self.p2PasswordFlag = False
         self.p1Username = self.p2Username = ''
         self.p1Password = self.p2Password = ''
         self.hiddenPassword1 = self.hiddenPassword2 = ''
+        self.p1UsernameRect = self.p1PasswordRect = None
+        self.p2UsernameRect = self.p2PasswordRect = None
+        self.username = "Email:"
+        self.password = "Password:"
+        self.LogIn1 = self.LogIn2 = False
+        self.logIn1Failed = self.logIn2Failed = False
+
+    def Start(self):
+        pygame.init()
+        self.screen = pygame.display.set_mode((self.width, self.height))
         self.inputRect1 = pygame.Rect(15, 200, 350, 50)
         self.inputRect2 = pygame.Rect(15, 350, 350, 50)
         self.inputRect3 = pygame.Rect(415, 200, 350, 50)
         self.inputRect4 = pygame.Rect(415, 350, 350, 50)
-        self.p1UsernameRect = self.p1PasswordRect = None
-        self.p2UsernameRect = self.p2PasswordRect = None
         self.color_passive = pygame.Color(178, 183, 191)
-        self.username = "Email:"
-        self.password = "Password:"
         self.inputColor = pygame.Color((178, 183, 191))
-        self.LogIn1 = self.LogIn2 = False
         self.baseFont = pygame.font.Font(None, 25)
-        background = pygame.image.load("assets/LogInBG.png")
+        self.background = pygame.image.load("assets/LogInBG.png")
+        self.rect = pygame.image.load("assets/MediumRectangle.png")
         pygame.display.set_caption("Eagle Defender")
 
         while True:
-            self.screen.blit(background, (0, 0))
+            self.screen.blit(self.background, (0, 0))
             pygame.draw.line(surface=self.screen, start_pos=(self.width / 2, 0), end_pos=(self.width / 2, self.height),
                              color=(0, 0, 0), width=5)
 
@@ -49,7 +63,7 @@ class LogInWindow:
             self.Player2LogIn()
 
             back = Button(image=None, pos=(740, 550),
-                              textInput="BACK", font=GetFont(25), baseColor="White", hoveringColor="Green")
+                          textInput="BACK", font=GetFont(25), baseColor="White", hoveringColor="Green")
 
             back.ChangeColor(self.mousePos)
             back.UpdateScreen(self.screen)
@@ -86,8 +100,9 @@ class LogInWindow:
                     if self.logInButton2.CheckForInput(self.mousePos) and not self.LogIn2:
                         self.VerifyLogIn(player2=True, player1=False)
 
-                    '''if back.CheckForInput(self.mousePos):
-                        MainScreen()'''
+                    if back.CheckForInput(self.mousePos):
+                        startWindow = StartWindow._instance
+                        startWindow.MainScreen()
 
                 if event.type == pygame.KEYDOWN:
                     if self.p1UsernameFlag:
@@ -138,18 +153,21 @@ class LogInWindow:
         if not self.LogIn1:
             self.mousePos = pygame.mouse.get_pos()
             self.logInButton1 = Button(image=None, pos=(180, 450),
-                          textInput="LOG IN", font=GetFont(30), baseColor="Black", hoveringColor="Green")
+                                       textInput="LOG IN", font=GetFont(30), baseColor="Black", hoveringColor="Green")
             self.logInButton1.ChangeColor(self.mousePos)
             self.logInButton1.UpdateScreen(self.screen)
         else:
             Text1 = GetFont(30).render("LOGGED IN", True, (0, 0, 0))
             self.screen.blit(Text1, (50, 440))
 
+        if self.logIn1Failed:
+            Text = GetFont(14).render("INVALID EMAIL OR PASSWORD", True, (255, 0, 0))
+            self.screen.blit(Text, (20, 280))
+
         if usernameSurface.get_width() > self.p1UsernameRect.w:
             self.p1Username = self.p1Username[:-1]
         elif passwordSurface.get_width() > self.p1PasswordRect.w:
             self.p1Password = self.p1Password[:-1]
-
 
     def Player2LogIn(self):
         self.screen.blit(self.rect, (415, 10))
@@ -168,13 +186,17 @@ class LogInWindow:
 
         if not self.LogIn2:
             self.mousePos = pygame.mouse.get_pos()
-            self.logInButton2 = Button(image=None, pos=(400+180, 450),
-                          textInput="LOG IN", font=GetFont(30), baseColor="Black", hoveringColor="Green")
+            self.logInButton2 = Button(image=None, pos=(400 + 180, 450),
+                                       textInput="LOG IN", font=GetFont(30), baseColor="Black", hoveringColor="Green")
             self.logInButton2.ChangeColor(self.mousePos)
             self.logInButton2.UpdateScreen(self.screen)
         else:
             Text1 = GetFont(30).render("LOGGED IN", True, (0, 0, 0))
             self.screen.blit(Text1, (450, 440))
+
+        if self.logIn2Failed:
+            Text = GetFont(14).render("INVALID EMAIL OR PASSWORD", True, (255, 0, 0))
+            self.screen.blit(Text, (420, 280))
 
         if usernameSurface2.get_width() > self.p2UsernameRect.w:
             self.p2Username = self.p2Username[:-1]
@@ -182,24 +204,36 @@ class LogInWindow:
             self.p2Password = self.p2Password[:-1]
 
     def VerifyLogIn(self, player1, player2):
-        url = "http://127.0.0.1:5000/api/login"
+        urlp1 = "http://127.0.0.1:5000/api/loginp1"
+        urlp2 = "http://127.0.0.1:5000/api/loginp2"
         headers = {'Content-Type': 'application/json'}
         if player1:
             data = {
                 "email": self.p1Username,
                 "password": self.p1Password
             }
-            self.LogIn1 = True
+            response = requests.post(urlp1, headers=headers, json=data)
+            if response.status_code == 201:
+                self.LogIn1 = True
+                self.logIn1Failed = False
+
+            elif response.status_code == 401:
+                self.logIn1Failed = True
+
         elif player2:
             data = {
                 "email": self.p2Username,
                 "password": self.p2Password
             }
-            self.LogIn2 = True
+            response = requests.post(urlp2, headers=headers, json=data)
+            if response.status_code == 201:
+                self.LogIn2 = True
+                self.logIn2Failed = False
+            elif response.status_code == 401:
+                self.logIn2Failed = True
 
-        response = requests.post(url, headers=headers, json=data)
-        if response.status_code == 201:
-            print("Logged in")
+
+
 
 if __name__ == "__main__":
     LogInWindow()
