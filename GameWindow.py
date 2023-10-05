@@ -1,4 +1,6 @@
 import pygame
+import random
+import os
 import sys
 import json
 from Player import Player
@@ -12,6 +14,7 @@ class GameWindow:
     background = None
     player1 = None
     player2 = None
+    songRoute = None
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
@@ -51,12 +54,24 @@ class GameWindow:
 
     def Start(self):
         pygame.init()
+        pygame.mixer.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.baseFont = pygame.font.Font(None, 25)
         self.background = pygame.image.load("assets/Mapa2 grid.png")
         pygame.display.set_caption("Eagle Defender")
         self.FillPlayer1Info()
         self.FillPlayer2Info()
+
+        playlistRoute = "DefaultPlaylist"
+        playlist = os.listdir(playlistRoute)
+        randomSong = random.choice(playlist)
+        randomSongPath = os.path.join(playlistRoute, randomSong)
+
+        self.songRoute = randomSongPath
+        pygame.mixer.music.load(self.songRoute)
+
+        # Reproduce la canción de fondo en bucle (-1 significa bucle infinito)
+        pygame.mixer.music.play(-1)
 
         while True:
             self.screen.blit(self.background, (0, 0))
@@ -87,5 +102,16 @@ class GameWindow:
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
+                    if event.key == pygame.K_1:
+                        pygame.mixer.music.stop()
+                        self.songRoute = self.player1.song
+                        pygame.mixer.music.load(self.songRoute)
+                        pygame.mixer.music.play(-1)
+
+                    if event.key == pygame.K_2:
+                        pygame.mixer.music.stop()
+                        self.songRoute = self.player2.song
+                        pygame.mixer.music.load(self.songRoute)
+                        pygame.mixer.music.play(-1)
 
             pygame.display.update()
