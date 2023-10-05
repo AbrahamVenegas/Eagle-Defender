@@ -1,6 +1,5 @@
 import pygame
 import sys
-import json
 from button import Button
 
 
@@ -16,9 +15,10 @@ class StartWindow:
             cls._instance = super().__new__(cls)
         return cls._instance
 
-    def __init__(self, helpWindow, logInWindow):
+    def __init__(self, helpWindow, logInWindow, registerWindow):
         self.helpWindow = helpWindow
         self.logInWindow = logInWindow
+        self.registerWindow = registerWindow
 
     def GetFont(self, size):  # To return it in the desired size
         return pygame.font.Font("assets/font.ttf", size)
@@ -47,47 +47,6 @@ class StartWindow:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if playBack.CheckForInput(playMousePosition):
-                        self.MainScreen()
-
-            pygame.display.update()
-
-    def RegisterScreen(self):
-        while True:
-
-            """
-            data = {
-                'name': 'abraham',
-                'password': '1234',
-                'email': 'abravenegas@estudiantec.cr',
-                'age': '20',
-                'song': 'torero'
-            }
-            
-    
-            with open('register_data.text','w') as register_file:
-                json.dump(data, register_file)
-            """
-            pygame.display.set_caption("Registro")
-            registerMousePosition = pygame.mouse.get_pos()
-
-            self.Screen.fill("white")
-
-            registerText = self.GetFont(45).render("This is the REGISTER screen.", True, "Black")
-            registerRectangle = registerText.get_rect(center=(720, 260))
-            self.Screen.blit(registerText, registerRectangle)
-
-            registerBack = Button(image=None, pos=(50, 20),
-                                  textInput="BACK", font=self.GetFont(20), baseColor="Black", hoveringColor="Green")
-
-            registerBack.ChangeColor(registerMousePosition)
-            registerBack.UpdateScreen(self.Screen)
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if registerBack.CheckForInput(registerMousePosition):
                         self.MainScreen()
 
             pygame.display.update()
@@ -164,7 +123,7 @@ class StartWindow:
                         pygame.quit()
                         self.logInWindow.Start()
                     if registerButton.CheckForInput(menuMousePosition):
-                        self.RegisterScreen()
+                        self.registerWindow.RegisterScreen()
                     if leaderboardButton.CheckForInput(menuMousePosition):
                         self.LeaderboardScreen()
                     if helpButton.CheckForInput(menuMousePosition):
