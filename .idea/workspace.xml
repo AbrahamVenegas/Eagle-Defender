@@ -5,14 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2997d568-e3bc-46bb-b2c1-62b67db69369" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Tank.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Eagle-Defender.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Eagle-Defender.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GameWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/GameWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/player1.json" beforeDir="false" afterPath="$PROJECT_DIR$/player1.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/player2.json" beforeDir="false" afterPath="$PROJECT_DIR$/player2.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tank.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tank.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/tank2.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/tank2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/tank3.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/tank3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/tank4.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/tank4.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/tank5.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/tank5.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/tank6.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/tank6.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/tank7.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/tank7.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/tank8.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/tank8.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
