@@ -4,6 +4,7 @@ import os
 import sys
 import json
 from Player import Player
+from Tank import Tank
 
 
 class GameWindow:
@@ -26,6 +27,7 @@ class GameWindow:
         self.height = 576
         self.player1 = Player(None, None, None, None, None, None)
         self.player2 = Player(None, None, None, None, None, None)
+        self.tank = Tank()
 
     def GetFont(self, size):
         return pygame.font.Font("assets/font.ttf", size)
@@ -73,9 +75,13 @@ class GameWindow:
         # Reproduce la canción de fondo en bucle (-1 significa bucle infinito)
         pygame.mixer.music.play(-1)
 
-        while True:
-            self.screen.blit(self.background, (0, 0))
+        clock = pygame.time.Clock()
+        fps = 120
 
+        while True:
+            clock.tick(fps)
+            self.screen.blit(self.background, (0, 0))
+            self.tank.draw(self.screen)
             p1Name = self.GetFont(14).render(self.player1.username, True, "White") # Name of the player one
             p1Rectangle = p1Name.get_rect(center=(170, 20))
             self.screen.blit(p1Name, p1Rectangle)
@@ -113,5 +119,16 @@ class GameWindow:
                         self.songRoute = self.player2.song
                         pygame.mixer.music.load("priv/songs/" + self.songRoute)
                         pygame.mixer.music.play(-1)
+
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_w]:
+                    self.tank.speed_y -= self.tank.acceleration
+                if keys[pygame.K_s]:
+                    self.tank.speed_y += self.tank.acceleration
+                if keys[pygame.K_a]:
+                    self.tank.speed_x -= self.tank.acceleration
+                if keys[pygame.K_d]:
+                    self.tank.speed_x += self.tank.acceleration
+                self.tank.update()
 
             pygame.display.update()
