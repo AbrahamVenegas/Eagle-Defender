@@ -168,6 +168,20 @@ class GameWindow:
             self.AmmoCounters()
             self.AmmoImg()
             self.SelectionAnimation()
+            if self.tank.rect.left < 50:
+                self.tank.rect.left = 50
+                self.tank.update()
+            if self.tank.rect.right > self.width:
+                self.tank.rect.right = self.width
+                self.tank.update()
+            if self.tank.rect.top < 100:
+                self.tank.rect.top = 100
+                self.tank.update()
+            if self.tank.rect.bottom > self.height-100:
+                self.tank.rect.bottom = self.height-100
+                self.tank.update()
+
+
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -192,16 +206,28 @@ class GameWindow:
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_w]:
                     self.tank.speed_y -= self.tank.acceleration
-                    self.tank.directionFlags("UP")
-                elif keys[pygame.K_s]:
+                    self.tank.direction = "up"
+                if keys[pygame.K_s]:
                     self.tank.speed_y += self.tank.acceleration
-                    self.tank.directionFlags("DOWN")
-                elif keys[pygame.K_a]:
+                    self.tank.direction = "down"
+                if keys[pygame.K_a]:
                     self.tank.speed_x -= self.tank.acceleration
-                    self.tank.directionFlags("LEFT")
-                elif keys[pygame.K_d]:
+                    if keys[pygame.K_w]:
+                        self.tank.direction = "up_left"
+                    elif keys[pygame.K_s]:
+                        self.tank.direction = "down_left"
+                    else:
+                        self.tank.direction = "left"
+
+                if keys[pygame.K_d]:
                     self.tank.speed_x += self.tank.acceleration
-                    self.tank.directionFlags("RIGHT")
+                    if keys[pygame.K_w]:
+                        self.tank.direction = "up_right"
+                    elif keys[pygame.K_s]:
+                        self.tank.direction = "down_right"
+                    else:
+                        self.tank.direction = "right"
+
                 self.tank.update()
 
             pygame.display.update()
