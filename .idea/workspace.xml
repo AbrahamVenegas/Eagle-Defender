@@ -5,24 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2997d568-e3bc-46bb-b2c1-62b67db69369" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/REST_API/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/classes/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/graphics/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GameWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/GameWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HelpWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/HelpWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogInWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/LogInWindow.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Player.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Player.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST_API.py" beforeDir="false" afterPath="$PROJECT_DIR$/REST_API/REST_API.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RegisterWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/RegisterWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StartWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/StartWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tank.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Tank.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/button.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/button.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data.json" beforeDir="false" afterPath="$PROJECT_DIR$/json/data.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/player1.json" beforeDir="false" afterPath="$PROJECT_DIR$/json/player1.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/player2.json" beforeDir="false" afterPath="$PROJECT_DIR$/json/player2.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/register_data.text" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes/Tank.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Tank.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphics/GameWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/GameWindow.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,21 +51,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Attack__Branch&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Gustavo A/Desktop/TEC/Modelado/Eagle-Defender/Main.py&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "obstaculos__movimiento",
+    "last_opened_file_path": "C:/Users/Gustavo A/Desktop/TEC/Modelado/Eagle-Defender/Main.py",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Gustavo A\Desktop\TEC\Modelado\Eagle-Defender" />
