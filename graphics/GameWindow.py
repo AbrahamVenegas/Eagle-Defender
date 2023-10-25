@@ -6,6 +6,7 @@ import json
 from classes.Player import Player
 from classes.Tank import Tank
 from classes.Tank import bullet_sprites
+from classes.BulletFactory import BulletFactory
 
 
 class GameWindow:
@@ -20,6 +21,11 @@ class GameWindow:
     timeElapsed = 0
     selectionX = 380
     selectionY = 2
+    bulletFactory = BulletFactory()
+    bullet = None
+    bulletSelected = "Fire"
+    fire = "ready"
+    selectionCount = 1
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
@@ -78,6 +84,7 @@ class GameWindow:
         bombRect = bombAmmoImg.get_rect(center=(320, 20))
         self.screen.blit(bombAmmoImg, bombRect)
 
+
     def AmmoCounters(self):
         fontSize = 16
         self.fireText = self.GetFont(fontSize).render(":" + str(self.fireAmmo), True, "White")
@@ -117,7 +124,18 @@ class GameWindow:
             self.timeElapsed -= 1 / 15.0
             self.index = (self.index + 1) % len(self.selectSprites)
 
+    def SelectBullet(self):
+        if self.selectionCount == 1:
+            self.selectionX = 380
+            self.bulletSelected = "Fire"
 
+        elif self.selectionCount == 2:
+            self.selectionX = 380 + 80
+            self.bulletSelected = "Water"
+
+        elif self.selectionCount == 3:
+            self.selectionX = 380 - 80
+            self.bulletSelected = "Bomb"
 
     def Start(self):
         pygame.init()
@@ -168,6 +186,7 @@ class GameWindow:
             self.AmmoCounters()
             self.AmmoImg()
             self.SelectionAnimation()
+
             if self.tank.rect.left < 50:
                 self.tank.rect.left = 50
                 self.tank.update()
@@ -180,8 +199,6 @@ class GameWindow:
             if self.tank.rect.bottom > self.height-100:
                 self.tank.rect.bottom = self.height-100
                 self.tank.update()
-
-
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -228,7 +245,24 @@ class GameWindow:
                     else:
                         self.tank.direction = "right"
 
+                if keys[pygame.K_z]:
+                    self.selectionCount += 1
+                    if self.selectionCount > 3:
+                        self.selectionCount = 1
+                    self.SelectBullet()
+
+                if keys[pygame.K_SPACE]:
+                    if self.fire == "ready":
+                        self.bullet = self.bulletFactory.CreateBullet(
+                            self.bulletSelected, self.tank.rect.x, self.tank.rect.y, self.tank.direction, self.screen)
+                        self.fire = "fire"
+
                 self.tank.update()
+
+            if self.fire == "fire":
+                self.bullet.DrawBullet()
+                if not self.bullet.Trajectory():
+                    self.fire = "ready"
 
             pygame.display.update()
             clock.tick(fps)

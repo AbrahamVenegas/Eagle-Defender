@@ -12,7 +12,7 @@ tank_sprites = [
 ]
 
 bullet_sprites = [
-    pygame.image.load("assets/Fire_rocket.png"),
+    pygame.image.load("assets/Fire_rocket_left.png"),
     pygame.image.load("assets/Water_rocket.png"),
     pygame.image.load("assets/Bomb_rocket.png")
 ]
@@ -76,13 +76,3 @@ class Tank:
 
     def draw(self, surface):
         surface.blit(self.image, self.rect)
-
-    def directionFlags(self, direction):
-        for item in self.Directions:
-            if item == direction:
-                self.Directions[direction] = True
-            else:
-                self.Directions[item] = False
-
-
-
