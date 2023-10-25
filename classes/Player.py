@@ -1,7 +1,3 @@
-import pygame
-import sys
-
-
 class Player:
     username = None
     password = None
@@ -10,7 +6,7 @@ class Player:
     photo = None
     song = None
 
-    def __init__(self, username, password, email, age, photo, song):
+    def __init__(self, username, password, email, age, photo, song, turn):
         self.username = username
         self.password = password
         self.email = email

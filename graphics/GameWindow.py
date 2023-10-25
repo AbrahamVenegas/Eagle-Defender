@@ -5,6 +5,7 @@ import sys
 import json
 from classes.Player import Player
 from classes.Tank import Tank
+from classes.Turn import Turn
 
 
 class GameWindow:
@@ -16,6 +17,7 @@ class GameWindow:
     player1 = None
     player2 = None
     songRoute = None
+    gameTurn = None
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
@@ -25,8 +27,9 @@ class GameWindow:
     def __init__(self):
         self.width = 800
         self.height = 576
-        self.player1 = Player(None, None, None, None, None, None)
-        self.player2 = Player(None, None, None, None, None, None)
+        self.player1 = Player(None, None, None, None, None, None, None)
+        self.player2 = Player(None, None, None, None, None, None, None)
+        self.gameTurn = Turn(None, None)
         self.tank = Tank()
 
     def GetFont(self, size):
@@ -41,7 +44,7 @@ class GameWindow:
         self.player1.email = datos["email"]
         self.player1.age = datos["age"]
         self.player1.photo = datos["photo"]
-        self.player1.song = datos["song"]
+        self.player1.song = "priv/songs/" + datos["song"]
 
     def FillPlayer2Info(self):
         with open("json/player2.json", "r") as jsonFile:
@@ -52,7 +55,7 @@ class GameWindow:
         self.player2.email = datos["email"]
         self.player2.age = datos["age"]
         self.player2.photo = datos["photo"]
-        self.player2.song = datos["song"]
+        self.player2.song = "priv/songs/" + datos["song"]
 
     def Start(self):
         pygame.init()
@@ -63,13 +66,13 @@ class GameWindow:
         pygame.display.set_caption("Eagle Defender")
         self.FillPlayer1Info()
         self.FillPlayer2Info()
-
+        ''' 
         playlistRoute = "DefaultPlaylist"
         playlist = os.listdir(playlistRoute)
         randomSong = random.choice(playlist)
         randomSongPath = os.path.join(playlistRoute, randomSong)
-
-        self.songRoute = randomSongPath
+        '''
+        self.songRoute = self.player1.song
         pygame.mixer.music.load(self.songRoute)
 
         # Reproduce la canción de fondo en bucle (-1 significa bucle infinito)
@@ -77,6 +80,14 @@ class GameWindow:
 
         clock = pygame.time.Clock()
         fps = 120
+
+        # Always play first the defensor (player 1)
+        self.gameTurn.player = "Defensor"
+        # print(self.gameTurn.player)
+        self.gameTurn.time = int(pygame.mixer.Sound(self.player1.song).get_length())
+        # print(self.gameTurn.time)
+        time_elapsed = 0
+        # print(seconds)
 
         while True:
             clock.tick(fps)
@@ -100,6 +111,42 @@ class GameWindow:
             p2PhotoRectangle = p2Photo.get_rect(center=(750, 20))
             self.screen.blit(p2Photo, p2PhotoRectangle)
 
+            turnText = self.GetFont(14).render("Turno:", True, "White")
+            turnTextRectangle = turnText.get_rect(center=(70, 556))
+            self.screen.blit(turnText, turnTextRectangle)
+
+            playerTurnText = self.GetFont(14).render(self.gameTurn.player, True, "White")
+            playerTurnTextRectangle = playerTurnText.get_rect(center=(170, 556))
+            self.screen.blit(playerTurnText, playerTurnTextRectangle)
+
+            actual_time = pygame.time.get_ticks() // 1000
+            past_time = actual_time - time_elapsed
+
+            if past_time >= 1 and self.gameTurn.time >= 1:
+                self.gameTurn.time -= 1
+                time_elapsed = actual_time
+
+            TurnTimeText = self.GetFont(14).render('Tiempo: ', True, "White")
+            TurnTimeTextRectangle = TurnTimeText.get_rect(center=(690, 556))
+            self.screen.blit(TurnTimeText, TurnTimeTextRectangle)
+
+            TurnTime = self.GetFont(14).render(str(self.gameTurn.time), True, "White")
+            TurnTimeRectangle = TurnTime.get_rect(center=(750, 556))
+            self.screen.blit(TurnTime, TurnTimeRectangle)
+
+            if self.gameTurn.CheckTurn(self.gameTurn.time):
+                self.gameTurn.player, self.gameTurn.time = self.gameTurn.ChangeTurn(self.gameTurn.player, self.player1.song, self.player2.song)
+                if self.gameTurn.player == "Defensor":
+                    pygame.mixer.music.stop()
+                    self.songRoute = self.player1.song
+                    pygame.mixer.music.load(self.songRoute)
+                    pygame.mixer.music.play(-1)
+                if self.gameTurn.player == "Atacante":
+                    pygame.mixer.music.stop()
+                    self.songRoute = self.player2.song
+                    pygame.mixer.music.load(self.songRoute)
+                    pygame.mixer.music.play(-1)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -108,17 +155,6 @@ class GameWindow:
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
-                    if event.key == pygame.K_1:
-                        pygame.mixer.music.stop()
-                        self.songRoute = self.player1.song
-                        pygame.mixer.music.load("priv/songs/" + self.songRoute)
-                        pygame.mixer.music.play(-1)
-
-                    if event.key == pygame.K_2:
-                        pygame.mixer.music.stop()
-                        self.songRoute = self.player2.song
-                        pygame.mixer.music.load("priv/songs/" + self.songRoute)
-                        pygame.mixer.music.play(-1)
 
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_w]:
