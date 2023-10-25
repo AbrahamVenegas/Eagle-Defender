@@ -5,24 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2997d568-e3bc-46bb-b2c1-62b67db69369" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/REST_API/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/classes/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/graphics/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Concrete.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Iron.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Wood.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/classes/Block.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/classes/prueba.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Eagle-Defender.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Eagle-Defender.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GameWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/GameWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HelpWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/HelpWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LogInWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/LogInWindow.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Player.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Player.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REST_API.py" beforeDir="false" afterPath="$PROJECT_DIR$/REST_API/REST_API.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RegisterWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/RegisterWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StartWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/StartWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tank.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Tank.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/button.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/button.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data.json" beforeDir="false" afterPath="$PROJECT_DIR$/json/data.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/player1.json" beforeDir="false" afterPath="$PROJECT_DIR$/json/player1.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/player2.json" beforeDir="false" afterPath="$PROJECT_DIR$/json/player2.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/register_data.text" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphics/GameWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/GameWindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/json/data.json" beforeDir="false" afterPath="$PROJECT_DIR$/json/data.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,8 +63,9 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Attack__Branch&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Gustavo A/Desktop/TEC/Modelado/Eagle-Defender/Main.py&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Block&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/pepev/OneDrive/Documentos/GitHub/Eagle-Defender/classes&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -82,9 +76,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\pepev\OneDrive\Documentos\GitHub\Eagle-Defender\classes" />
       <recent name="C:\Users\Gustavo A\Desktop\TEC\Modelado\Eagle-Defender" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\pepev\OneDrive\Documentos\GitHub\Eagle-Defender\classes" />
       <recent name="C:\Users\Jose\Desktop\PMI\Proyecto\Eagle-Defender\graphics" />
       <recent name="C:\Users\Jose\Desktop\PMI\Proyecto\Eagle-Defender\json" />
       <recent name="C:\Users\Jose\Desktop\PMI\Proyecto\Eagle-Defender\classes" />
@@ -180,10 +176,26 @@
       <workItem from="1696393855400" duration="206000" />
       <workItem from="1696445432417" duration="3287000" />
       <workItem from="1696461897194" duration="8729000" />
+      <workItem from="1697946110760" duration="8165000" />
+      <workItem from="1698007460566" duration="16000" />
+      <workItem from="1698007493069" duration="165000" />
+      <workItem from="1698008065422" duration="8688000" />
+      <workItem from="1698089820266" duration="373000" />
+      <workItem from="1698090226816" duration="2070000" />
+      <workItem from="1698206095473" duration="7655000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Main_py$GameWindow.coverage" NAME="GameWindow Coverage Results" MODIFIED="1698009125414" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/graphics" />
+    <SUITE FILE_PATH="coverage/Main_py$prueba.coverage" NAME="prueba Coverage Results" MODIFIED="1698259444818" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/classes" />
+    <SUITE FILE_PATH="coverage/Main_py$Main.coverage" NAME="Main Coverage Results" MODIFIED="1698259753499" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/Main_py$Tank.coverage" NAME="Tank Coverage Results" MODIFIED="1697948600848" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/classes" />
+    <SUITE FILE_PATH="coverage/Main_py$prueba1.coverage" NAME="prueba1 Coverage Results" MODIFIED="1698259589066" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/classes" />
+    <SUITE FILE_PATH="coverage/Main_py$Block.coverage" NAME="Block Coverage Results" MODIFIED="1697950724361" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/classes" />
+    <SUITE FILE_PATH="coverage/Main_py$REST_API.coverage" NAME="REST_API Coverage Results" MODIFIED="1698008392332" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/REST_API" />
   </component>
 </project>
