@@ -137,6 +137,22 @@ class GameWindow:
             self.selectionX = 380 - 80
             self.bulletSelected = "Bomb"
 
+    def OutOfAmmo(self):
+        if self.selectionCount == 1:
+            return self.fireAmmo == 0
+        elif self.selectionCount == 2:
+            return self.waterAmmo == 0
+        elif self.selectionCount == 3:
+            return self.bombAmmo == 0
+
+    def UpdateAmmo(self):
+        if self.bulletSelected == "Fire":
+            self.fireAmmo -= 1
+        elif self.bulletSelected == "Water":
+            self.waterAmmo -= 1
+        elif self.bulletSelected == "Bomb":
+            self.bombAmmo -= 1
+
     def Start(self):
         pygame.init()
         pygame.mixer.init()
@@ -245,14 +261,14 @@ class GameWindow:
                     else:
                         self.tank.direction = "right"
 
-                if keys[pygame.K_z]:
+                if keys[pygame.K_z] and self.fire == "ready":
                     self.selectionCount += 1
                     if self.selectionCount > 3:
                         self.selectionCount = 1
                     self.SelectBullet()
 
                 if keys[pygame.K_SPACE]:
-                    if self.fire == "ready":
+                    if self.fire == "ready" and not self.OutOfAmmo():
                         self.bullet = self.bulletFactory.CreateBullet(
                             self.bulletSelected, self.tank.rect.x, self.tank.rect.y, self.tank.direction, self.screen)
                         self.fire = "fire"
@@ -262,6 +278,7 @@ class GameWindow:
             if self.fire == "fire":
                 self.bullet.DrawBullet()
                 if not self.bullet.Trajectory():
+                    self.UpdateAmmo()
                     self.fire = "ready"
 
             pygame.display.update()
