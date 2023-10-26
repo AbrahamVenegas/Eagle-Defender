@@ -61,7 +61,7 @@ class GameWindow:
         self.Eagle = Eagle()
         self.reloadFlag = 0
         self.aim = "ready"
-        self.selectionFlag = 0
+        self.keyState = {}
 
     def GetFont(self, size):
         return pygame.font.Font("assets/font.ttf", size)
@@ -180,7 +180,6 @@ class GameWindow:
             elif self.gameTurn.player == "Defensor":
                 self.selectionX = 380 - 80
                 self.blockSelected = "Iron"
-        self.selectionFlag += 1
 
     def OutOfAmmo(self):
         if self.selectionCount == 1:
@@ -269,14 +268,15 @@ class GameWindow:
             self.reloadFlag = 0
 
     def Player2Shooting(self, keys):
-        if keys[pygame.K_z] and self.fire == "ready":
+        if keys[pygame.K_z] and not self.keyState.get(pygame.K_z, False):
+            self.keyState[pygame.K_z] = True
             self.selectionCount += 1
             if self.selectionCount > 3:
                 self.selectionCount = 1
-            if self.selectionFlag == 0:
-                self.SelectIcon()
-            else:
-                self.selectionFlag = 0
+            self.SelectIcon()
+
+        if not keys[pygame.K_z]:
+            self.keyState[pygame.K_z] = False
 
         if keys[pygame.K_SPACE]:
             if self.fire == "ready" and not self.OutOfAmmo() and self.aim == "ready":
