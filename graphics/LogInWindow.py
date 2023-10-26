@@ -143,9 +143,11 @@ class LogInWindow:
         logInText = GetFont(40).render("PLAYER 1", True, (0, 0, 0))
         usernameText = GetFont(20).render(self.username, True, (0, 0, 0))
         passwordText = GetFont(20).render(self.password, True, (0, 0, 0))
+        roleText = GetFont(16).render("DEFENDER", True, (3, 98, 252))
         self.screen.blit(logInText, (15 + 25, 10 + 40))
         self.screen.blit(usernameText, (15, 170))
         self.screen.blit(passwordText, (15, 320))
+        self.screen.blit(roleText, (125, 95))
 
         usernameSurface = self.baseFont.render(self.p1Username, True, self.inputColor)
         self.screen.blit(usernameSurface, (self.p1UsernameRect.x + 5, self.p1UsernameRect.y + 15))
@@ -177,9 +179,11 @@ class LogInWindow:
         logInText = GetFont(40).render("PLAYER 2", True, (0, 0, 0))
         usernameText2 = GetFont(20).render(self.username, True, (0, 0, 0))
         passwordText2 = GetFont(20).render(self.password, True, (0, 0, 0))
+        roleText = GetFont(16).render("ATTACKER", True, (255, 38, 38))
         self.screen.blit(logInText, (400 + 15 + 25, 10 + 40))
         self.screen.blit(usernameText2, (415, 170))
         self.screen.blit(passwordText2, (415, 320))
+        self.screen.blit(roleText, (125 + 400, 95))
 
         usernameSurface2 = self.baseFont.render(self.p2Username, True, self.inputColor)
         self.screen.blit(usernameSurface2, (self.p2UsernameRect.x + 5, self.p2UsernameRect.y + 15))
