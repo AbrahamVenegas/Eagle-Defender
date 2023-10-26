@@ -5,6 +5,7 @@ import sys
 import json
 from classes.Player import Player
 from classes.Tank import Tank
+from classes.BlockFactory import BlockFactory
 
 
 class GameWindow:
@@ -16,6 +17,9 @@ class GameWindow:
     player1 = None
     player2 = None
     songRoute = None
+    block = None
+    BlockFactory = BlockFactory()
+    setBlock = None
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
@@ -120,6 +124,13 @@ class GameWindow:
                         pygame.mixer.music.load("priv/songs/" + self.songRoute)
                         pygame.mixer.music.play(-1)
 
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        x, y = pygame.mouse.get_pos()
+                        self.block = self.BlockFactory.CreateBlock("Concrete", x, y, self.screen)
+                        self.block.SetPosition(x, y)
+                        self.setBlock = "set"
+
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_w]:
                     self.tank.speed_y -= self.tank.acceleration
@@ -130,5 +141,8 @@ class GameWindow:
                 if keys[pygame.K_d]:
                     self.tank.speed_x += self.tank.acceleration
                 self.tank.update()
+
+            if self.setBlock == "set":
+                self.block.DrawBlock()
 
             pygame.display.update()
