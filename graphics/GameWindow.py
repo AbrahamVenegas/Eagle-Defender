@@ -28,6 +28,7 @@ class GameWindow:
     bulletFactory = BulletFactory()
     bullet = None
     bulletSelected = "Fire"
+    blockSelected = "Wood"
     fire = "ready"
     selectionCount = 1
     block = None
@@ -44,12 +45,18 @@ class GameWindow:
         self.height = 576
         self.player1 = Player(None, None, None, None, None, None, None)
         self.player2 = Player(None, None, None, None, None, None, None)
-        self.gameTurn = Turn(None, None)
+        self.gameTurn = Turn(15, "Defensor")
         self.tank = Tank()
         self.fireAmmo = 5
         self.waterAmmo = 5
         self.bombAmmo = 5
-        self.fireText = self.waterText = self.bombText = None
+        self.ironAmmo = 10
+        self.concreteAmmo = 10
+        self.woodAmmo = 10
+        self.ironBlocks = []
+        self.concreteBlocks = []
+        self.woodBlocks = []
+        self.text1 = self.text2 = self.text3 = None
         self.selectSprites = None
         self.Eagle = Eagle()
         self.reloadFlag = 0
@@ -81,33 +88,49 @@ class GameWindow:
         self.player2.song = "priv/songs/" + datos["song"]
 
     def AmmoImg(self):
-        fireAmmoImg = bullet_sprites[0]
-        waterAmmoImg = bullet_sprites[1]
-        bombAmmoImg = bullet_sprites[2]
-        fireAmmoImg = pygame.transform.rotate(fireAmmoImg, 270)
-        waterAmmoImg = pygame.transform.rotate(waterAmmoImg, 270)
-        bombAmmoImg = pygame.transform.rotate(bombAmmoImg, 270)
+        image1 = None
+        image2 = None
+        image3 = None
 
-        fireRect = fireAmmoImg.get_rect(center=(400, 20))
-        self.screen.blit(fireAmmoImg, fireRect)
-        waterRect = waterAmmoImg.get_rect(center=(480, 20))
-        self.screen.blit(waterAmmoImg, waterRect)
-        bombRect = bombAmmoImg.get_rect(center=(320, 20))
-        self.screen.blit(bombAmmoImg, bombRect)
+        if self.gameTurn.player == "Atacante":
+            image1 = bullet_sprites[0]
+            image2 = bullet_sprites[1]
+            image3 = bullet_sprites[2]
+            image1 = pygame.transform.rotate(image1, 270)
+            image2 = pygame.transform.rotate(image2, 270)
+            image3 = pygame.transform.rotate(image3, 270)
+
+        elif self.gameTurn.player == "Defensor":
+            image1 = pygame.image.load("assets/Wood.png")
+            image2 = pygame.image.load("assets/Concrete.png")
+            image3 = pygame.image.load("assets/Iron.png")
+
+        rect1 = image1.get_rect(center=(400, 20))
+        rect2 = image2.get_rect(center=(480, 20))
+        rect3 = image3.get_rect(center=(320, 20))
+        self.screen.blit(image1, rect1)
+        self.screen.blit(image2, rect2)
+        self.screen.blit(image3, rect3)
 
 
     def AmmoCounters(self):
         fontSize = 16
-        self.fireText = self.GetFont(fontSize).render(":" + str(self.fireAmmo), True, "White")
-        self.waterText = self.GetFont(fontSize).render(":" + str(self.waterAmmo), True, "White")
-        self.bombText = self.GetFont(fontSize).render(":" + str(self.bombAmmo), True, "White")
+        if self.gameTurn.player == "Atacante":
+            self.text1 = self.GetFont(fontSize).render(":" + str(self.fireAmmo), True, "White")
+            self.text2 = self.GetFont(fontSize).render(":" + str(self.waterAmmo), True, "White")
+            self.text3 = self.GetFont(fontSize).render(":" + str(self.bombAmmo), True, "White")
 
-        fireRect = self.fireText.get_rect(center=(430, 20))
-        waterRect = self.fireText.get_rect(center=(510, 20))
-        bombRect = self.fireText.get_rect(center=(350, 20))
-        self.screen.blit(self.fireText, fireRect)
-        self.screen.blit(self.waterText, waterRect)
-        self.screen.blit(self.bombText, bombRect)
+        elif self.gameTurn.player == "Defensor":
+            self.text1 = self.GetFont(fontSize).render(":" + str(self.woodAmmo), True, "White")
+            self.text2 = self.GetFont(fontSize).render(":" + str(self.concreteAmmo), True, "White")
+            self.text3 = self.GetFont(fontSize).render(":" + str(self.ironAmmo), True, "White")
+
+        rect1 = self.text1.get_rect(center=(430, 20))
+        rect2 = self.text1.get_rect(center=(510, 20))
+        rect3 = self.text1.get_rect(center=(350, 20))
+        self.screen.blit(self.text1, rect1)
+        self.screen.blit(self.text2, rect2)
+        self.screen.blit(self.text3, rect3)
 
     def loadSelectionAnimation(self):
         self.selectSprites = [
@@ -135,34 +158,62 @@ class GameWindow:
             self.timeElapsed -= 1 / 15.0
             self.index = (self.index + 1) % len(self.selectSprites)
 
-    def SelectBullet(self):
+    def SelectIcon(self):
         if self.selectionCount == 1:
-            self.selectionX = 380
-            self.bulletSelected = "Fire"
-
+            if self.gameTurn.player == "Atacante":
+                self.selectionX = 380
+                self.bulletSelected = "Fire"
+            elif self.gameTurn.player == "Defensor":
+                self.selectionX = 380
+                self.blockSelected = "Wood"
         elif self.selectionCount == 2:
-            self.selectionX = 380 + 80
-            self.bulletSelected = "Water"
-
+            if self.gameTurn.player == "Atacante":
+                self.selectionX = 380 + 80
+                self.bulletSelected = "Water"
+            elif self.gameTurn.player == "Defensor":
+                self.selectionX = 380 + 80
+                self.blockSelected = "Concrete"
         elif self.selectionCount == 3:
-            self.selectionX = 380 - 80
-            self.bulletSelected = "Bomb"
+            if self.gameTurn.player == "Atacante":
+                self.selectionX = 380 - 80
+                self.bulletSelected = "Bomb"
+            elif self.gameTurn.player == "Defensor":
+                self.selectionX = 380 - 80
+                self.blockSelected = "Iron"
 
     def OutOfAmmo(self):
         if self.selectionCount == 1:
-            return self.fireAmmo == 0
+            if self.gameTurn.player == "Atacante":
+                return self.fireAmmo == 0
+            if self.gameTurn.player == "Defensor":
+                return self.woodAmmo == 0
         elif self.selectionCount == 2:
-            return self.waterAmmo == 0
+            if self.gameTurn.player == "Atacante":
+                return self.waterAmmo == 0
+            if self.gameTurn.player == "Defensor":
+                return self.concreteAmmo == 0
         elif self.selectionCount == 3:
-            return self.bombAmmo == 0
+            if self.gameTurn.player == "Atacante":
+                return self.bombAmmo == 0
+            if self.gameTurn.player == "Defensor":
+                return self.ironAmmo == 0
 
     def UpdateAmmo(self):
-        if self.bulletSelected == "Fire":
-            self.fireAmmo -= 1
-        elif self.bulletSelected == "Water":
-            self.waterAmmo -= 1
-        elif self.bulletSelected == "Bomb":
-            self.bombAmmo -= 1
+        if self.gameTurn.player == "Atacante":
+            if self.bulletSelected == "Fire":
+                self.fireAmmo -= 1
+            elif self.bulletSelected == "Water":
+                self.waterAmmo -= 1
+            elif self.bulletSelected == "Bomb":
+                self.bombAmmo -= 1
+        elif self.gameTurn.player == "Defensor":
+            if self.blockSelected == "Wood":
+                self.woodAmmo -= 1
+            elif self.blockSelected == "Concrete":
+                self.concreteAmmo -= 1
+            elif self.blockSelected == "Iron":
+                self.ironAmmo -= 1
+
 
     def ReloadAmmo(self):
         if self.reloadFlag == 0:
@@ -197,11 +248,6 @@ class GameWindow:
         clock = pygame.time.Clock()
         fps = 120
 
-        # Always play first the defensor (player 1)
-        self.gameTurn.player = "Defensor"
-        # print(self.gameTurn.player)
-        self.gameTurn.time = int(pygame.mixer.Sound(self.player1.song).get_length())
-        # print(self.gameTurn.time)
         time_elapsed = 0
         # print(seconds)
 
@@ -262,22 +308,23 @@ class GameWindow:
                     self.songRoute = self.player2.song
                     pygame.mixer.music.load(self.songRoute)
                     pygame.mixer.music.play(-1)
+            if self.gameTurn.player == "Atacante":
+                self.tank.draw(self.screen)
+                if self.tank.rect.left < 50:
+                    self.tank.rect.left = 50
+                    self.tank.update()
+                if self.tank.rect.right > self.width:
+                    self.tank.rect.right = self.width
+                    self.tank.update()
+                if self.tank.rect.top < 100:
+                    self.tank.rect.top = 100
+                    self.tank.update()
+                if self.tank.rect.bottom > self.height - 100:
+                    self.tank.rect.bottom = self.height - 100
+                    self.tank.update()
             self.AmmoCounters()
             self.AmmoImg()
             self.SelectionAnimation()
-
-            if self.tank.rect.left < 50:
-                self.tank.rect.left = 50
-                self.tank.update()
-            if self.tank.rect.right > self.width:
-                self.tank.rect.right = self.width
-                self.tank.update()
-            if self.tank.rect.top < 100:
-                self.tank.rect.top = 100
-                self.tank.update()
-            if self.tank.rect.bottom > self.height-100:
-                self.tank.rect.bottom = self.height-100
-                self.tank.update()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -287,24 +334,26 @@ class GameWindow:
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
-                    elif event.key == pygame.K_1:
-                        pygame.mixer.music.stop()
-                        self.songRoute = self.player1.song
-                        pygame.mixer.music.load("priv/songs/" + self.songRoute)
-                        pygame.mixer.music.play(-1)
-
-                    elif event.key == pygame.K_2:
-                        pygame.mixer.music.stop()
-                        self.songRoute = self.player2.song
-                        pygame.mixer.music.load("priv/songs/" + self.songRoute)
-                        pygame.mixer.music.play(-1)
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
-                        x, y = pygame.mouse.get_pos()
-                        self.block = self.BlockFactory.CreateBlock("Concrete", x, y, self.screen)
-                        self.block.SetPosition(x, y)
-                        self.setBlock = "set"
+                        if self.gameTurn.player == "Defensor" and not self.OutOfAmmo():
+                            x, y = pygame.mouse.get_pos()
+                            if self.blockSelected == "Wood":
+                                block = self.BlockFactory.CreateBlock(self.blockSelected, x, y, self.screen)
+                                if block.flag:
+                                    self.woodBlocks.append(block)
+                                    self.UpdateAmmo()
+                            if self.blockSelected == "Iron":
+                                block = self.BlockFactory.CreateBlock(self.blockSelected, x, y, self.screen)
+                                if block.flag:
+                                    self.ironBlocks.append(block)
+                                    self.UpdateAmmo()
+                            if self.blockSelected == "Concrete":
+                                block = self.BlockFactory.CreateBlock(self.blockSelected, x, y, self.screen)
+                                if block.flag:
+                                    self.concreteBlocks.append(block)
+                                    self.UpdateAmmo()
 
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_w]:
@@ -343,7 +392,7 @@ class GameWindow:
                     self.selectionCount += 1
                     if self.selectionCount > 3:
                         self.selectionCount = 1
-                    self.SelectBullet()
+                    self.SelectIcon()
 
                 if keys[pygame.K_SPACE]:
                     if self.fire == "ready" and not self.OutOfAmmo() and self.aim == "ready":
@@ -356,10 +405,20 @@ class GameWindow:
             if self.fire == "fire":
                 self.bullet.DrawBullet()
                 if not self.bullet.Trajectory() or self.bullet.is_Collision(self.Eagle.rect):
+                    for block in self.woodBlocks:
+                        if block.isCollision(self.bullet.rect):
+                            self.fire = "ready"
+                            self.UpdateAmmo()
+                            self.woodBlocks.remove(block)
                     self.UpdateAmmo()
                     self.fire = "ready"
-            if self.setBlock == "set":
-                self.block.DrawBlock()
+
+            for block in self.woodBlocks:
+                block.DrawBlock()
+            for block in self.concreteBlocks:
+                block.DrawBlock()
+            for block in self.ironBlocks:
+                block.DrawBlock()
 
             if self.gameTurn.time % 30 == 0:
                 self.ReloadAmmo()
