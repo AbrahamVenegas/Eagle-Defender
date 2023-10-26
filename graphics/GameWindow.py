@@ -52,6 +52,7 @@ class GameWindow:
         self.fireText = self.waterText = self.bombText = None
         self.selectSprites = None
         self.Eagle = Eagle()
+        self.reloadFlag = 0
 
     def GetFont(self, size):
         return pygame.font.Font("assets/font.ttf", size)
@@ -161,6 +162,13 @@ class GameWindow:
             self.waterAmmo -= 1
         elif self.bulletSelected == "Bomb":
             self.bombAmmo -= 1
+
+    def ReloadAmmo(self):
+        if self.reloadFlag == 0:
+            self.bombAmmo += 5
+            self.fireAmmo += 5
+            self.waterAmmo += 5
+            self.reloadFlag += 1
 
     def Start(self):
         pygame.init()
@@ -343,6 +351,11 @@ class GameWindow:
                     self.fire = "ready"
             if self.setBlock == "set":
                 self.block.DrawBlock()
+
+            if self.gameTurn.time % 30 == 0:
+                self.ReloadAmmo()
+            else:
+                self.reloadFlag = 0
 
             pygame.display.update()
             clock.tick(fps)
