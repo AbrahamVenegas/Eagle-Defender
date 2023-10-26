@@ -159,6 +159,15 @@ class GameWindow:
             self.index = (self.index + 1) % len(self.selectSprites)
 
     def SelectIcon(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_z] and not self.keyState.get(pygame.K_z, False):
+            self.keyState[pygame.K_z] = True
+            self.selectionCount += 1
+            if self.selectionCount > 3:
+                self.selectionCount = 1
+        if not keys[pygame.K_z]:
+            self.keyState[pygame.K_z] = False
+
         if self.selectionCount == 1:
             if self.gameTurn.player == "Atacante":
                 self.selectionX = 380
@@ -222,12 +231,7 @@ class GameWindow:
             self.reloadFlag += 1
 
     def Player1Turn(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_z]:
-            self.selectionCount += 1
-            if self.selectionCount > 3:
-                self.selectionCount = 1
-            self.SelectIcon()
+        self.SelectIcon()
 
     def Player2Turn(self):
         self.tank.draw(self.screen)
@@ -235,6 +239,7 @@ class GameWindow:
         self.Player2Movement(keys)
         self.Player2Shooting(keys)
         self.tank.update()
+        self.SelectIcon()
         """  --------------------- COLLISIONS ---------------------------------------------- """
         if self.tank.rect.left < 50:
             self.tank.rect.left = 50
@@ -267,16 +272,6 @@ class GameWindow:
             self.reloadFlag = 0
 
     def Player2Shooting(self, keys):
-        if keys[pygame.K_z] and not self.keyState.get(pygame.K_z, False):
-            self.keyState[pygame.K_z] = True
-            self.selectionCount += 1
-            if self.selectionCount > 3:
-                self.selectionCount = 1
-            self.SelectIcon()
-
-        if not keys[pygame.K_z]:
-            self.keyState[pygame.K_z] = False
-
         if keys[pygame.K_SPACE]:
             if self.fire == "ready" and not self.OutOfAmmo() and self.aim == "ready":
                 self.bullet = self.bulletFactory.CreateBullet(
