@@ -8,6 +8,7 @@ from classes.Tank import Tank
 from classes.Turn import Turn
 from classes.Tank import bullet_sprites
 from classes.BulletFactory import BulletFactory
+from classes.BlockFactory import BlockFactory
 
 
 class GameWindow:
@@ -28,6 +29,9 @@ class GameWindow:
     bulletSelected = "Fire"
     fire = "ready"
     selectionCount = 1
+    block = None
+    BlockFactory = BlockFactory()
+    setBlock = None
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
@@ -283,6 +287,13 @@ class GameWindow:
                         pygame.mixer.music.load("priv/songs/" + self.songRoute)
                         pygame.mixer.music.play(-1)
 
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        x, y = pygame.mouse.get_pos()
+                        self.block = self.BlockFactory.CreateBlock("Concrete", x, y, self.screen)
+                        self.block.SetPosition(x, y)
+                        self.setBlock = "set"
+
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_w]:
                     self.tank.speed_y -= self.tank.acceleration
@@ -327,6 +338,8 @@ class GameWindow:
                 if not self.bullet.Trajectory():
                     self.UpdateAmmo()
                     self.fire = "ready"
+            if self.setBlock == "set":
+                self.block.DrawBlock()
 
             pygame.display.update()
             clock.tick(fps)
