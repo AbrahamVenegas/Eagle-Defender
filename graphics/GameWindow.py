@@ -53,6 +53,7 @@ class GameWindow:
         self.selectSprites = None
         self.Eagle = Eagle()
         self.reloadFlag = 0
+        self.aim = "ready"
 
     def GetFont(self, size):
         return pygame.font.Font("assets/font.ttf", size)
@@ -309,26 +310,34 @@ class GameWindow:
                 if keys[pygame.K_w]:
                     self.tank.speed_y -= self.tank.acceleration
                     self.tank.direction = "up"
+                    self.aim = "ready"
                 if keys[pygame.K_s]:
                     self.tank.speed_y += self.tank.acceleration
                     self.tank.direction = "down"
+                    self.aim = "ready"
                 if keys[pygame.K_a]:
                     self.tank.speed_x -= self.tank.acceleration
                     if keys[pygame.K_w]:
                         self.tank.direction = "up_left"
+                        self.aim = "None"
                     elif keys[pygame.K_s]:
                         self.tank.direction = "down_left"
+                        self.aim = "None"
                     else:
                         self.tank.direction = "left"
+                        self.aim = "ready"
 
                 if keys[pygame.K_d]:
                     self.tank.speed_x += self.tank.acceleration
                     if keys[pygame.K_w]:
                         self.tank.direction = "up_right"
+                        self.aim = "None"
                     elif keys[pygame.K_s]:
                         self.tank.direction = "down_right"
+                        self.aim = "None"
                     else:
                         self.tank.direction = "right"
+                        self.aim = "ready"
 
                 if keys[pygame.K_z] and self.fire == "ready":
                     self.selectionCount += 1
@@ -337,7 +346,7 @@ class GameWindow:
                     self.SelectBullet()
 
                 if keys[pygame.K_SPACE]:
-                    if self.fire == "ready" and not self.OutOfAmmo():
+                    if self.fire == "ready" and not self.OutOfAmmo() and self.aim == "ready":
                         self.bullet = self.bulletFactory.CreateBullet(
                             self.bulletSelected, self.tank.rect.x, self.tank.rect.y, self.tank.direction, self.screen)
                         self.fire = "fire"
