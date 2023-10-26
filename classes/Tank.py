@@ -39,6 +39,7 @@ class Tank:
     speed_y = 0  # Velocidad vertical
     acceleration = 0.5  # Aceleración del movimiento
     friction = 0.2  # Fricción para el movimiento suave
+    shootingSound = None
 
     def __int__(self, x, y):
         super().__init__()
@@ -73,6 +74,15 @@ class Tank:
         self.rect.y += self.speed_y
 
         self.image = self.images[self.direction]
+
+    def playSound(self):
+        self.shootingSound = pygame.mixer.Sound('assets/Launch.mp3')
+        self.shootingSound.set_volume(0.5)
+        self.shootingSound.play()
+
+    def stopSound(self):
+        if self.shootingSound is not None:
+            self.shootingSound.stop()
 
     def draw(self, surface):
         surface.blit(self.image, self.rect)

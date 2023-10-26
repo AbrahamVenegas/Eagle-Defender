@@ -21,3 +21,7 @@ class Bullet(ABC):  # interface class
     @abstractmethod
     def DrawBullet(self):
         pass
+
+    @abstractmethod
+    def CollisionSound(self):
+        pass

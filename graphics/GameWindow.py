@@ -227,10 +227,7 @@ class GameWindow:
             self.selectionCount += 1
             if self.selectionCount > 3:
                 self.selectionCount = 1
-            if self.selectionFlag == 0:
-                self.SelectIcon()
-            else:
-                self.selectionFlag = 0
+            self.SelectIcon()
 
     def Player2Turn(self):
         self.tank.draw(self.screen)
@@ -259,6 +256,8 @@ class GameWindow:
                         self.fire = "ready"
                         self.UpdateAmmo()
                         self.woodBlocks.remove(block)
+                self.tank.stopSound()
+                self.bullet.CollisionSound()
                 self.UpdateAmmo()
                 self.fire = "ready"
         """  --------------------- COLLISIONS ---------------------------------------------- """
@@ -283,6 +282,7 @@ class GameWindow:
                 self.bullet = self.bulletFactory.CreateBullet(
                     self.bulletSelected, self.tank.rect.x, self.tank.rect.y, self.tank.direction, self.screen)
                 self.fire = "fire"
+                self.tank.playSound()
 
     def Player2Movement(self, keys):
         if keys[pygame.K_w]:
@@ -337,6 +337,7 @@ class GameWindow:
 
         # Reproduce la canción de fondo en bucle (-1 significa bucle infinito)
         pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.2)
 
         clock = pygame.time.Clock()
         fps = 60

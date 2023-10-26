@@ -21,6 +21,8 @@ class WaterBullet(Bullet, ABC):
         self.tankDirection = direction
         self.screen = surface
         self.RotateSprite()
+        self.collideSound = pygame.mixer.Sound('assets/Explosion.mp3')
+        self.collideSound.set_volume(0.5)
 
     def RotateSprite(self):
         if self.tankDirection == "left":
@@ -87,3 +89,6 @@ class WaterBullet(Bullet, ABC):
 
     def DrawBullet(self):
         self.screen.blit(self.sprite, self.rect)
+
+    def CollisionSound(self):
+        self.collideSound.play()
