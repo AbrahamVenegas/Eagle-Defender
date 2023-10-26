@@ -70,8 +70,8 @@ class FireBullet(Bullet, ABC):
                 self.rect.y += self.speed
         return True
 
-    def is_Collision(self, blockX, blockY):
-        pass
+    def is_Collision(self, objectRect):
+        return self.rect.colliderect(objectRect)
 
     def BorderCollision(self):
         if self.rect.x < self.tankX - self.maxRange or self.rect.x < 50:  # Max trajectory + border collision

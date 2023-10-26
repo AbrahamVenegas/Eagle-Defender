@@ -9,6 +9,7 @@ from classes.Turn import Turn
 from classes.Tank import bullet_sprites
 from classes.BulletFactory import BulletFactory
 from classes.BlockFactory import BlockFactory
+from classes.Eagle import Eagle
 
 
 class GameWindow:
@@ -50,6 +51,7 @@ class GameWindow:
         self.bombAmmo = 5
         self.fireText = self.waterText = self.bombText = None
         self.selectSprites = None
+        self.Eagle = Eagle()
 
     def GetFont(self, size):
         return pygame.font.Font("assets/font.ttf", size)
@@ -196,6 +198,7 @@ class GameWindow:
 
         while True:
             self.screen.blit(self.background, (0, 0))
+            self.screen.blit(self.Eagle.sprite, self.Eagle.rect)
             self.tank.draw(self.screen)
             p1Name = self.GetFont(14).render(self.player1.username, True, "White")  # Name of the player one
             p1Rectangle = p1Name.get_rect(center=(170, 20))
@@ -335,7 +338,7 @@ class GameWindow:
 
             if self.fire == "fire":
                 self.bullet.DrawBullet()
-                if not self.bullet.Trajectory():
+                if not self.bullet.Trajectory() or self.bullet.is_Collision(self.Eagle.rect):
                     self.UpdateAmmo()
                     self.fire = "ready"
             if self.setBlock == "set":

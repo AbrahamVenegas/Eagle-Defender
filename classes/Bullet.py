@@ -7,7 +7,7 @@ class Bullet(ABC):  # interface class
         pass
 
     @abstractmethod
-    def is_Collision(self, blockX, blockY):
+    def is_Collision(self, objectRect):
         pass
 
     @abstractmethod
