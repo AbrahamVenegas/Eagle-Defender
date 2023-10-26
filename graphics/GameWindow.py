@@ -61,6 +61,7 @@ class GameWindow:
         self.Eagle = Eagle()
         self.reloadFlag = 0
         self.aim = "ready"
+        self.selectionFlag = 0
 
     def GetFont(self, size):
         return pygame.font.Font("assets/font.ttf", size)
@@ -111,7 +112,6 @@ class GameWindow:
         self.screen.blit(image1, rect1)
         self.screen.blit(image2, rect2)
         self.screen.blit(image3, rect3)
-
 
     def AmmoCounters(self):
         fontSize = 16
@@ -180,6 +180,7 @@ class GameWindow:
             elif self.gameTurn.player == "Defensor":
                 self.selectionX = 380 - 80
                 self.blockSelected = "Iron"
+        self.selectionFlag += 1
 
     def OutOfAmmo(self):
         if self.selectionCount == 1:
@@ -214,13 +215,106 @@ class GameWindow:
             elif self.blockSelected == "Iron":
                 self.ironAmmo -= 1
 
-
     def ReloadAmmo(self):
         if self.reloadFlag == 0:
             self.bombAmmo += 5
             self.fireAmmo += 5
             self.waterAmmo += 5
             self.reloadFlag += 1
+
+    def Player1Turn(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_z]:
+            self.selectionCount += 1
+            if self.selectionCount > 3:
+                self.selectionCount = 1
+            if self.selectionFlag == 0:
+                self.SelectIcon()
+            else:
+                self.selectionFlag = 0
+
+    def Player2Turn(self):
+        self.tank.draw(self.screen)
+        keys = pygame.key.get_pressed()
+        self.Player2Movement(keys)
+        self.Player2Shooting(keys)
+        self.tank.update()
+        """  --------------------- COLLISIONS ---------------------------------------------- """
+        if self.tank.rect.left < 50:
+            self.tank.rect.left = 50
+            self.tank.update()
+        if self.tank.rect.right > self.width:
+            self.tank.rect.right = self.width
+            self.tank.update()
+        if self.tank.rect.top < 100:
+            self.tank.rect.top = 100
+            self.tank.update()
+        if self.tank.rect.bottom > self.height - 100:
+            self.tank.rect.bottom = self.height - 100
+
+        if self.fire == "fire":
+            self.bullet.DrawBullet()
+            if not self.bullet.Trajectory() or self.bullet.is_Collision(self.Eagle.rect):
+                for block in self.woodBlocks:
+                    if block.isCollision(self.bullet.rect):
+                        self.fire = "ready"
+                        self.UpdateAmmo()
+                        self.woodBlocks.remove(block)
+                self.UpdateAmmo()
+                self.fire = "ready"
+        """  --------------------- COLLISIONS ---------------------------------------------- """
+        if self.gameTurn.time % 30 == 0:
+            self.ReloadAmmo()
+        else:
+            self.reloadFlag = 0
+
+    def Player2Shooting(self, keys):
+        if keys[pygame.K_z] and self.fire == "ready":
+            self.selectionCount += 1
+            if self.selectionCount > 3:
+                self.selectionCount = 1
+            if self.selectionFlag == 0:
+                self.SelectIcon()
+            else:
+                self.selectionFlag = 0
+
+        if keys[pygame.K_SPACE]:
+            if self.fire == "ready" and not self.OutOfAmmo() and self.aim == "ready":
+                self.bullet = self.bulletFactory.CreateBullet(
+                    self.bulletSelected, self.tank.rect.x, self.tank.rect.y, self.tank.direction, self.screen)
+                self.fire = "fire"
+
+    def Player2Movement(self, keys):
+        if keys[pygame.K_w]:
+            self.tank.speed_y -= self.tank.acceleration
+            self.tank.direction = "up"
+            self.aim = "ready"
+        if keys[pygame.K_s]:
+            self.tank.speed_y += self.tank.acceleration
+            self.tank.direction = "down"
+            self.aim = "ready"
+        if keys[pygame.K_a]:
+            self.tank.speed_x -= self.tank.acceleration
+            if keys[pygame.K_w]:
+                self.tank.direction = "up_left"
+                self.aim = "None"
+            elif keys[pygame.K_s]:
+                self.tank.direction = "down_left"
+                self.aim = "None"
+            else:
+                self.tank.direction = "left"
+                self.aim = "ready"
+        if keys[pygame.K_d]:
+            self.tank.speed_x += self.tank.acceleration
+            if keys[pygame.K_w]:
+                self.tank.direction = "up_right"
+                self.aim = "None"
+            elif keys[pygame.K_s]:
+                self.tank.direction = "down_right"
+                self.aim = "None"
+            else:
+                self.tank.direction = "right"
+                self.aim = "ready"
 
     def Start(self):
         pygame.init()
@@ -231,7 +325,6 @@ class GameWindow:
         pygame.display.set_caption("Eagle Defender")
         self.FillPlayer1Info()
         self.FillPlayer2Info()
-        
         self.loadSelectionAnimation()
         ''' 
         playlistRoute = "DefaultPlaylist"
@@ -246,15 +339,15 @@ class GameWindow:
         pygame.mixer.music.play(-1)
 
         clock = pygame.time.Clock()
-        fps = 120
+        fps = 60
 
         time_elapsed = 0
         # print(seconds)
 
         while True:
+            """  --------------------- PLAYERS INFO ---------------------------------------------- """
             self.screen.blit(self.background, (0, 0))
             self.screen.blit(self.Eagle.sprite, self.Eagle.rect)
-            self.tank.draw(self.screen)
             p1Name = self.GetFont(14).render(self.player1.username, True, "White")  # Name of the player one
             p1Rectangle = p1Name.get_rect(center=(170, 20))
             self.screen.blit(p1Name, p1Rectangle)
@@ -280,7 +373,9 @@ class GameWindow:
             playerTurnText = self.GetFont(14).render(self.gameTurn.player, True, "White")
             playerTurnTextRectangle = playerTurnText.get_rect(center=(170, 556))
             self.screen.blit(playerTurnText, playerTurnTextRectangle)
+            """  --------------------- PLAYERS INFO ---------------------------------------------- """
 
+            """  --------------------- TIMER ----------------------------------------------------- """
             actual_time = pygame.time.get_ticks() // 1000
             past_time = actual_time - time_elapsed
 
@@ -295,9 +390,18 @@ class GameWindow:
             TurnTime = self.GetFont(14).render(str(self.gameTurn.time), True, "White")
             TurnTimeRectangle = TurnTime.get_rect(center=(750, 556))
             self.screen.blit(TurnTime, TurnTimeRectangle)
+            """  --------------------- TIMER ----------------------------------------------------- """
 
-            if self.gameTurn.CheckTurn(self.gameTurn.time):
-                self.gameTurn.player, self.gameTurn.time = self.gameTurn.ChangeTurn(self.gameTurn.player, self.player1.song, self.player2.song)
+            """  --------------------- COUNTERS AND ANIMATIONS ----------------------------------------------------- """
+            self.AmmoCounters()
+            self.AmmoImg()
+            self.SelectionAnimation()
+            """  --------------------- COUNTERS AND ANIMATIONS ----------------------------------------------------- """
+
+            if self.gameTurn.CheckTurn(self.gameTurn.time):  # Solo se ejecuta una vez
+                self.gameTurn.player, self.gameTurn.time = self.gameTurn.ChangeTurn(self.gameTurn.player,
+                                                                                    self.player1.song,
+                                                                                    self.player2.song)
                 if self.gameTurn.player == "Defensor":
                     pygame.mixer.music.stop()
                     self.songRoute = self.player1.song
@@ -308,23 +412,12 @@ class GameWindow:
                     self.songRoute = self.player2.song
                     pygame.mixer.music.load(self.songRoute)
                     pygame.mixer.music.play(-1)
+
             if self.gameTurn.player == "Atacante":
-                self.tank.draw(self.screen)
-                if self.tank.rect.left < 50:
-                    self.tank.rect.left = 50
-                    self.tank.update()
-                if self.tank.rect.right > self.width:
-                    self.tank.rect.right = self.width
-                    self.tank.update()
-                if self.tank.rect.top < 100:
-                    self.tank.rect.top = 100
-                    self.tank.update()
-                if self.tank.rect.bottom > self.height - 100:
-                    self.tank.rect.bottom = self.height - 100
-                    self.tank.update()
-            self.AmmoCounters()
-            self.AmmoImg()
-            self.SelectionAnimation()
+                self.Player2Turn()
+
+            elif self.gameTurn.player == "Defensor":
+                self.Player1Turn()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -355,75 +448,12 @@ class GameWindow:
                                     self.concreteBlocks.append(block)
                                     self.UpdateAmmo()
 
-                keys = pygame.key.get_pressed()
-                if keys[pygame.K_w]:
-                    self.tank.speed_y -= self.tank.acceleration
-                    self.tank.direction = "up"
-                    self.aim = "ready"
-                if keys[pygame.K_s]:
-                    self.tank.speed_y += self.tank.acceleration
-                    self.tank.direction = "down"
-                    self.aim = "ready"
-                if keys[pygame.K_a]:
-                    self.tank.speed_x -= self.tank.acceleration
-                    if keys[pygame.K_w]:
-                        self.tank.direction = "up_left"
-                        self.aim = "None"
-                    elif keys[pygame.K_s]:
-                        self.tank.direction = "down_left"
-                        self.aim = "None"
-                    else:
-                        self.tank.direction = "left"
-                        self.aim = "ready"
-
-                if keys[pygame.K_d]:
-                    self.tank.speed_x += self.tank.acceleration
-                    if keys[pygame.K_w]:
-                        self.tank.direction = "up_right"
-                        self.aim = "None"
-                    elif keys[pygame.K_s]:
-                        self.tank.direction = "down_right"
-                        self.aim = "None"
-                    else:
-                        self.tank.direction = "right"
-                        self.aim = "ready"
-
-                if keys[pygame.K_z] and self.fire == "ready":
-                    self.selectionCount += 1
-                    if self.selectionCount > 3:
-                        self.selectionCount = 1
-                    self.SelectIcon()
-
-                if keys[pygame.K_SPACE]:
-                    if self.fire == "ready" and not self.OutOfAmmo() and self.aim == "ready":
-                        self.bullet = self.bulletFactory.CreateBullet(
-                            self.bulletSelected, self.tank.rect.x, self.tank.rect.y, self.tank.direction, self.screen)
-                        self.fire = "fire"
-
-                self.tank.update()
-
-            if self.fire == "fire":
-                self.bullet.DrawBullet()
-                if not self.bullet.Trajectory() or self.bullet.is_Collision(self.Eagle.rect):
-                    for block in self.woodBlocks:
-                        if block.isCollision(self.bullet.rect):
-                            self.fire = "ready"
-                            self.UpdateAmmo()
-                            self.woodBlocks.remove(block)
-                    self.UpdateAmmo()
-                    self.fire = "ready"
-
             for block in self.woodBlocks:
                 block.DrawBlock()
             for block in self.concreteBlocks:
                 block.DrawBlock()
             for block in self.ironBlocks:
                 block.DrawBlock()
-
-            if self.gameTurn.time % 30 == 0:
-                self.ReloadAmmo()
-            else:
-                self.reloadFlag = 0
 
             pygame.display.update()
             clock.tick(fps)

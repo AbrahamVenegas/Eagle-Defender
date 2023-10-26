@@ -9,5 +9,5 @@ if __name__ == "__main__":
     helpWindow = HelpWindow()
     logInWindow = LogInWindow()
     registerWindow = RegisterWindow()
-    startWindow = StartWindow(helpWindow, logInWindow, registerWindow)
+    startWindow = StartWindow(helpWindow, gameWindow, registerWindow)
     startWindow.MainScreen()
