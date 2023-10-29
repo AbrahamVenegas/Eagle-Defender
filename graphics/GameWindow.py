@@ -45,7 +45,7 @@ class GameWindow:
         self.height = 576
         self.player1 = Player(None, None, None, None, None, None, None)
         self.player2 = Player(None, None, None, None, None, None, None)
-        self.gameTurn = Turn(15, "Defensor")
+        self.gameTurn = Turn(5, "Defensor")
         self.tank = Tank()
         self.fireAmmo = 5
         self.waterAmmo = 5
@@ -258,17 +258,60 @@ class GameWindow:
             for block in block_list:
                 if block.isCollision(self.tank.rect):
                     if self.tank.speed_x > 0:
-                        self.tank.speed_x = 0
-                        self.tank.rect.right -= 1
-                    elif self.tank.speed_x < 0:
-                        self.tank.speed_x = 0
-                        self.tank.rect.left += 1
-                    elif self.tank.speed_y > 0:
-                        self.tank.speed_y = 0
-                        self.tank.rect.bottom -= 1
-                    elif self.tank.speed_y < 0:
-                        self.tank.speed_y = 0
-                        self.tank.rect.top += 1
+                        self.tank.rect.x -= self.tank.speed_x
+                    if self.tank.speed_x < 0:
+                        self.tank.rect.x -= self.tank.speed_x
+                    if self.tank.speed_y > 0:
+                        self.tank.rect.y -= self.tank.speed_y
+                    if self.tank.speed_y < 0:
+                        self.tank.rect.y -= self.tank.speed_y
+
+                if self.fire == "fire":
+                    if block.isCollision(self.bullet.rect):
+                        self.UpdateAmmo()
+                        block.playSound()
+                        if self.bullet.type == "Bomb":
+                            if block in self.woodBlocks:
+                                self.woodBlocks.remove(block)
+                                self.fire = "ready"
+                            if block in self.concreteBlocks:
+                                block.updateHP(3)
+                                if block.hp <= 0:
+                                    self.concreteBlocks.remove(block)
+                                self.fire = "ready"
+                            if block in self.ironBlocks:
+                                block.updateHP(3)
+                                if block.hp <= 0:
+                                    self.ironBlocks.remove(block)
+                                self.fire = "ready"
+                        if self.bullet.type == "Fire":
+                            if block in self.woodBlocks:
+                                self.woodBlocks.remove(block)
+                                self.fire = "ready"
+                            if block in self.concreteBlocks:
+                                block.updateHP(2)
+                                if block.hp <= 0:
+                                    self.concreteBlocks.remove(block)
+                                self.fire = "ready"
+                            if block in self.ironBlocks:
+                                block.updateHP(3)
+                                if block.hp <= 0:
+                                    self.ironBlocks.remove(block)
+                                self.fire = "ready"
+                        if self.bullet.type == "Water":
+                            if block in self.woodBlocks:
+                                self.woodBlocks.remove(block)
+                                self.fire = "ready"
+                            if block in self.concreteBlocks:
+                                block.updateHP(1)
+                                if block.hp <= 0:
+                                    self.concreteBlocks.remove(block)
+                                self.fire = "ready"
+                            if block in self.ironBlocks:
+                                block.updateHP(2)
+                                if block.hp <= 0:
+                                    self.ironBlocks.remove(block)
+                                self.fire = "ready"
 
         if self.fire == "fire":
             self.bullet.DrawBullet()
@@ -277,22 +320,6 @@ class GameWindow:
                 self.bullet.CollisionSound()
                 self.UpdateAmmo()
                 self.fire = "ready"
-            for block in self.woodBlocks:
-                if block.isCollision(self.bullet.rect):
-                    self.UpdateAmmo()
-                    self.woodBlocks.remove(block)
-                    self.fire = "ready"
-            for block in self.concreteBlocks:
-                if block.isCollision(self.bullet.rect):
-                    self.UpdateAmmo()
-                    self.concreteBlocks.remove(block)
-                    self.fire = "ready"
-            for block in self.ironBlocks:
-                if block.isCollision(self.bullet.rect):
-                    self.UpdateAmmo()
-                    self.ironBlocks.remove(block)
-                    self.fire = "ready"
-
         """  --------------------- COLLISIONS ---------------------------------------------- """
         if self.gameTurn.time % 30 == 0:
             self.ReloadAmmo()
@@ -357,10 +384,8 @@ class GameWindow:
         '''
         self.songRoute = self.player1.song
         pygame.mixer.music.load(self.songRoute)
-
-        # Reproduce la canción de fondo en bucle (-1 significa bucle infinito)
+        pygame.mixer.music.set_volume(0.02)
         pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.2)
 
         clock = pygame.time.Clock()
         fps = 60
@@ -430,11 +455,13 @@ class GameWindow:
                     pygame.mixer.music.stop()
                     self.songRoute = self.player1.song
                     pygame.mixer.music.load(self.songRoute)
+                    pygame.mixer.music.set_volume(0.02)
                     pygame.mixer.music.play(-1)
                 if self.gameTurn.player == "Atacante":
                     pygame.mixer.music.stop()
                     self.songRoute = self.player2.song
                     pygame.mixer.music.load(self.songRoute)
+                    pygame.mixer.music.set_volume(0.02)
                     pygame.mixer.music.play(-1)
 
             if self.gameTurn.player == "Atacante":

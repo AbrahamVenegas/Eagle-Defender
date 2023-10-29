@@ -33,7 +33,7 @@ class Tank:
     direction = "left"
     image = pygame.transform.scale(images[direction], (100, 60))
     rect = image.get_rect()
-    rect.x = 500
+    rect.x = 700
     rect.y = 260
     speed_x = 0  # Velocidad horizontal
     speed_y = 0  # Velocidad vertical
@@ -77,7 +77,7 @@ class Tank:
 
     def playSound(self):
         self.shootingSound = pygame.mixer.Sound('assets/Launch.mp3')
-        self.shootingSound.set_volume(0.5)
+        self.shootingSound.set_volume(0.03)
         self.shootingSound.play()
 
     def stopSound(self):

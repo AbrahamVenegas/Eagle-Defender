@@ -91,5 +91,6 @@ class FireBullet(Bullet, ABC):
         self.screen.blit(self.sprite, self.rect)
 
     def CollisionSound(self):
+        self.collideSound.set_volume(0.1)
         self.collideSound.play()
 

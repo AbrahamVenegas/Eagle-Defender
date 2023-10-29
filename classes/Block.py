@@ -12,5 +12,13 @@ class Block(ABC):  # interface class
         pass
 
     @abstractmethod
-    def isCollision(self, object):
+    def isCollision(self, Object):
+        pass
+
+    @abstractmethod
+    def updateHP(self, damage):
+        pass
+
+    @abstractmethod
+    def playSound(self):
         pass
