@@ -14,19 +14,19 @@ class IronBlock(Block, ABC):
         self.BlockX = BlockX
         self.BlockY = BlockY
         self.screen = surface
-        self.sprite = pygame.image.load("assets/Iron.png")
+        self.sprite = pygame.image.load("assets/Blocks/Iron1.png")
         self.rect = self.sprite.get_rect()
         self.flag = False
         self.SetPosition()
 
     def SetPosition(self):
-        row = (self.BlockY // 32)
-        column = (self.BlockX // 32)
-        if 8 <= row <= 10 and 3 <= column <= 6:
+        self.BlockY = self.BlockY // 32
+        self.BlockX = self.BlockX // 32
+        if 8 <= self.BlockY <= 10 and 3 <= self.BlockX <= 6:
             self.flag = False
-        elif 3 < row < 15 and column > 1:
-            self.rect.x = column * 32
-            self.rect.y = row * 32
+        elif 3 < self.BlockY < 15 and self.BlockX > 1:
+            self.rect.x = self.BlockX * 32
+            self.rect.y = self.BlockY * 32
             self.flag = True
 
     def DrawBlock(self):

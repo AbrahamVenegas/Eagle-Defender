@@ -56,6 +56,7 @@ class GameWindow:
         self.ironBlocks = []
         self.concreteBlocks = []
         self.woodBlocks = []
+        self.coordinates = []
         self.text1 = self.text2 = self.text3 = None
         self.selectSprites = None
         self.Eagle = Eagle()
@@ -102,9 +103,9 @@ class GameWindow:
             image3 = pygame.transform.rotate(image3, 270)
 
         elif self.gameTurn.player == "Defensor":
-            image1 = pygame.image.load("assets/Wood.png")
-            image2 = pygame.image.load("assets/Concrete.png")
-            image3 = pygame.image.load("assets/Iron.png")
+            image1 = pygame.image.load("assets/Blocks/Wood1.png")
+            image2 = pygame.image.load("assets/Blocks/Concrete1.png")
+            image3 = pygame.image.load("assets/Blocks/Iron1.png")
 
         rect1 = image1.get_rect(center=(400, 20))
         rect2 = image2.get_rect(center=(480, 20))
@@ -253,18 +254,45 @@ class GameWindow:
         if self.tank.rect.bottom > self.height - 100:
             self.tank.rect.bottom = self.height - 100
 
+        for block_list in [self.woodBlocks, self.concreteBlocks, self.ironBlocks]:
+            for block in block_list:
+                if block.isCollision(self.tank.rect):
+                    if self.tank.speed_x > 0:
+                        self.tank.speed_x = 0
+                        self.tank.rect.right -= 1
+                    elif self.tank.speed_x < 0:
+                        self.tank.speed_x = 0
+                        self.tank.rect.left += 1
+                    elif self.tank.speed_y > 0:
+                        self.tank.speed_y = 0
+                        self.tank.rect.bottom -= 1
+                    elif self.tank.speed_y < 0:
+                        self.tank.speed_y = 0
+                        self.tank.rect.top += 1
+
         if self.fire == "fire":
             self.bullet.DrawBullet()
             if not self.bullet.Trajectory() or self.bullet.is_Collision(self.Eagle.rect):
-                for block in self.woodBlocks:
-                    if block.isCollision(self.bullet.rect):
-                        self.fire = "ready"
-                        self.UpdateAmmo()
-                        self.woodBlocks.remove(block)
                 self.tank.stopSound()
                 self.bullet.CollisionSound()
                 self.UpdateAmmo()
                 self.fire = "ready"
+            for block in self.woodBlocks:
+                if block.isCollision(self.bullet.rect):
+                    self.UpdateAmmo()
+                    self.woodBlocks.remove(block)
+                    self.fire = "ready"
+            for block in self.concreteBlocks:
+                if block.isCollision(self.bullet.rect):
+                    self.UpdateAmmo()
+                    self.concreteBlocks.remove(block)
+                    self.fire = "ready"
+            for block in self.ironBlocks:
+                if block.isCollision(self.bullet.rect):
+                    self.UpdateAmmo()
+                    self.ironBlocks.remove(block)
+                    self.fire = "ready"
+
         """  --------------------- COLLISIONS ---------------------------------------------- """
         if self.gameTurn.time % 30 == 0:
             self.ReloadAmmo()
@@ -428,19 +456,20 @@ class GameWindow:
                     if event.button == 1:
                         if self.gameTurn.player == "Defensor" and not self.OutOfAmmo():
                             x, y = pygame.mouse.get_pos()
+                            block = self.BlockFactory.CreateBlock(self.blockSelected, x, y, self.screen)
                             if self.blockSelected == "Wood":
-                                block = self.BlockFactory.CreateBlock(self.blockSelected, x, y, self.screen)
-                                if block.flag:
+                                if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
+                                    self.coordinates.append((block.BlockX, block.BlockY))
                                     self.woodBlocks.append(block)
                                     self.UpdateAmmo()
                             if self.blockSelected == "Iron":
-                                block = self.BlockFactory.CreateBlock(self.blockSelected, x, y, self.screen)
-                                if block.flag:
+                                if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
+                                    self.coordinates.append((block.BlockX, block.BlockY))
                                     self.ironBlocks.append(block)
                                     self.UpdateAmmo()
                             if self.blockSelected == "Concrete":
-                                block = self.BlockFactory.CreateBlock(self.blockSelected, x, y, self.screen)
-                                if block.flag:
+                                if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
+                                    self.coordinates.append((block.BlockX, block.BlockY))
                                     self.concreteBlocks.append(block)
                                     self.UpdateAmmo()
 
