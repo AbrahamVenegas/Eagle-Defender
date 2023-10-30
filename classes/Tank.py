@@ -1,33 +1,33 @@
 import pygame
 
 tank_sprites = [
-    pygame.image.load("assets/tank1.png"),
-    pygame.image.load("assets/tank2.png"),
-    pygame.image.load("assets/tank3.png"),
-    pygame.image.load("assets/tank4.png"),
-    pygame.image.load("assets/tank5.png"),
-    pygame.image.load("assets/tank6.png"),
-    pygame.image.load("assets/tank7.png"),
-    pygame.image.load("assets/tank8.png")
+    pygame.image.load("assets/Tank/tank1.png"),
+    pygame.image.load("assets/Tank/tank2.png"),
+    pygame.image.load("assets/Tank/tank3.png"),
+    pygame.image.load("assets/Tank/tank4.png"),
+    pygame.image.load("assets/Tank/tank5.png"),
+    pygame.image.load("assets/Tank/tank6.png"),
+    pygame.image.load("assets/Tank/tank7.png"),
+    pygame.image.load("assets/Tank/tank8.png")
 ]
 
 bullet_sprites = [
-    pygame.image.load("assets/Fire_rocket_left.png"),
-    pygame.image.load("assets/Water_rocket.png"),
-    pygame.image.load("assets/Bomb_rocket.png")
+    pygame.image.load("assets/Weapons/Fire_rocket.png"),
+    pygame.image.load("assets/Weapons/Water_rocket.png"),
+    pygame.image.load("assets/Weapons/Bomb_rocket.png")
 ]
 
 
 class Tank:
     images = {
-        "left": pygame.image.load("assets/tank1.png"),
-        "right": pygame.image.load("assets/tank5.png"),
-        "up": pygame.image.load("assets/tank7.png"),
-        "down": pygame.image.load("assets/tank3.png"),
-        "up_right": pygame.image.load("assets/tank6.png"),
-        "up_left": pygame.image.load("assets/tank8.png"),
-        "down_right": pygame.image.load("assets/tank4.png"),
-        "down_left": pygame.image.load("assets/tank2.png")
+        "left": pygame.image.load("assets/Tank/tank1.png"),
+        "right": pygame.image.load("assets/Tank/tank5.png"),
+        "up": pygame.image.load("assets/Tank/tank7.png"),
+        "down": pygame.image.load("assets/Tank/tank3.png"),
+        "up_right": pygame.image.load("assets/Tank/tank6.png"),
+        "up_left": pygame.image.load("assets/Tank/tank8.png"),
+        "down_right": pygame.image.load("assets/Tank/tank4.png"),
+        "down_left": pygame.image.load("assets/Tank/tank2.png")
     }
     index = 0
     direction = "left"
@@ -44,14 +44,14 @@ class Tank:
     def __int__(self, x, y):
         super().__init__()
         self.images = {
-            "left": pygame.image.load("assets/tank1.png"),
-            "right": pygame.image.load("assets/tank5.png"),
-            "up": pygame.image.load("assets/tank7.png"),
-            "down": pygame.image.load("assets/tank3.png"),
-            "up_right": pygame.image.load("assets/tank6.png"),
-            "up_left": pygame.image.load("assets/tank8.png"),
-            "down_right": pygame.image.load("assets/tank4.png"),
-            "down_left": pygame.image.load("assets/tank2.png")
+            "left": pygame.image.load("assets/Tank/tank1.png"),
+            "right": pygame.image.load("assets/Tank/tank5.png"),
+            "up": pygame.image.load("assets/Tank/tank7.png"),
+            "down": pygame.image.load("assets/Tank/tank3.png"),
+            "up_right": pygame.image.load("assets/Tank/tank6.png"),
+            "up_left": pygame.image.load("assets/Tank/tank8.png"),
+            "down_right": pygame.image.load("assets/Tank/tank4.png"),
+            "down_left": pygame.image.load("assets/Tank/tank2.png")
         }
         self.index = 0
         self.rect = self.image.get_rect()
@@ -76,7 +76,7 @@ class Tank:
         self.image = self.images[self.direction]
 
     def playSound(self):
-        self.shootingSound = pygame.mixer.Sound('assets/Launch.mp3')
+        self.shootingSound = pygame.mixer.Sound('assets/SoundEffects/Launch.mp3')
         self.shootingSound.set_volume(0.03)
         self.shootingSound.play()
 

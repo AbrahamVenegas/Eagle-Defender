@@ -135,14 +135,14 @@ class GameWindow:
 
     def loadSelectionAnimation(self):
         self.selectSprites = [
-            pygame.image.load("assets/Select_01.png"),
-            pygame.image.load("assets/Select_02.png"),
-            pygame.image.load("assets/Select_03.png"),
-            pygame.image.load("assets/Select_04.png"),
-            pygame.image.load("assets/Select_05.png"),
-            pygame.image.load("assets/Select_06.png"),
-            pygame.image.load("assets/Select_07.png"),
-            pygame.image.load("assets/Select_08.png"),
+            pygame.image.load("assets/SelectionAnimation/Select_01.png"),
+            pygame.image.load("assets/SelectionAnimation/Select_02.png"),
+            pygame.image.load("assets/SelectionAnimation/Select_03.png"),
+            pygame.image.load("assets/SelectionAnimation/Select_04.png"),
+            pygame.image.load("assets/SelectionAnimation/Select_05.png"),
+            pygame.image.load("assets/SelectionAnimation/Select_06.png"),
+            pygame.image.load("assets/SelectionAnimation/Select_07.png"),
+            pygame.image.load("assets/SelectionAnimation/Select_08.png"),
         ]
 
     def SelectionAnimation(self):
@@ -268,50 +268,43 @@ class GameWindow:
 
                 if self.fire == "fire":
                     if block.isCollision(self.bullet.rect):
-                        self.UpdateAmmo()
+                        self.tank.stopSound()
                         block.playSound()
+                        self.UpdateAmmo()
+                        self.fire = "ready"
                         if self.bullet.type == "Bomb":
                             if block in self.woodBlocks:
                                 self.woodBlocks.remove(block)
-                                self.fire = "ready"
                             if block in self.concreteBlocks:
                                 block.updateHP(3)
                                 if block.hp <= 0:
                                     self.concreteBlocks.remove(block)
-                                self.fire = "ready"
                             if block in self.ironBlocks:
                                 block.updateHP(3)
                                 if block.hp <= 0:
                                     self.ironBlocks.remove(block)
-                                self.fire = "ready"
                         if self.bullet.type == "Fire":
                             if block in self.woodBlocks:
                                 self.woodBlocks.remove(block)
-                                self.fire = "ready"
                             if block in self.concreteBlocks:
                                 block.updateHP(2)
                                 if block.hp <= 0:
                                     self.concreteBlocks.remove(block)
-                                self.fire = "ready"
                             if block in self.ironBlocks:
                                 block.updateHP(3)
                                 if block.hp <= 0:
                                     self.ironBlocks.remove(block)
-                                self.fire = "ready"
                         if self.bullet.type == "Water":
                             if block in self.woodBlocks:
                                 self.woodBlocks.remove(block)
-                                self.fire = "ready"
                             if block in self.concreteBlocks:
                                 block.updateHP(1)
                                 if block.hp <= 0:
                                     self.concreteBlocks.remove(block)
-                                self.fire = "ready"
                             if block in self.ironBlocks:
                                 block.updateHP(2)
                                 if block.hp <= 0:
                                     self.ironBlocks.remove(block)
-                                self.fire = "ready"
 
         if self.fire == "fire":
             self.bullet.DrawBullet()

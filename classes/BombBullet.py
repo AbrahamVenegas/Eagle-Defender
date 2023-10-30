@@ -5,7 +5,7 @@ from classes.Bullet import Bullet
 
 
 class BombBullet(Bullet, ABC):
-    sprite0 = pygame.image.load("assets/Bomb_rocket.png")
+    sprite0 = pygame.image.load("assets/Weapons/Bomb_rocket.png")
     sprite = sprite0
     type = None
     maxRange = 256
@@ -21,7 +21,7 @@ class BombBullet(Bullet, ABC):
         self.tankDirection = direction
         self.screen = surface
         self.RotateSprite()
-        self.collideSound = pygame.mixer.Sound('assets/Explosion.mp3')
+        self.collideSound = pygame.mixer.Sound('assets/SoundEffects/Explosion.mp3')
         self.collideSound.set_volume(0.5)
 
     def RotateSprite(self):
