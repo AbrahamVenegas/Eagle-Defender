@@ -66,6 +66,7 @@ class GameWindow:
         self.reloadFlag = 0
         self.aim = "ready"
         self.keyState = {}
+        self.score = 0
 
     def GetFont(self, size):
         return pygame.font.Font("assets/font.ttf", size)
@@ -91,6 +92,10 @@ class GameWindow:
         self.player2.age = datos["age"]
         self.player2.photo = datos["photo"]
         self.player2.song = "priv/songs/" + datos["song"]
+
+    def SetScore(self):
+        scoreText = self.GetFont(16).render("Score: " + str(self.score), True, "White")
+        self.screen.blit(scoreText, (360, 545))
 
     def AmmoImg(self):
         image1 = None
@@ -236,7 +241,7 @@ class GameWindow:
 
     def Player1Turn(self):
         self.SelectIcon()
-        self.readyButton = Button(self.GbuttonImage, pos=(400, 550),
+        self.readyButton = Button(self.GbuttonImage, pos=(730, 80),
                textInput="Ready", font=self.GetFont(12), baseColor="White", hoveringColor="Purple")
 
     def Player2Turn(self):
@@ -275,6 +280,7 @@ class GameWindow:
                     if block.isCollision(self.bullet.rect):
                         self.tank.stopSound()
                         block.playSound()
+                        self.score += 10
                         self.UpdateAmmo()
                         self.fire = "ready"
                         if self.bullet.type == "Bomb":
@@ -446,6 +452,7 @@ class GameWindow:
             self.AmmoCounters()
             self.AmmoImg()
             self.SelectionAnimation()
+            self.SetScore()
             """  --------------------- COUNTERS AND ANIMATIONS ----------------------------------------------------- """
 
             if self.gameTurn.CheckTurn(self.gameTurn.time):
