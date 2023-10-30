@@ -381,9 +381,9 @@ class GameWindow:
         randomSongPath = os.path.join(playlistRoute, randomSong)
         '''
         self.songRoute = self.player1.song
-        pygame.mixer.music.load(self.songRoute)
-        self.gameTurn.time = int(pygame.mixer.Sound(self.songRoute).get_length())
         self.gameTurn.player = "Defensor"
+        self.gameTurn.time = int(pygame.mixer.Sound(self.songRoute).get_length())
+        pygame.mixer.music.load(self.songRoute)
         pygame.mixer.music.set_volume(0.02)
         pygame.mixer.music.play(-1)
 
@@ -452,6 +452,18 @@ class GameWindow:
                 self.gameTurn.player, self.gameTurn.time = self.gameTurn.ChangeTurn(self.gameTurn.player,
                                                                                     self.player1.song,
                                                                                     self.player2.song)
+                if self.gameTurn.player == "Defensor":
+                    pygame.mixer.music.stop()
+                    self.songRoute = self.player1.song
+                    pygame.mixer.music.load(self.songRoute)
+                    pygame.mixer.music.set_volume(0.02)
+                    pygame.mixer.music.play(-1)
+                if self.gameTurn.player == "Atacante":
+                    pygame.mixer.music.stop()
+                    self.songRoute = self.player2.song
+                    pygame.mixer.music.load(self.songRoute)
+                    pygame.mixer.music.set_volume(0.02)
+                    pygame.mixer.music.play(-1)
 
             if self.gameTurn.player == "Atacante":
                 self.Player2Turn()
@@ -478,6 +490,12 @@ class GameWindow:
                                 self.gameTurn.player, self.gameTurn.time = self.gameTurn.ChangeTurn(self.gameTurn.player
                                                                                                     , self.player1.song,
                                                                                                     self.player2.song)
+                                pygame.mixer.music.stop()
+                                self.songRoute = self.player1.song
+                                pygame.mixer.music.load(self.songRoute)
+                                pygame.mixer.music.set_volume(0.02)
+                                pygame.mixer.music.play(-1)
+
                             if not self.OutOfAmmo():
                                 block = self.BlockFactory.CreateBlock(self.blockSelected, x, y, self.screen)
                                 if self.blockSelected == "Wood":
