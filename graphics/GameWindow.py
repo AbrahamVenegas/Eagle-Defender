@@ -10,6 +10,7 @@ from classes.Tank import bullet_sprites
 from classes.BulletFactory import BulletFactory
 from classes.BlockFactory import BlockFactory
 from classes.Eagle import Eagle
+from classes.button import Button
 
 
 class GameWindow:
@@ -45,7 +46,9 @@ class GameWindow:
         self.height = 576
         self.player1 = Player(None, None, None, None, None, None, None)
         self.player2 = Player(None, None, None, None, None, None, None)
-        self.gameTurn = Turn(5, "Defensor")
+        self.gameTurn = Turn(None, None)
+        self.GbuttonImage = pygame.transform.scale(pygame.image.load("assets/Buttons/GreenButton.png"), (110, 50))
+        self.readyButton = None
         self.tank = Tank()
         self.fireAmmo = 5
         self.waterAmmo = 5
@@ -233,6 +236,8 @@ class GameWindow:
 
     def Player1Turn(self):
         self.SelectIcon()
+        self.readyButton = Button(self.GbuttonImage, pos=(400, 550),
+               textInput="Ready", font=self.GetFont(12), baseColor="White", hoveringColor="Purple")
 
     def Player2Turn(self):
         self.tank.draw(self.screen)
@@ -377,6 +382,8 @@ class GameWindow:
         '''
         self.songRoute = self.player1.song
         pygame.mixer.music.load(self.songRoute)
+        self.gameTurn.time = int(pygame.mixer.Sound(self.songRoute).get_length())
+        self.gameTurn.player = "Defensor"
         pygame.mixer.music.set_volume(0.02)
         pygame.mixer.music.play(-1)
 
@@ -390,6 +397,7 @@ class GameWindow:
             """  --------------------- PLAYERS INFO ---------------------------------------------- """
             self.screen.blit(self.background, (0, 0))
             self.screen.blit(self.Eagle.sprite, self.Eagle.rect)
+            x, y = pygame.mouse.get_pos()
             p1Name = self.GetFont(14).render(self.player1.username, True, "White")  # Name of the player one
             p1Rectangle = p1Name.get_rect(center=(170, 20))
             self.screen.blit(p1Name, p1Rectangle)
@@ -440,28 +448,18 @@ class GameWindow:
             self.SelectionAnimation()
             """  --------------------- COUNTERS AND ANIMATIONS ----------------------------------------------------- """
 
-            if self.gameTurn.CheckTurn(self.gameTurn.time):  # Solo se ejecuta una vez
+            if self.gameTurn.CheckTurn(self.gameTurn.time):
                 self.gameTurn.player, self.gameTurn.time = self.gameTurn.ChangeTurn(self.gameTurn.player,
                                                                                     self.player1.song,
                                                                                     self.player2.song)
-                if self.gameTurn.player == "Defensor":
-                    pygame.mixer.music.stop()
-                    self.songRoute = self.player1.song
-                    pygame.mixer.music.load(self.songRoute)
-                    pygame.mixer.music.set_volume(0.02)
-                    pygame.mixer.music.play(-1)
-                if self.gameTurn.player == "Atacante":
-                    pygame.mixer.music.stop()
-                    self.songRoute = self.player2.song
-                    pygame.mixer.music.load(self.songRoute)
-                    pygame.mixer.music.set_volume(0.02)
-                    pygame.mixer.music.play(-1)
 
             if self.gameTurn.player == "Atacante":
                 self.Player2Turn()
 
             elif self.gameTurn.player == "Defensor":
                 self.Player1Turn()
+                self.readyButton.ChangeColor((x, y))
+                self.readyButton.UpdateScreen(self.screen)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -474,24 +472,29 @@ class GameWindow:
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
-                        if self.gameTurn.player == "Defensor" and not self.OutOfAmmo():
-                            x, y = pygame.mouse.get_pos()
-                            block = self.BlockFactory.CreateBlock(self.blockSelected, x, y, self.screen)
-                            if self.blockSelected == "Wood":
-                                if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
-                                    self.coordinates.append((block.BlockX, block.BlockY))
-                                    self.woodBlocks.append(block)
-                                    self.UpdateAmmo()
-                            if self.blockSelected == "Iron":
-                                if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
-                                    self.coordinates.append((block.BlockX, block.BlockY))
-                                    self.ironBlocks.append(block)
-                                    self.UpdateAmmo()
-                            if self.blockSelected == "Concrete":
-                                if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
-                                    self.coordinates.append((block.BlockX, block.BlockY))
-                                    self.concreteBlocks.append(block)
-                                    self.UpdateAmmo()
+                        if self.gameTurn.player == "Defensor":
+
+                            if self.readyButton.CheckForInput((x, y)):
+                                self.gameTurn.player, self.gameTurn.time = self.gameTurn.ChangeTurn(self.gameTurn.player
+                                                                                                    , self.player1.song,
+                                                                                                    self.player2.song)
+                            if not self.OutOfAmmo():
+                                block = self.BlockFactory.CreateBlock(self.blockSelected, x, y, self.screen)
+                                if self.blockSelected == "Wood":
+                                    if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
+                                        self.coordinates.append((block.BlockX, block.BlockY))
+                                        self.woodBlocks.append(block)
+                                        self.UpdateAmmo()
+                                if self.blockSelected == "Iron":
+                                    if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
+                                        self.coordinates.append((block.BlockX, block.BlockY))
+                                        self.ironBlocks.append(block)
+                                        self.UpdateAmmo()
+                                if self.blockSelected == "Concrete":
+                                    if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
+                                        self.coordinates.append((block.BlockX, block.BlockY))
+                                        self.concreteBlocks.append(block)
+                                        self.UpdateAmmo()
 
             for block in self.woodBlocks:
                 block.DrawBlock()
