@@ -370,6 +370,31 @@ class GameWindow:
                 self.tank.direction = "right"
                 self.aim = "ready"
 
+    def pause_game(self):
+        paused = True
+        while paused:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        # Si se presiona "esc" nuevamente, reanuda el juego y sale de la función de pausa
+                        paused = False
+            # Lógica para mostrar la ventana de pausa en la pantalla
+            self.show_paused_window()
+            pygame.display.update()
+
+    def show_paused_window(self):
+        self.screen.fill(color=0)
+        PausedGame = self.GetFont(64).render('PAUSED ', True, "White")
+        PausedGameRect = PausedGame.get_rect(center=(440, 100))
+        self.screen.blit(PausedGame, PausedGameRect)
+
+        
+
+
+
     def Start(self):
         pygame.init()
         pygame.mixer.init()
@@ -486,8 +511,7 @@ class GameWindow:
                     sys.exit()
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                        sys.exit()
+                        self.pause_game()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
