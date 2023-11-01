@@ -381,6 +381,12 @@ class GameWindow:
                     if event.key == pygame.K_ESCAPE:
                         # Si se presiona "esc" nuevamente, reanuda el juego y sale de la función de pausa
                         paused = False
+                    if event.key == pygame.K_q:
+                        pygame.quit()
+                        sys.exit()
+                    if event.key == pygame.K_s:
+                        paused = False
+                        ## TODO
             # Lógica para mostrar la ventana de pausa en la pantalla
             self.show_paused_window()
             pygame.display.update()
@@ -391,7 +397,17 @@ class GameWindow:
         PausedGameRect = PausedGame.get_rect(center=(440, 100))
         self.screen.blit(PausedGame, PausedGameRect)
 
-        
+        quit_text = self.GetFont(24).render("QUIT GAME [Q]", True, "White")
+        quit_rect = quit_text.get_rect(center=(self.width // 2, self.height // 2 + 25))
+        self.screen.blit(quit_text, quit_rect)
+
+        resume_text = self.GetFont(24).render("RESUME GAME [ESC]", True, "White")
+        resume_rect = resume_text.get_rect(center=(self.width // 2, self.height // 2 + 95))
+        self.screen.blit(resume_text, resume_rect)
+
+        save_text = self.GetFont(24).render("SAVE GAME [S]", True, "White")
+        save_rect = save_text.get_rect(center=(self.width // 2, self.height // 2 + 165))
+        self.screen.blit(save_text, save_rect)
 
 
 
