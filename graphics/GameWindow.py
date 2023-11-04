@@ -9,6 +9,7 @@ from classes.Bullets.BulletFactory import BulletFactory
 from classes.Blocks.BlockFactory import BlockFactory
 from classes.Eagle import Eagle
 from classes.button import Button
+from classes.Timer import Timer
 
 
 class GameWindow:
@@ -20,8 +21,8 @@ class GameWindow:
     player2 = None
     songRoute = None
     gameTurn = None
-    index = 0
-    timeElapsed = 0
+    index = timeElapsed = 0
+    timer = None
     selectionX = 380
     selectionY = 2
     bulletFactory = BulletFactory()
@@ -323,7 +324,7 @@ class GameWindow:
                 self.UpdateAmmo()
                 self.fire = "ready"
         """  --------------------- COLLISIONS ---------------------------------------------- """
-        if self.gameTurn.time % 30 == 0:
+        if self.timer.time % 30 == 0:
             self.ReloadAmmo()
         else:
             self.reloadFlag = 0
@@ -419,6 +420,8 @@ class GameWindow:
         self.FillPlayer1Info()
         self.FillPlayer2Info()
         self.loadSelectionAnimation()
+        self.timer = Timer(self.screen, 630, 545, self.GetFont(14), 60)
+        self.timer.start()
         ''' 
         playlistRoute = "DefaultPlaylist"
         playlist = os.listdir(playlistRoute)
@@ -427,16 +430,12 @@ class GameWindow:
         '''
         self.songRoute = self.player1.song
         self.gameTurn.player = "Defensor"
-        self.gameTurn.time = int(pygame.mixer.Sound(self.songRoute).get_length())
         pygame.mixer.music.load(self.songRoute)
         pygame.mixer.music.set_volume(0.02)
         pygame.mixer.music.play(-1)
 
         clock = pygame.time.Clock()
         fps = 60
-
-        time_elapsed = 0
-        # print(seconds)
 
         while True:
             """  --------------------- PLAYERS INFO ---------------------------------------------- """
@@ -470,23 +469,6 @@ class GameWindow:
             self.screen.blit(playerTurnText, playerTurnTextRectangle)
             """  --------------------- PLAYERS INFO ---------------------------------------------- """
 
-            """  --------------------- TIMER ----------------------------------------------------- """
-            actual_time = pygame.time.get_ticks() // 1000
-            past_time = actual_time - time_elapsed
-
-            if past_time >= 1 and self.gameTurn.time >= 1:
-                self.gameTurn.time -= 1
-                time_elapsed = actual_time
-
-            TurnTimeText = self.GetFont(14).render('Tiempo: ', True, "White")
-            TurnTimeTextRectangle = TurnTimeText.get_rect(center=(690, 556))
-            self.screen.blit(TurnTimeText, TurnTimeTextRectangle)
-
-            TurnTime = self.GetFont(14).render(str(self.gameTurn.time), True, "White")
-            TurnTimeRectangle = TurnTime.get_rect(center=(750, 556))
-            self.screen.blit(TurnTime, TurnTimeRectangle)
-            """  --------------------- TIMER ----------------------------------------------------- """
-
             """  --------------------- COUNTERS AND ANIMATIONS ----------------------------------------------------- """
             self.AmmoCounters()
             self.AmmoImg()
@@ -494,17 +476,23 @@ class GameWindow:
             self.SetScore()
             """  --------------------- COUNTERS AND ANIMATIONS ----------------------------------------------------- """
 
-            if self.gameTurn.CheckTurn(self.gameTurn.time):
+            """  --------------------- TIMER ----------------------------------------------------- """
+            self.timer.update()
+            self.timer.draw()
+            """  --------------------- TIMER ----------------------------------------------------- """
+
+            if self.gameTurn.CheckTurn(self.timer.time):
                 self.gameTurn.player, self.gameTurn.time = self.gameTurn.ChangeTurn(self.gameTurn.player,
                                                                                     self.player1.song,
                                                                                     self.player2.song)
+                self.timer.reset(60)
                 if self.gameTurn.player == "Defensor":
                     pygame.mixer.music.stop()
                     self.songRoute = self.player1.song
                     pygame.mixer.music.load(self.songRoute)
                     pygame.mixer.music.set_volume(0.02)
                     pygame.mixer.music.play(-1)
-                if self.gameTurn.player == "Atacante":
+                elif self.gameTurn.player == "Atacante":
                     pygame.mixer.music.stop()
                     self.songRoute = self.player2.song
                     pygame.mixer.music.load(self.songRoute)
@@ -535,6 +523,7 @@ class GameWindow:
                                 self.gameTurn.player, self.gameTurn.time = self.gameTurn.ChangeTurn(self.gameTurn.player
                                                                                                     , self.player1.song,
                                                                                                     self.player2.song)
+                                self.timer.reset(60)
                                 pygame.mixer.music.stop()
                                 self.songRoute = self.player1.song
                                 pygame.mixer.music.load(self.songRoute)
