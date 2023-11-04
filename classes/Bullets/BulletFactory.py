@@ -1,6 +1,6 @@
-from classes.FireBullet import FireBullet
-from classes.WaterBullet import WaterBullet
-from classes.BombBullet import BombBullet
+from classes.Bullets.FireBullet import FireBullet
+from classes.Bullets.WaterBullet import WaterBullet
+from classes.Bullets.BombBullet import BombBullet
 
 
 class BulletFactory:

@@ -1,11 +1,11 @@
 from abc import ABC
 import pygame
 
-from classes.Bullet import Bullet
+from classes.Bullets.Bullet import Bullet
 
 
-class BombBullet(Bullet, ABC):
-    sprite0 = pygame.image.load("assets/Weapons/Bomb_rocket.png")
+class FireBullet(Bullet, ABC):
+    sprite0 = pygame.image.load("assets/Weapons/Fire_rocket.png")
     sprite = sprite0
     type = None
     maxRange = 256
@@ -15,7 +15,7 @@ class BombBullet(Bullet, ABC):
     rect = sprite.get_rect()
 
     def __init__(self, tankX, tankY, direction, surface):
-        self.type = "Bomb"
+        self.type = "Fire"
         self.tankX = tankX
         self.tankY = tankY
         self.tankDirection = direction
@@ -93,3 +93,4 @@ class BombBullet(Bullet, ABC):
     def CollisionSound(self):
         self.collideSound.set_volume(0.1)
         self.collideSound.play()
+

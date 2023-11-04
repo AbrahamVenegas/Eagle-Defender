@@ -1,7 +1,7 @@
 from abc import ABC
 import pygame
 
-from classes.Bullet import Bullet
+from classes.Bullets.Bullet import Bullet
 
 
 class WaterBullet(Bullet, ABC):

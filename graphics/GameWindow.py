@@ -1,14 +1,12 @@
 import pygame
-import random
-import os
 import sys
 import json
 from classes.Player import Player
 from classes.Tank import Tank
 from classes.Turn import Turn
 from classes.Tank import bullet_sprites
-from classes.BulletFactory import BulletFactory
-from classes.BlockFactory import BlockFactory
+from classes.Bullets.BulletFactory import BulletFactory
+from classes.Blocks.BlockFactory import BlockFactory
 from classes.Eagle import Eagle
 from classes.button import Button
 

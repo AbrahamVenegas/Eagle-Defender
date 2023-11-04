@@ -1,21 +1,21 @@
 from abc import ABC
 import pygame
 
-from classes.Block import Block
+from classes.Blocks.Block import Block
 
 
-class IronBlock(Block, ABC):
+class WoodBlock(Block, ABC):
     sprite = None
     type = None
     rect = None
-    ironSound = None
+    woodSound = None
 
     def __init__(self, BlockX, BlockY, surface):
-        self.type = "Concrete"
+        self.type = "Wood"
         self.BlockX = BlockX
         self.BlockY = BlockY
         self.screen = surface
-        self.images = ["assets/Blocks/Iron3.png", "assets/Blocks/Iron2.png", "assets/Blocks/Iron1.png"]
+        self.images = ["assets/Blocks/Wood3.png", "assets/Blocks/Wood2.png", "assets/Blocks/Wood1.png"]
         self.hp = 3
         self.sprite = pygame.image.load(self.images[self.hp - 1])
         self.rect = self.sprite.get_rect()
@@ -45,6 +45,6 @@ class IronBlock(Block, ABC):
             self.sprite = pygame.image.load(self.images[self.hp - 1])
 
     def playSound(self):
-        self.ironSound = pygame.mixer.Sound('assets/SoundEffects/IronCracking.mp3')
-        self.ironSound.set_volume(0.1)
-        self.ironSound.play()
+        self.woodSound = pygame.mixer.Sound('assets/SoundEffects/WoodCracking.mp3')
+        self.woodSound.set_volume(0.1)
+        self.woodSound.play()

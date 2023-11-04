@@ -1,6 +1,6 @@
-from classes.WoodBlock import WoodBlock
-from classes.ConcreteBlock import ConcreteBlock
-from classes.IronBlock import IronBlock
+from classes.Blocks.WoodBlock import WoodBlock
+from classes.Blocks.ConcreteBlock import ConcreteBlock
+from classes.Blocks.IronBlock import IronBlock
 
 
 class BlockFactory:

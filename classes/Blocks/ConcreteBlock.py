@@ -1,7 +1,7 @@
 from abc import ABC
 import pygame
 
-from classes.Block import Block
+from classes.Blocks.Block import Block
 
 
 class ConcreteBlock(Block, ABC):
