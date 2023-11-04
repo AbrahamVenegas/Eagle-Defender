@@ -10,6 +10,7 @@ from classes.Blocks.BlockFactory import BlockFactory
 from classes.Eagle import Eagle
 from classes.button import Button
 from classes.Timer import Timer
+from classes.DJ import DJ
 
 
 class GameWindow:
@@ -33,6 +34,7 @@ class GameWindow:
     selectionCount = 1
     block = None
     BlockFactory = BlockFactory()
+    dj = None
     setBlock = None
 
     def __new__(cls, *args, **kwargs):
@@ -241,7 +243,7 @@ class GameWindow:
     def Player1Turn(self):
         self.SelectIcon()
         self.readyButton = Button(self.GbuttonImage, pos=(730, 80),
-               textInput="Ready", font=self.GetFont(12), baseColor="White", hoveringColor="Purple")
+                                  textInput="Ready", font=self.GetFont(12), baseColor="White", hoveringColor="Purple")
 
     def Player2Turn(self):
         self.tank.draw(self.screen)
@@ -408,11 +410,8 @@ class GameWindow:
         save_rect = save_text.get_rect(center=(self.width // 2, self.height // 2 + 165))
         self.screen.blit(save_text, save_rect)
 
-
-
     def Start(self):
         pygame.init()
-        pygame.mixer.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.baseFont = pygame.font.Font(None, 25)
         self.background = pygame.image.load("assets/Mapa2 grid.png")
@@ -422,17 +421,16 @@ class GameWindow:
         self.loadSelectionAnimation()
         self.timer = Timer(self.screen, 630, 545, self.GetFont(14), 60)
         self.timer.start()
+        self.dj = DJ(self.player1.song)
+        self.dj.Play()
         ''' 
         playlistRoute = "DefaultPlaylist"
         playlist = os.listdir(playlistRoute)
         randomSong = random.choice(playlist)
         randomSongPath = os.path.join(playlistRoute, randomSong)
         '''
-        self.songRoute = self.player1.song
+        # self.songRoute = self.player1.song
         self.gameTurn.player = "Defensor"
-        pygame.mixer.music.load(self.songRoute)
-        pygame.mixer.music.set_volume(0.02)
-        pygame.mixer.music.play(-1)
 
         clock = pygame.time.Clock()
         fps = 60
@@ -487,17 +485,10 @@ class GameWindow:
                                                                                     self.player2.song)
                 self.timer.reset(60)
                 if self.gameTurn.player == "Defensor":
-                    pygame.mixer.music.stop()
-                    self.songRoute = self.player1.song
-                    pygame.mixer.music.load(self.songRoute)
-                    pygame.mixer.music.set_volume(0.02)
-                    pygame.mixer.music.play(-1)
+                    self.dj.Play()
                 elif self.gameTurn.player == "Atacante":
-                    pygame.mixer.music.stop()
-                    self.songRoute = self.player2.song
-                    pygame.mixer.music.load(self.songRoute)
-                    pygame.mixer.music.set_volume(0.02)
-                    pygame.mixer.music.play(-1)
+                    self.dj.Stop()
+                    self.dj.NewSong(self.player2.song)
 
             if self.gameTurn.player == "Atacante":
                 self.Player2Turn()
@@ -524,11 +515,8 @@ class GameWindow:
                                                                                                     , self.player1.song,
                                                                                                     self.player2.song)
                                 self.timer.reset(60)
-                                pygame.mixer.music.stop()
-                                self.songRoute = self.player1.song
-                                pygame.mixer.music.load(self.songRoute)
-                                pygame.mixer.music.set_volume(0.02)
-                                pygame.mixer.music.play(-1)
+                                self.dj.Stop()
+                                self.dj.NewSong(self.player2.song)
 
                             if not self.OutOfAmmo():
                                 block = self.BlockFactory.CreateBlock(self.blockSelected, x, y, self.screen)
