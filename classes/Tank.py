@@ -86,3 +86,56 @@ class Tank:
 
     def draw(self, surface):
         surface.blit(self.image, self.rect)
+
+    def Movement(self, keys):
+        if keys[pygame.K_w]:
+            self.speed_y -= self.acceleration
+            self.direction = "up"
+            return "ready"
+        if keys[pygame.K_s]:
+            self.speed_y += self.acceleration
+            self.direction = "down"
+            return "ready"
+        if keys[pygame.K_a]:
+            self.speed_x -= self.acceleration
+            if keys[pygame.K_w]:
+                self.direction = "up_left"
+                return "None"
+            elif keys[pygame.K_s]:
+                self.direction = "down_left"
+                return "None"
+            else:
+                self.direction = "left"
+                return "ready"
+        if keys[pygame.K_d]:
+            self.speed_x += self.acceleration
+            if keys[pygame.K_w]:
+                self.direction = "up_right"
+                return "None"
+            elif keys[pygame.K_s]:
+                self.direction = "down_right"
+                return "None"
+            else:
+                self.direction = "right"
+                return "ready"
+        return "ready"
+
+    def BorderCollide(self, width, height):
+        if self.rect.left < 50:
+            self.rect.left = 50
+        if self.rect.right > width:
+            self.rect.right = width
+        if self.rect.top < 100:
+            self.rect.top = 100
+        if self.rect.bottom > height - 100:
+            self.rect.bottom = height - 100
+
+    def blockCollide(self):
+        if self.speed_x > 0:
+            self.rect.x -= self.speed_x
+        if self.speed_x < 0:
+            self.rect.x -= self.speed_x
+        if self.speed_y > 0:
+            self.rect.y -= self.speed_y
+        if self.speed_y < 0:
+            self.rect.y -= self.speed_y

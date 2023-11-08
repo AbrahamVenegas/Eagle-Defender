@@ -14,6 +14,14 @@ class Player:
         self.photo = photo
         self.song = song
 
+    def SetData(self, jsonData):
+        self.username = jsonData["username"]
+        self.password = jsonData["password"]
+        self.email = jsonData["email"]
+        self.age = jsonData["age"]
+        self.photo = jsonData["photo"]
+        self.song = "priv/songs/" + jsonData["song"]
+
     def display_info(self):
         print("Username:", self.username)
         print("Password:", self.password)

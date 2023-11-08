@@ -15,12 +15,10 @@ from classes.DJ import DJ
 
 class GameWindow:
     _instance = None
-    baseFont = None
     screen = None
     background = None
     player1 = None
     player2 = None
-    songRoute = None
     gameTurn = None
     index = timeElapsed = 0
     timer = None
@@ -35,7 +33,6 @@ class GameWindow:
     block = None
     BlockFactory = BlockFactory()
     dj = None
-    setBlock = None
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
@@ -75,13 +72,7 @@ class GameWindow:
     def FillPlayer1Info(self):
         with open("json/player1.json", "r") as jsonFile:
             datos = json.load(jsonFile)
-
-        self.player1.username = datos["username"]
-        self.player1.password = datos["password"]
-        self.player1.email = datos["email"]
-        self.player1.age = datos["age"]
-        self.player1.photo = datos["photo"]
-        self.player1.song = "priv/songs/" + datos["song"]
+        self.player1.SetData(datos)
 
     def FillPlayer2Info(self):
         with open("json/player2.json", "r") as jsonFile:
@@ -248,35 +239,18 @@ class GameWindow:
     def Player2Turn(self):
         self.tank.draw(self.screen)
         keys = pygame.key.get_pressed()
-        self.Player2Movement(keys)
+        self.aim = self.tank.Movement(keys)
         self.Player2Shooting(keys)
         self.tank.update()
         self.SelectIcon()
         """  --------------------- COLLISIONS ---------------------------------------------- """
-        if self.tank.rect.left < 50:
-            self.tank.rect.left = 50
-            self.tank.update()
-        if self.tank.rect.right > self.width:
-            self.tank.rect.right = self.width
-            self.tank.update()
-        if self.tank.rect.top < 100:
-            self.tank.rect.top = 100
-            self.tank.update()
-        if self.tank.rect.bottom > self.height - 100:
-            self.tank.rect.bottom = self.height - 100
+        self.tank.BorderCollide(self.width, self.height)
 
         for block_list in [self.woodBlocks, self.concreteBlocks, self.ironBlocks]:
             for block in block_list:
                 if block.isCollision(self.tank.rect):
-                    if self.tank.speed_x > 0:
-                        self.tank.rect.x -= self.tank.speed_x
-                    if self.tank.speed_x < 0:
-                        self.tank.rect.x -= self.tank.speed_x
-                    if self.tank.speed_y > 0:
-                        self.tank.rect.y -= self.tank.speed_y
-                    if self.tank.speed_y < 0:
-                        self.tank.rect.y -= self.tank.speed_y
-
+                    self.tank.blockCollide()
+                """Explo"""
                 if self.fire == "fire":
                     if block.isCollision(self.bullet.rect):
                         self.tank.stopSound()
@@ -339,38 +313,6 @@ class GameWindow:
                 self.fire = "fire"
                 self.tank.playSound()
 
-    def Player2Movement(self, keys):
-        if keys[pygame.K_w]:
-            self.tank.speed_y -= self.tank.acceleration
-            self.tank.direction = "up"
-            self.aim = "ready"
-        if keys[pygame.K_s]:
-            self.tank.speed_y += self.tank.acceleration
-            self.tank.direction = "down"
-            self.aim = "ready"
-        if keys[pygame.K_a]:
-            self.tank.speed_x -= self.tank.acceleration
-            if keys[pygame.K_w]:
-                self.tank.direction = "up_left"
-                self.aim = "None"
-            elif keys[pygame.K_s]:
-                self.tank.direction = "down_left"
-                self.aim = "None"
-            else:
-                self.tank.direction = "left"
-                self.aim = "ready"
-        if keys[pygame.K_d]:
-            self.tank.speed_x += self.tank.acceleration
-            if keys[pygame.K_w]:
-                self.tank.direction = "up_right"
-                self.aim = "None"
-            elif keys[pygame.K_s]:
-                self.tank.direction = "down_right"
-                self.aim = "None"
-            else:
-                self.tank.direction = "right"
-                self.aim = "ready"
-
     def pause_game(self):
         paused = True
         while paused:
@@ -413,7 +355,6 @@ class GameWindow:
     def Start(self):
         pygame.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
-        self.baseFont = pygame.font.Font(None, 25)
         self.background = pygame.image.load("assets/Mapa2 grid.png")
         pygame.display.set_caption("Eagle Defender")
         self.FillPlayer1Info()
@@ -423,13 +364,6 @@ class GameWindow:
         self.timer.start()
         self.dj = DJ(self.player1.song)
         self.dj.Play()
-        ''' 
-        playlistRoute = "DefaultPlaylist"
-        playlist = os.listdir(playlistRoute)
-        randomSong = random.choice(playlist)
-        randomSongPath = os.path.join(playlistRoute, randomSong)
-        '''
-        # self.songRoute = self.player1.song
         self.gameTurn.player = "Defensor"
 
         clock = pygame.time.Clock()
