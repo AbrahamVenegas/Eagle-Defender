@@ -11,6 +11,7 @@ from classes.Eagle import Eagle
 from classes.button import Button
 from classes.Timer import Timer
 from classes.DJ import DJ
+from graphics.PauseWindow import PauseWindow
 
 
 class GameWindow:
@@ -77,13 +78,7 @@ class GameWindow:
     def FillPlayer2Info(self):
         with open("json/player2.json", "r") as jsonFile:
             datos = json.load(jsonFile)
-
-        self.player2.username = datos["username"]
-        self.player2.password = datos["password"]
-        self.player2.email = datos["email"]
-        self.player2.age = datos["age"]
-        self.player2.photo = datos["photo"]
-        self.player2.song = "priv/songs/" + datos["song"]
+        self.player2.SetData(datos)
 
     def SetScore(self):
         scoreText = self.GetFont(16).render("Score: " + str(self.score), True, "White")
@@ -116,15 +111,16 @@ class GameWindow:
 
     def AmmoCounters(self):
         fontSize = 16
+        font = self.GetFont(fontSize)
         if self.gameTurn.player == "Atacante":
-            self.text1 = self.GetFont(fontSize).render(":" + str(self.fireAmmo), True, "White")
-            self.text2 = self.GetFont(fontSize).render(":" + str(self.waterAmmo), True, "White")
-            self.text3 = self.GetFont(fontSize).render(":" + str(self.bombAmmo), True, "White")
+            self.text1 = font.render(":" + str(self.fireAmmo), True, "White")
+            self.text2 = font.render(":" + str(self.waterAmmo), True, "White")
+            self.text3 = font.render(":" + str(self.bombAmmo), True, "White")
 
         elif self.gameTurn.player == "Defensor":
-            self.text1 = self.GetFont(fontSize).render(":" + str(self.woodAmmo), True, "White")
-            self.text2 = self.GetFont(fontSize).render(":" + str(self.concreteAmmo), True, "White")
-            self.text3 = self.GetFont(fontSize).render(":" + str(self.ironAmmo), True, "White")
+            self.text1 = font.render(":" + str(self.woodAmmo), True, "White")
+            self.text2 = font.render(":" + str(self.concreteAmmo), True, "White")
+            self.text3 = font.render(":" + str(self.ironAmmo), True, "White")
 
         rect1 = self.text1.get_rect(center=(430, 20))
         rect2 = self.text1.get_rect(center=(510, 20))
@@ -250,7 +246,6 @@ class GameWindow:
             for block in block_list:
                 if block.isCollision(self.tank.rect):
                     self.tank.blockCollide()
-                """Explo"""
                 if self.fire == "fire":
                     if block.isCollision(self.bullet.rect):
                         self.tank.stopSound()
@@ -300,7 +295,7 @@ class GameWindow:
                 self.UpdateAmmo()
                 self.fire = "ready"
         """  --------------------- COLLISIONS ---------------------------------------------- """
-        if self.timer.time % 30 == 0:
+        if self.timer.time % 30 == 0 and self.timer.time != 60:
             self.ReloadAmmo()
         else:
             self.reloadFlag = 0
@@ -312,45 +307,6 @@ class GameWindow:
                     self.bulletSelected, self.tank.rect.x, self.tank.rect.y, self.tank.direction, self.screen)
                 self.fire = "fire"
                 self.tank.playSound()
-
-    def pause_game(self):
-        paused = True
-        while paused:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        # Si se presiona "esc" nuevamente, reanuda el juego y sale de la función de pausa
-                        paused = False
-                    if event.key == pygame.K_q:
-                        pygame.quit()
-                        sys.exit()
-                    if event.key == pygame.K_s:
-                        paused = False
-                        ## TODO
-            # Lógica para mostrar la ventana de pausa en la pantalla
-            self.show_paused_window()
-            pygame.display.update()
-
-    def show_paused_window(self):
-        self.screen.fill(color=0)
-        PausedGame = self.GetFont(64).render('PAUSED ', True, "White")
-        PausedGameRect = PausedGame.get_rect(center=(440, 100))
-        self.screen.blit(PausedGame, PausedGameRect)
-
-        quit_text = self.GetFont(24).render("QUIT GAME [Q]", True, "White")
-        quit_rect = quit_text.get_rect(center=(self.width // 2, self.height // 2 + 25))
-        self.screen.blit(quit_text, quit_rect)
-
-        resume_text = self.GetFont(24).render("RESUME GAME [ESC]", True, "White")
-        resume_rect = resume_text.get_rect(center=(self.width // 2, self.height // 2 + 95))
-        self.screen.blit(resume_text, resume_rect)
-
-        save_text = self.GetFont(24).render("SAVE GAME [S]", True, "White")
-        save_rect = save_text.get_rect(center=(self.width // 2, self.height // 2 + 165))
-        self.screen.blit(save_text, save_rect)
 
     def Start(self):
         pygame.init()
@@ -364,6 +320,7 @@ class GameWindow:
         self.timer.start()
         self.dj = DJ(self.player1.song)
         self.dj.Play()
+        game_pause = PauseWindow(self.screen, self.width, self.height, self.GetFont(64), self.GetFont(24))
         self.gameTurn.player = "Defensor"
 
         clock = pygame.time.Clock()
@@ -438,7 +395,9 @@ class GameWindow:
                     sys.exit()
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        self.pause_game()
+                        self.dj.PauseSong()
+                        game_pause.pause_game()
+                        self.dj.Continue()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:

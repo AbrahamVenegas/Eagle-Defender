@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2997d568-e3bc-46bb-b2c1-62b67db69369" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/graphics/PauseWindow.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/Player.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Player.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/Tank.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Tank.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/graphics/GameWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/GameWindow.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -169,7 +168,7 @@
       <workItem from="1696461897194" duration="8729000" />
       <workItem from="1698340371777" duration="1690000" />
       <workItem from="1698697523693" duration="949000" />
-      <workItem from="1699479576768" duration="3132000" />
+      <workItem from="1699479576768" duration="6434000" />
     </task>
     <servers />
   </component>
@@ -177,6 +176,6 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Main_py$Main.coverage" NAME="Main Coverage Results" MODIFIED="1699482740300" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/Main_py$Main.coverage" NAME="Main Coverage Results" MODIFIED="1699485989234" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>
