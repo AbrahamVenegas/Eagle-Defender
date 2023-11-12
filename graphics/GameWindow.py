@@ -62,7 +62,8 @@ class GameWindow:
         self.text1 = self.text2 = self.text3 = None
         self.selectSprites = None
         self.Eagle = Eagle()
-        self.reloadFlag = 0
+        self.reloadFlag = self.blocksDestroyed = 0
+        self.foraneo = 1
         self.aim = "ready"
         self.keyState = {}
         self.score = 0
@@ -227,10 +228,35 @@ class GameWindow:
             self.waterAmmo += 5
             self.reloadFlag += 1
 
+    def ForaneoBuff(self, flag):
+        if self.foraneo == 0 and flag:
+            self.waterAmmo += self.dj.BeneficioForaneo()
+        elif self.foraneo == 0 and not flag:
+            self.waterAmmo -= self.dj.BeneficioForaneo()
+        self.foraneo += 1
+
     def Player1Turn(self):
         self.SelectIcon()
         self.readyButton = Button(self.GbuttonImage, pos=(730, 80),
                                   textInput="Ready", font=self.GetFont(12), baseColor="White", hoveringColor="Purple")
+
+    def showMusicInfo(self):
+        font = self.GetFont(12)
+        tempo = font.render(f"Tempo: {self.dj.tempo}", True, 'White')
+        pop = font.render(f"Pop: {self.dj.popularidad}", True, 'White')
+        baila = font.render(f"Bailabilidad: {self.dj.bailabilidad}", True, 'White')
+        acustico = font.render(f"Acustico: {self.dj.acustico}", True, 'White')
+        title = font.render("MUSICA", True, 'White')
+        image = pygame.image.load("assets/MediumRectangle.png")
+        box = pygame.transform.scale(image, (200, 100))
+
+        self.screen.blit(box, (10, 60))
+        self.screen.blit(title, (10, 65))
+        self.screen.blit(tempo, (10, 85))
+        self.screen.blit(pop, (10, 100))
+        self.screen.blit(baila, (10, 115))
+        self.screen.blit(acustico, (10, 130))
+
 
     def Player2Turn(self):
         self.tank.draw(self.screen)
@@ -239,6 +265,7 @@ class GameWindow:
         self.Player2Shooting(keys)
         self.tank.update()
         self.SelectIcon()
+        self.showMusicInfo()
         """  --------------------- COLLISIONS ---------------------------------------------- """
         self.tank.BorderCollide(self.width, self.height)
 
@@ -252,6 +279,7 @@ class GameWindow:
                         block.playSound()
                         self.score += 10
                         self.UpdateAmmo()
+                        self.blocksDestroyed += 1
                         self.fire = "ready"
                         if self.bullet.type == "Bomb":
                             if block in self.woodBlocks:
@@ -296,9 +324,17 @@ class GameWindow:
                 self.fire = "ready"
         """  --------------------- COLLISIONS ---------------------------------------------- """
         if self.timer.time % 30 == 0 and self.timer.time != 60:
+            halfBlocks = int((30 - (self.ironAmmo + self.concreteAmmo + self.woodAmmo))/2)
+            if self.blocksDestroyed <= halfBlocks:
+                self.ForaneoBuff(True)
             self.ReloadAmmo()
+        elif self.timer.time == 20:
+            self.ForaneoBuff(False)
         else:
-            self.reloadFlag = 0
+            self.reloadFlag = 0 
+            self.foraneo = 0
+
+
 
     def Player2Shooting(self, keys):
         if keys[pygame.K_SPACE]:
@@ -381,6 +417,13 @@ class GameWindow:
                     self.dj.Stop()
                     self.dj.NewSong(self.player2.song)
 
+            for block in self.woodBlocks:
+                block.DrawBlock()
+            for block in self.concreteBlocks:
+                block.DrawBlock()
+            for block in self.ironBlocks:
+                block.DrawBlock()
+
             if self.gameTurn.player == "Atacante":
                 self.Player2Turn()
 
@@ -429,12 +472,6 @@ class GameWindow:
                                         self.concreteBlocks.append(block)
                                         self.UpdateAmmo()
 
-            for block in self.woodBlocks:
-                block.DrawBlock()
-            for block in self.concreteBlocks:
-                block.DrawBlock()
-            for block in self.ironBlocks:
-                block.DrawBlock()
 
             pygame.display.update()
             clock.tick(fps)

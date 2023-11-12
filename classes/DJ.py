@@ -1,3 +1,4 @@
+import random
 import pygame
 
 
@@ -12,6 +13,10 @@ class DJ:
     def __init__(self, songRoute):
         pygame.mixer.init()
         self.song = songRoute
+        self.tempo = random.randint(1, 10)
+        self.popularidad = random.randint(1, 10)
+        self.bailabilidad = random.randint(1, 10)
+        self.acustico = random.randint(1, 10)
         pygame.mixer.music.set_volume(0.02)
 
     def Stop(self):
@@ -37,3 +42,6 @@ class DJ:
     def PlayLobbyMusic(self):
         pygame.mixer.music.load("assets/Music/Lobby_music.mp3")
         pygame.mixer.music.play(-1)
+
+    def BeneficioForaneo(self):
+        return int(self.popularidad/self.bailabilidad * self.acustico + self.tempo)
