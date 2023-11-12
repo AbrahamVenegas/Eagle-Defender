@@ -12,6 +12,7 @@ from classes.button import Button
 from classes.Timer import Timer
 from classes.DJ import DJ
 from graphics.PauseWindow import PauseWindow
+from classes.AnimationHandler import AnimationHandler
 
 
 class GameWindow:
@@ -45,6 +46,9 @@ class GameWindow:
         self.height = 576
         self.player1 = Player(None, None, None, None, None, None, None)
         self.player2 = Player(None, None, None, None, None, None, None)
+        self.selectAnimation = None
+        self.explosionAnimation = None
+        self.explosionFlag = False
         self.gameTurn = Turn(None, None)
         self.GbuttonImage = pygame.transform.scale(pygame.image.load("assets/Buttons/GreenButton.png"), (110, 50))
         self.readyButton = None
@@ -128,32 +132,6 @@ class GameWindow:
         self.screen.blit(self.text1, rect1)
         self.screen.blit(self.text2, rect2)
         self.screen.blit(self.text3, rect3)
-
-    def loadSelectionAnimation(self):
-        self.selectSprites = [
-            pygame.image.load("assets/SelectionAnimation/Select_01.png"),
-            pygame.image.load("assets/SelectionAnimation/Select_02.png"),
-            pygame.image.load("assets/SelectionAnimation/Select_03.png"),
-            pygame.image.load("assets/SelectionAnimation/Select_04.png"),
-            pygame.image.load("assets/SelectionAnimation/Select_05.png"),
-            pygame.image.load("assets/SelectionAnimation/Select_06.png"),
-            pygame.image.load("assets/SelectionAnimation/Select_07.png"),
-            pygame.image.load("assets/SelectionAnimation/Select_08.png"),
-        ]
-
-    def SelectionAnimation(self):
-        clock = pygame.time.Clock()
-        selectionImg = self.selectSprites[self.index]
-        selectionRect = selectionImg.get_rect()
-        selectionRect.x = self.selectionX
-        selectionRect.y = self.selectionY
-        self.screen.blit(selectionImg, selectionRect)
-        deltaTime = clock.tick(60) / 1000.0
-        self.timeElapsed += deltaTime
-
-        if self.timeElapsed >= 1 / 15.0:
-            self.timeElapsed -= 1 / 15.0
-            self.index = (self.index + 1) % len(self.selectSprites)
 
     def SelectIcon(self):
         keys = pygame.key.get_pressed()
@@ -248,6 +226,8 @@ class GameWindow:
                     self.tank.blockCollide()
                 if self.fire == "fire":
                     if block.isCollision(self.bullet.rect):
+                        self.explosionFlag = True
+                        self.explosionAnimation.updatePos(block.rect.x - 80, block.rect.y - 80)
                         self.tank.stopSound()
                         block.playSound()
                         self.score += 10
@@ -315,7 +295,10 @@ class GameWindow:
         pygame.display.set_caption("Eagle Defender")
         self.FillPlayer1Info()
         self.FillPlayer2Info()
-        self.loadSelectionAnimation()
+        self.selectAnimation = AnimationHandler(self.screen, "assets/SelectionAnimation/", self.selectionX
+                                                , self.selectionY, 300)
+        self.explosionAnimation = AnimationHandler(self.screen, "assets/ExplosionAnimation/", 0, 0,
+                                                   16)
         self.timer = Timer(self.screen, 630, 545, self.GetFont(14), 60)
         self.timer.start()
         self.dj = DJ(self.player1.song)
@@ -361,7 +344,9 @@ class GameWindow:
             """  --------------------- COUNTERS AND ANIMATIONS ----------------------------------------------------- """
             self.AmmoCounters()
             self.AmmoImg()
-            self.SelectionAnimation()
+            self.selectAnimation.updatePos(self.selectionX, self.selectionY)
+
+            self.selectAnimation.playAnimation()
             self.SetScore()
             """  --------------------- COUNTERS AND ANIMATIONS ----------------------------------------------------- """
 
@@ -383,6 +368,9 @@ class GameWindow:
 
             if self.gameTurn.player == "Atacante":
                 self.Player2Turn()
+                if self.explosionFlag:
+                    self.explosionAnimation.playAnimation()
+                    self.explosionFlag = self.explosionAnimation.play
 
             elif self.gameTurn.player == "Defensor":
                 self.Player1Turn()
