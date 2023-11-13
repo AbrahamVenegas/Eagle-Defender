@@ -19,11 +19,11 @@ class PauseWindow:
     def VerifySave(self, player, email):
         response = REST_API.check_save_limit(str(email))
         if response:
-            self.adapter.saveData()
+            REST_API.save_game(email, str(self.adapter.saveData()))
             self.saveMenu.showMenu(player, False)
         else:
             if self.saveMenu.showMenu(player, True):
-                print("Lleno")
+                REST_API.save_game(email, str(self.adapter.saveData()))
 
     def pause_game(self, player, email):  # username
         paused = True

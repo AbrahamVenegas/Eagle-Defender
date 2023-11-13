@@ -11,10 +11,7 @@ class JSONAdapter:
         return cls._instance
 
     def saveData(self):
-        route = 'json/gameData.json'
-        with open(route, 'w') as f:
-            json.dump(self.data, f)
-        print(str(self.data))
+        return self.data
 
     def clear(self):
         self.data.clear()
