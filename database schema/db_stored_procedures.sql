@@ -48,4 +48,44 @@ SELECT * FROM player
 DROP FUNCTION login_player
 SELECT login_player('jose@email.com','abcd')
 
+CREATE OR REPLACE FUNCTION insert_leaderboard(p_player_name VARCHAR(255), p_entry_time integer)
+RETURNS VOID AS $$
+DECLARE
+    row_count INTEGER;
+    max_entry_time integer;
+BEGIN
+    -- Contar el número de filas en la tabla
+    SELECT COUNT(*) INTO row_count FROM leaderboard;
+
+    -- Si la tabla tiene menos de 5 filas, simplemente inserta
+    IF row_count < 5 THEN
+        INSERT INTO leaderboard (username, best_time, photo) VALUES (p_player_name, p_entry_time, 'NA');
+    ELSE
+        -- Si la tabla ya tiene 5 filas, verifica si el nuevo tiempo es menor que el tiempo máximo actual
+        SELECT MAX(best_time) INTO max_entry_time FROM leaderboard;
+
+        IF p_entry_time < max_entry_time THEN
+            -- Elimina la entrada con el tiempo más alto
+            DELETE FROM leaderboard WHERE best_time = max_entry_time;
+            -- Inserta la nueva entrada
+            INSERT INTO leaderboard (username, best_time, photo) VALUES (p_player_name, p_entry_time, 'NA');
+        END IF;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE RULE maximo_cinco_filas_rule
+AS ON INSERT TO leaderboard
+DO INSTEAD (
+    SELECT contar_filas();
+    INSERT INTO leaderboard VALUES (NEW.*);
+);
+
+insert into player(username, password, email, age, photo, song)
+values ('Jose', '1234', 'jose@gmail.com', 22, 'asas', 'asasa');
+
+select insert_leaderboard('Jose', 10)
+
+ALTER TABLE leaderboard
+ALTER COLUMN best_time TYPE INTEGER USING EXTRACT(EPOCH FROM best_time)::INTEGER;
 
