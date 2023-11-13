@@ -12,6 +12,7 @@ from classes.button import Button
 from classes.Timer import Timer
 from classes.DJ import DJ
 from graphics.PauseWindow import PauseWindow
+from REST_API.JSONAdapter import JSONAdapter
 
 
 class GameWindow:
@@ -34,6 +35,15 @@ class GameWindow:
     block = None
     BlockFactory = BlockFactory()
     dj = None
+    ironBlocks = []
+    concreteBlocks = []
+    woodBlocks = []
+    fireAmmo = 5
+    waterAmmo = 5
+    bombAmmo = 5
+    ironAmmo = 10
+    concreteAmmo = 10
+    woodAmmo = 10
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
@@ -49,15 +59,6 @@ class GameWindow:
         self.GbuttonImage = pygame.transform.scale(pygame.image.load("assets/Buttons/GreenButton.png"), (110, 50))
         self.readyButton = None
         self.tank = Tank()
-        self.fireAmmo = 5
-        self.waterAmmo = 5
-        self.bombAmmo = 5
-        self.ironAmmo = 10
-        self.concreteAmmo = 10
-        self.woodAmmo = 10
-        self.ironBlocks = []
-        self.concreteBlocks = []
-        self.woodBlocks = []
         self.coordinates = []
         self.text1 = self.text2 = self.text3 = None
         self.selectSprites = None
@@ -67,6 +68,7 @@ class GameWindow:
         self.aim = "ready"
         self.keyState = {}
         self.score = 0
+        self.adapter = JSONAdapter()
 
     def GetFont(self, size):
         return pygame.font.Font("assets/font.ttf", size)
@@ -334,8 +336,6 @@ class GameWindow:
             self.reloadFlag = 0 
             self.foraneo = 0
 
-
-
     def Player2Shooting(self, keys):
         if keys[pygame.K_SPACE]:
             if self.fire == "ready" and not self.OutOfAmmo() and self.aim == "ready":
@@ -439,6 +439,12 @@ class GameWindow:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.dj.PauseSong()
+                        self.adapter.clear()
+                        self.adapter.getBlocksInfo([self.woodBlocks, self.ironBlocks, self.concreteBlocks],
+                                                   [self.woodAmmo, self.ironAmmo, self.concreteAmmo])
+                        self.adapter.getPlayersInfo(self.player1, self.player2, self.gameTurn.player, self.timer.time)
+                        self.adapter.getTankInfo(self.tank.rect.x, self.tank.rect.y)
+                        self.adapter.getAmmoInfo(self.bombAmmo, self.fireAmmo, self.waterAmmo)
                         game_pause.pause_game()
                         self.dj.Continue()
 

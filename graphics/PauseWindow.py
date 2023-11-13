@@ -1,5 +1,6 @@
 import pygame
 import sys
+from REST_API.JSONAdapter import JSONAdapter
 
 
 class PauseWindow:
@@ -10,6 +11,7 @@ class PauseWindow:
         self.height = height
         self.titleFont = titleFont
         self.font = font
+        self.adapter = JSONAdapter()
 
     def pause_game(self):
         paused = True
@@ -26,8 +28,8 @@ class PauseWindow:
                         pygame.quit()
                         sys.exit()
                     if event.key == pygame.K_s:
-                        paused = False
-                        ## TODO
+                        self.adapter.saveData()
+
             # Lógica para mostrar la ventana de pausa en la pantalla
             self.show_paused_window()
             pygame.display.update()
