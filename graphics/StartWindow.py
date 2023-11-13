@@ -101,7 +101,7 @@ class StartWindow:
                         self.MainScreen()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_g:
-                        REST_API.insert_leaderboard('Marco', 1)
+                        REST_API.get_player_saves('marco@gmail.com', 0)
 
 
             pygame.display.update()
