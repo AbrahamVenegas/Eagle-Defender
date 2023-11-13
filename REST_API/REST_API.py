@@ -171,19 +171,17 @@ def get_player_saves(email, nonvalue):
             cursor.execute(GET_SAVED_GAMES, (email, nonvalue))
             response = cursor.fetchall()
 
-            # Procesar las cadenas manualmente
-            game_data = []
+            processed_data = []
             for tupla_str, in response:
-                # Eliminar paréntesis y comillas
-                clean_str = tupla_str.strip("()'")
-                # Dividir por comas y obtener los elementos
-                elements = clean_str.split(",")
-                email = elements[0]
-                game_info = elements[1]
-                timestamp = elements[2]
-                game_data.append((email, game_info, timestamp))
-            print(game_data)
-            return game_data
+                # Dividir la cadena en tres partes: email, game_info, timestamp
+                elements = tupla_str.split(",", 2)
+                email = elements[0].strip("()")
+                # Eliminar las comillas y los backslashes del JSON
+                json_str = elements[1].replace("\\", "").strip('"')
+                timestamp = elements[2].strip("()")
+                processed_data.append((email, json_str, timestamp))
+            print(processed_data)
+            return processed_data
 
 
 
