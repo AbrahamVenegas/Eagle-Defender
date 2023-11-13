@@ -1,7 +1,6 @@
 import pygame
 from classes.button import Button
 import sys
-from graphics.StartWindow import StartWindow
 
 
 class HelpWindow:
@@ -58,9 +57,7 @@ class HelpWindow:
                     if howToWin.CheckForInput(helpMousePosition):
                         self.HelpHTW()
                     if helpBack.CheckForInput(helpMousePosition):
-                        startWindow = StartWindow._instance
-                        startWindow.MainScreen()
-                        break
+                        return "Start"
 
             pygame.display.update()
 
