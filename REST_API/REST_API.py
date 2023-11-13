@@ -9,7 +9,7 @@ INSERT_PLAYER = "SELECT register_player(%s, %s, %s, %s, %s, %s)"
 LOGIN_PLAYER = "SELECT login_player(%s, %s)"
 GET_LEADERBOARD = "SELECT get_leaderboard()"
 INSERT_LEADERBOARD = "SELECT insert_leaderboard(%s, %s)"
-CHECK_SAVE_LIMIT = "SELECT check_user_limit(%s)"
+CHECK_SAVE_LIMIT = "SELECT check_user_limit(%s, %s)"
 SAVE_GAME = "SELECT insert_game_data(%s, %s)"
 
 load_dotenv()
@@ -143,13 +143,11 @@ def insert_leaderboard(username, time):
 def check_save_limit(email):
     with conn:
         with conn.cursor() as cursor:
-            cursor.execute(CHECK_SAVE_LIMIT, email)
+            cursor.execute(CHECK_SAVE_LIMIT, (email, 0))
             response = cursor.fetchall()
             if response[0][0] == 1:
-                print('True')
                 return True
             else:
-                print('False')
                 return False
 
 @app.post("/api/savegame")

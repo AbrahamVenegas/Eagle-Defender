@@ -446,9 +446,9 @@ class GameWindow:
                         self.adapter.getTankInfo(self.tank.rect.x, self.tank.rect.y)
                         self.adapter.getAmmoInfo(self.bombAmmo, self.fireAmmo, self.waterAmmo)
                         if self.gameTurn.player == "Defensor":
-                            game_pause.pause_game(self.player1.username)
+                            game_pause.pause_game(self.player1.username, self.player1.email)
                         elif self.gameTurn.player == "Atacante":
-                            game_pause.pause_game(self.player2.username)
+                            game_pause.pause_game(self.player2.username, self.player2.email)
                         self.dj.Continue()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
