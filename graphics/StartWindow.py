@@ -7,8 +7,6 @@ from REST_API import REST_API
 
 class StartWindow:
     _instance = None
-    helpWindow = None
-    logInWindow = None
     Screen = None
     Background = pygame.image.load("assets/Background.png")
 
@@ -17,10 +15,7 @@ class StartWindow:
             cls._instance = super().__new__(cls)
         return cls._instance
 
-    def __init__(self, helpWindow, logInWindow, registerWindow):
-        self.helpWindow = helpWindow
-        self.logInWindow = logInWindow
-        self.registerWindow = registerWindow
+    def __init__(self):
         self.DJ = DJ("assets/Music/Lobby_Music.mp3")
 
     def GetFont(self, size):  # To return it in the desired size
@@ -151,7 +146,7 @@ class StartWindow:
                     if playButton.CheckForInput(menuMousePosition):
                         running = False
                         pygame.quit()
-                        self.logInWindow.Start()
+                        return "Quit"
                     if registerButton.CheckForInput(menuMousePosition):
                         self.registerWindow.RegisterScreen()
                     if leaderboardButton.CheckForInput(menuMousePosition):
