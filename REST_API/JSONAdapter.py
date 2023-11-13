@@ -14,7 +14,7 @@ class JSONAdapter:
         route = 'json/gameData.json'
         with open(route, 'w') as f:
             json.dump(self.data, f)
-        print(self.data)
+        print(str(self.data))
 
     def clear(self):
         self.data.clear()
@@ -43,11 +43,7 @@ class JSONAdapter:
         self.data["ironCounter"] = blockCounters[1]
         self.data["concreteCounter"] = blockCounters[2]
 
-    def getPlayersInfo(self, p1, p2, turn, time):
-        if turn == "Defensor":
-            self.data["email"] = p1.email  # Email del jugador con el turno actual
-        elif turn == "Atacante":
-            self.data["email"] = p2.email  # Email del jugador con el turno actual
+    def getPlayersInfo(self, turn, time):
         self.data["turn"] = turn
         self.data["time"] = time
 

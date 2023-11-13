@@ -1,6 +1,7 @@
 import pygame
 import sys
 from REST_API.JSONAdapter import JSONAdapter
+from graphics.SaveMenu import SaveMenu
 
 
 class PauseWindow:
@@ -12,8 +13,9 @@ class PauseWindow:
         self.titleFont = titleFont
         self.font = font
         self.adapter = JSONAdapter()
+        self.saveMenu = SaveMenu(screen, width, height, font, titleFont)
 
-    def pause_game(self):
+    def pause_game(self, player):  # username
         paused = True
         while paused:
             for event in pygame.event.get():
@@ -29,16 +31,21 @@ class PauseWindow:
                         sys.exit()
                     if event.key == pygame.K_s:
                         self.adapter.saveData()
+                        self.saveMenu.showMenu(player)
 
             # Lógica para mostrar la ventana de pausa en la pantalla
-            self.show_paused_window()
+            self.show_paused_window(player)
             pygame.display.update()
 
-    def show_paused_window(self):
+    def show_paused_window(self, player):
         self.screen.fill(color=0)
         PausedGame = self.titleFont.render('PAUSED ', True, "White")
         PausedGameRect = PausedGame.get_rect(center=(440, 100))
         self.screen.blit(PausedGame, PausedGameRect)
+
+        player = self.font.render(f"PLAYER: {player}", True, 'White')
+        playerRect = player.get_rect(center=(self.width // 2, self.height // 2 - 70))
+        self.screen.blit(player, playerRect)
 
         quit_text = self.font.render("QUIT GAME [Q]", True, "White")
         quit_rect = quit_text.get_rect(center=(self.width // 2, self.height // 2 + 25))

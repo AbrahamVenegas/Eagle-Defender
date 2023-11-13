@@ -1,1 +1,1 @@
-{"wood": "[(12, 7)]", "woodLife": "[3]", "iron": "[(12, 9)]", "ironLife": "[1]", "concrete": "[(12, 8)]", "concreteLife": "[3]", "woodCounter": 9, "ironCounter": 9, "concreteCounter": 9, "email": "a", "turn": "Atacante", "time": 53, "Tank": [564, 286], "Bullets": [5, 5, 4]}
+{"wood": "[]", "woodLife": "[]", "iron": "[]", "ironLife": "[]", "concrete": "[]", "concreteLife": "[]", "woodCounter": 10, "ironCounter": 10, "concreteCounter": 10, "email": "a", "turn": "Defensor", "time": 60, "Tank": [700, 260], "Bullets": [5, 5, 5]}

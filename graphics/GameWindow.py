@@ -442,10 +442,13 @@ class GameWindow:
                         self.adapter.clear()
                         self.adapter.getBlocksInfo([self.woodBlocks, self.ironBlocks, self.concreteBlocks],
                                                    [self.woodAmmo, self.ironAmmo, self.concreteAmmo])
-                        self.adapter.getPlayersInfo(self.player1, self.player2, self.gameTurn.player, self.timer.time)
+                        self.adapter.getPlayersInfo(self.gameTurn.player, self.timer.time)
                         self.adapter.getTankInfo(self.tank.rect.x, self.tank.rect.y)
                         self.adapter.getAmmoInfo(self.bombAmmo, self.fireAmmo, self.waterAmmo)
-                        game_pause.pause_game()
+                        if self.gameTurn.player == "Defensor":
+                            game_pause.pause_game(self.player1.username)
+                        elif self.gameTurn.player == "Atacante":
+                            game_pause.pause_game(self.player2.username)
                         self.dj.Continue()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
