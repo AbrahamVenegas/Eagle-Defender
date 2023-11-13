@@ -1,6 +1,7 @@
 import pygame
 import sys
 from classes.button import Button
+from REST_API import REST_API
 
 
 class StartWindow:
@@ -52,17 +53,38 @@ class StartWindow:
             pygame.display.update()
 
     def LeaderboardScreen(self):
+        response = REST_API.get_leaderboard()
         while True:
             pygame.display.set_caption("Salón de la Fama")
             leaderboardMousePosition = pygame.mouse.get_pos()
 
             self.Screen.fill("white")
 
-            leadearboardText = self.GetFont(45).render("This is the LEADERBOARD screen.", True, "Black")
-            leadearboardRectangle = leadearboardText.get_rect(center=(720, 260))
+            leadearboardText = self.GetFont(45).render("LEADERBOARD", True, "Black")
+            leadearboardRectangle = leadearboardText.get_rect(center=(720, 100))
+
+            userlabel = self.GetFont(30).render("Username", True, "Black")
+            userlabelrect = leadearboardText.get_rect(center=(500, 200))
+
+            timelabel = self.GetFont(30).render("Best time (s)", True, "Black")
+            timelabelrect = leadearboardText.get_rect(center=(1100, 200))
+
+            for i, (nombre, numero, _) in enumerate(response[:5]):
+                y = 250 + i * 50
+                usernamelabel = self.GetFont(30).render(f"{nombre}", True, "Black")
+                usernamerect = leadearboardText.get_rect(center=(500, y))
+
+                timelabelp = self.GetFont(30).render(f"{numero}", True, "Black")
+                timerect = leadearboardText.get_rect(center=(1100, y))
+
+                self.Screen.blit(usernamelabel, usernamerect)
+                self.Screen.blit(timelabelp, timerect)
+
+            self.Screen.blit(userlabel, userlabelrect)
+            self.Screen.blit(timelabel, timelabelrect)
             self.Screen.blit(leadearboardText, leadearboardRectangle)
 
-            leadearboardBack = Button(image=None, pos=(720, 460),
+            leadearboardBack = Button(image=None, pos=(720, 600),
                                       textInput="BACK", font=self.GetFont(75), baseColor="Black", hoveringColor="Green")
 
             leadearboardBack.ChangeColor(leaderboardMousePosition)
@@ -75,6 +97,10 @@ class StartWindow:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if leadearboardBack.CheckForInput(leaderboardMousePosition):
                         self.MainScreen()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_g:
+                        REST_API.insert_leaderboard('Marco', 1)
+
 
             pygame.display.update()
 
