@@ -11,6 +11,7 @@ GET_LEADERBOARD = "SELECT get_leaderboard()"
 INSERT_LEADERBOARD = "SELECT insert_leaderboard(%s, %s)"
 CHECK_SAVE_LIMIT = "SELECT check_user_limit(%s)"
 SAVE_GAME = "SELECT insert_game_data(%s, %s)"
+GET_SAVED_GAMES = "SELECT get_games_by_user(%s, %s)"
 
 load_dotenv()
 
@@ -164,6 +165,28 @@ def save_game(email, game_json):
             else:
                 print('False')
                 return False
+
+@app.post("/api/getplayersaves")
+def get_player_saves(email, nonvalue):
+    with conn:
+        with conn.cursor() as cursor:
+            cursor.execute(GET_SAVED_GAMES, (email, nonvalue))
+            response = cursor.fetchall()
+
+            # Procesar las cadenas manualmente
+            game_data = []
+            for tupla_str, in response:
+                # Eliminar paréntesis y comillas
+                clean_str = tupla_str.strip("()'")
+                # Dividir por comas y obtener los elementos
+                elements = clean_str.split(",")
+                email = elements[0]
+                game_info = elements[1]
+                timestamp = elements[2]
+                game_data.append((email, game_info, timestamp))
+            print(game_data)
+            return game_data
+
 
 
 if __name__ == '__main__':
