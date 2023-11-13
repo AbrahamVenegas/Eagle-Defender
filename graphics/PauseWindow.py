@@ -3,6 +3,7 @@ import sys
 from REST_API.JSONAdapter import JSONAdapter
 from graphics.SaveMenu import SaveMenu
 from REST_API import REST_API
+from REST_API.Loader import Loader
 
 
 class PauseWindow:
@@ -15,6 +16,7 @@ class PauseWindow:
         self.font = font
         self.adapter = JSONAdapter()
         self.saveMenu = SaveMenu(screen, width, height, font, titleFont)
+        self.loader = Loader()
 
     def VerifySave(self, player, email):
         response = REST_API.check_save_limit(str(email))
@@ -41,6 +43,8 @@ class PauseWindow:
                         sys.exit()
                     if event.key == pygame.K_s:
                         self.VerifySave(player, email)
+                    if event.key == pygame.K_l:
+                        self.loader.getJSON(email)
 
             # Lógica para mostrar la ventana de pausa en la pantalla
             self.show_paused_window(player)
@@ -67,3 +71,7 @@ class PauseWindow:
         save_text = self.font.render("SAVE GAME [S]", True, "White")
         save_rect = save_text.get_rect(center=(self.width // 2, self.height // 2 + 165))
         self.screen.blit(save_text, save_rect)
+
+        load_text = self.font.render("LOAD GAME [L]", True, "White")
+        load_rect = load_text.get_rect(center=(self.width // 2, self.height // 2 + 165 + 70))
+        self.screen.blit(load_text, load_rect)

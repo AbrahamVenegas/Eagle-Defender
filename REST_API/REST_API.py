@@ -1,3 +1,5 @@
+import ast
+
 from flask import Flask, request, jsonify
 import psycopg2
 import os
@@ -173,16 +175,32 @@ def get_player_saves(email, nonvalue):
 
             processed_data = []
             for tupla_str, in response:
-                # Dividir la cadena en tres partes: email, game_info, timestamp
-                elements = tupla_str.split(",", 2)
-                email = elements[0].strip("()")
-                # Eliminar las comillas y los backslashes del JSON
-                json_str = elements[1].replace("\\", "").strip('"')
-                timestamp = elements[2].strip("()")
-                processed_data.append((email, json_str, timestamp))
-            print(processed_data)
-            return processed_data
+                email = ""
+                jsonStr = ""
+                dateStr = ""
+                chainStr = tupla_str.strip("()")
+                for letter in chainStr:  # Obteniendo email
+                    if letter == ',':
+                        chainStr = chainStr[2:]
+                        break
+                    email += letter
+                    chainStr = chainStr[1:]
 
+                for letter in chainStr:  # Obteniendo json string
+                    if letter == '}':
+                        jsonStr += letter
+                        chainStr = chainStr[4:]
+                        break
+                    jsonStr += letter
+                    chainStr = chainStr[1:]
+
+                for letter in chainStr:  # Obteniendo fecha string
+                    if letter == '"':
+                        break
+                    dateStr += letter
+                    chainStr = chainStr[1:]
+                processed_data.append((email, jsonStr, dateStr))
+            return processed_data
 
 
 if __name__ == '__main__':
