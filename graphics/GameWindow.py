@@ -88,9 +88,38 @@ class GameWindow:
     def LoadGame(self):
         json = self.loader.loadGame()
         print(json)
+        count = 0
+        woodLife = eval(json['woodLife'])
+        ironLife = eval(json['ironLife'])
+        concreteLife = eval(json['concreteLife'])
+        bullets = json['Bullets']
+        tankPos = json['Tank']
         if json is not None:
             for block in eval(json['wood']):
-                self.woodBlocks.append(self.BlockFactory.CreateBlock('Wood', block[0], block[1], self.screen))
+                self.woodBlocks.append(self.BlockFactory.CreateBlock('Wood', block[0]*32, block[1]*32, self.screen))
+                self.woodBlocks[count].updateHP(int(woodLife[count]))
+                count += 1
+            count = 0
+            for block in eval(json['iron']):
+                self.ironBlocks.append(self.BlockFactory.CreateBlock('Iron', block[0]*32, block[1]*32, self.screen))
+                self.ironBlocks[count].updateHP(int(ironLife[count]))
+                count += 1
+            count = 0
+            for block in eval(json['concrete']):
+                self.ironBlocks.append(self.BlockFactory.CreateBlock('Concrete', block[0] * 32, block[1] * 32, self.screen))
+                self.ironBlocks[count].updateHP(int(concreteLife[count]))
+                count += 1
+        self.woodAmmo = json['woodCounter']
+        self.ironAmmo = json['ironCounter']
+        self.concreteAmmo = json['concreteCounter']
+        self.gameTurn.player = json['turn']
+        self.timer.reset(int(json['time']))
+        self.tank.rect.x = int(tankPos[0])
+        self.tank.rect.y = int(tankPos[1])
+        self.bombAmmo = int(bullets[0])
+        self.fireAmmo = int(bullets[1])
+        self.waterAmmo = int(bullets[2])
+
 
     def SetScore(self):
         scoreText = self.GetFont(16).render("Score: " + str(self.score), True, "White")
