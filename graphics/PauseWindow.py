@@ -47,7 +47,8 @@ class PauseWindow:
                         self.VerifySave(player, email)
                     if event.key == pygame.K_l:
                         self.loader.getJSON(email)
-                        self.loadMenu.showLoadMenu()
+                        if self.loadMenu.showLoadMenu() == "Load":
+                            return "Load"
 
 
             # Lógica para mostrar la ventana de pausa en la pantalla

@@ -13,6 +13,7 @@ from classes.Timer import Timer
 from classes.DJ import DJ
 from graphics.PauseWindow import PauseWindow
 from REST_API.JSONAdapter import JSONAdapter
+from REST_API.Loader import Loader
 
 
 class GameWindow:
@@ -34,6 +35,7 @@ class GameWindow:
     selectionCount = 1
     block = None
     BlockFactory = BlockFactory()
+    loader = Loader()
     dj = None
     ironBlocks = []
     concreteBlocks = []
@@ -82,6 +84,13 @@ class GameWindow:
         with open("json/player2.json", "r") as jsonFile:
             datos = json.load(jsonFile)
         self.player2.SetData(datos)
+
+    def LoadGame(self):
+        json = self.loader.loadGame()
+        print(json)
+        if json is not None:
+            for block in eval(json['wood']):
+                self.woodBlocks.append(self.BlockFactory.CreateBlock('Wood', block[0], block[1], self.screen))
 
     def SetScore(self):
         scoreText = self.GetFont(16).render("Score: " + str(self.score), True, "White")
@@ -445,11 +454,14 @@ class GameWindow:
                         self.adapter.getPlayersInfo(self.gameTurn.player, self.timer.time)
                         self.adapter.getTankInfo(self.tank.rect.x, self.tank.rect.y)
                         self.adapter.getAmmoInfo(self.bombAmmo, self.fireAmmo, self.waterAmmo)
+                        load = ""
                         if self.gameTurn.player == "Defensor":
-                            game_pause.pause_game(self.player1.username, self.player1.email)
+                            load = game_pause.pause_game(self.player1.username, self.player1.email)
                         elif self.gameTurn.player == "Atacante":
-                            game_pause.pause_game(self.player2.username, self.player2.email)
+                            load = game_pause.pause_game(self.player2.username, self.player2.email)
                         self.dj.Continue()
+                        if load == "Load":
+                            self.LoadGame()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:

@@ -27,10 +27,18 @@ class LoadMenu:
                     mouseX, mouseY = pygame.mouse.get_pos()
                     if self.rect1.collidepoint(mouseX, mouseY):
                         self.loader.slot = 1
+                        loading = False
+                        return "Load"
                     elif self.rect2.collidepoint(mouseX, mouseY):
                         self.loader.slot = 2
+                        loading = False
+                        return "Load"
                     elif self.rect3.collidepoint(mouseX, mouseY):
                         self.loader.slot = 3
+                        loading = False
+                        return "Load"
+                if event.type == pygame.K_ESCAPE:
+                    loading = False
             self.LoadingInfo()
             pygame.display.update()
 
