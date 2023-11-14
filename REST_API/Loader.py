@@ -5,7 +5,8 @@ class Loader:
     _instance = None
     data = {}
     email = ""
-    date = ""
+    date = []
+    slot = 0
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
@@ -17,4 +18,4 @@ class Loader:
         for i, (emailStr, jsonStr, date) in enumerate(info[:3]):
             self.email = emailStr
             self.data = eval(jsonStr)
-            self.date = date
+            self.date.append(date)

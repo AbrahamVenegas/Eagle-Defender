@@ -195,7 +195,8 @@ def get_player_saves(email, nonvalue):
                     chainStr = chainStr[1:]
 
                 for letter in chainStr:  # Obteniendo fecha string
-                    if letter == '"':
+                    if letter == '.':
+                        dateStr = dateStr[:-3]
                         break
                     dateStr += letter
                     chainStr = chainStr[1:]

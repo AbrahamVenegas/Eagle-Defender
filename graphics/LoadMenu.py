@@ -1,6 +1,6 @@
 import sys
-
 import pygame
+from REST_API.Loader import Loader
 
 
 class LoadMenu:
@@ -9,6 +9,8 @@ class LoadMenu:
         self.screen = screen
         self.width = 800
         self.height = 576
+        self.rect1 = self.rect2 = self.rect3 = None
+        self.loader = Loader()
 
     def GetFont(self, size):
         return pygame.font.Font("assets/font.ttf", size)
@@ -21,6 +23,14 @@ class LoadMenu:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouseX, mouseY = pygame.mouse.get_pos()
+                    if self.rect1.collidepoint(mouseX, mouseY):
+                        self.loader.slot = 1
+                    elif self.rect2.collidepoint(mouseX, mouseY):
+                        self.loader.slot = 2
+                    elif self.rect3.collidepoint(mouseX, mouseY):
+                        self.loader.slot = 3
             self.LoadingInfo()
             pygame.display.update()
 
@@ -30,5 +40,19 @@ class LoadMenu:
         self.screen.blit(title, titleRect)
 
         slotImg = pygame.image.load("assets/LoadSlot.png")
-        slot1 = pygame.transform.scale(slotImg, (500, 130))
-        self.screen.blit(slot1, (50, 250))
+        slot1 = pygame.transform.scale(slotImg, (500, 120))
+        self.rect1 = slot1.get_rect(center=(400, 170+60))
+        self.rect2 = slot1.get_rect(center=(400, 170+120+60))
+        self.rect3 = slot1.get_rect(center=(400, 170+120*2+60))
+        self.screen.blit(slot1, self.rect1)
+        self.screen.blit(slot1, self.rect2)
+        self.screen.blit(slot1, self.rect3)
+
+        yPadding = 0
+        for date in self.loader.date:
+            date1 = self.GetFont(18).render(date, True, 'White')
+            email = self.GetFont(18).render(self.loader.email, True, 'White')
+            self.screen.blit(date1, (250, 200+yPadding))
+            self.screen.blit(email, (250, 235+yPadding))
+            yPadding += 120
+
