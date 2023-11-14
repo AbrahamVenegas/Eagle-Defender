@@ -1,17 +1,27 @@
 import pygame
 import sys
+from REST_API.JSONAdapter import JSONAdapter
+from REST_API import REST_API
 
 class SaveMenu:
+    screen = None
 
-    def __init__(self, screen, width, height, font, titleFont):
-        self.screen = screen
-        self.width = width
-        self.height = height
-        self.font = font
-        self.title = titleFont
+    def __init__(self):
+        self.width = 800
+        self.height = 576
+        self.font = None
+        self.title = None
         self.pointer = 0
+        self.adapter = JSONAdapter()
 
-    def showMenu(self, player, flag):
+    def GetFont(self, size):
+        return pygame.font.Font("assets/font.ttf", size)
+
+    def showMenu(self, player, email, flag):
+        pygame.init()
+        self.screen = pygame.display.set_mode((self.width, self.height))
+        self.title = self.GetFont(64)
+        self.font = self.GetFont(24)
         saving = True
         while saving:
             for event in pygame.event.get():
@@ -20,13 +30,14 @@ class SaveMenu:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
+                        REST_API.save_game(email, str(self.adapter.saveData()))
                         saving = False
-                        return True
+                        return "Pause"
                     elif event.key == pygame.K_y:
                         flag = False
                     elif event.key == pygame.K_n:
                         saving = False
-                        return False
+                        return "Pause"
 
             self.showGames(player, flag)
             pygame.display.update()

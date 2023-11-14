@@ -11,7 +11,6 @@ from classes.Eagle import Eagle
 from classes.button import Button
 from classes.Timer import Timer
 from classes.DJ import DJ
-from graphics.PauseWindow import PauseWindow
 from REST_API.JSONAdapter import JSONAdapter
 
 
@@ -32,7 +31,6 @@ class GameWindow:
     blockSelected = "Wood"
     fire = "ready"
     selectionCount = 1
-    block = None
     BlockFactory = BlockFactory()
     dj = None
     ironBlocks = []
@@ -45,12 +43,8 @@ class GameWindow:
     concreteAmmo = 10
     woodAmmo = 10
 
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
-
     def __init__(self):
+        self.gameState = False
         self.width = 800
         self.height = 576
         self.player1 = Player(None, None, None, None, None, None, None)
@@ -69,6 +63,31 @@ class GameWindow:
         self.keyState = {}
         self.score = 0
         self.adapter = JSONAdapter()
+
+    def Reset(self):
+        self.ironBlocks.clear()
+        self.concreteBlocks.clear()
+        self.woodBlocks.clear()
+        self.fireAmmo = 5
+        self.waterAmmo = 5
+        self.bombAmmo = 5
+        self.ironAmmo = 10
+        self.concreteAmmo = 10
+        self.woodAmmo = 10
+        self.bulletSelected = "Fire"
+        self.blockSelected = "Wood"
+        self.fire = "ready"
+        self.selectionCount = 1
+        self.gameTurn = Turn(None, None)
+        self.index = timeElapsed = 0
+        self.selectionX = 380
+        self.selectionY = 2
+        self.reloadFlag = self.blocksDestroyed = 0
+        self.foraneo = 1
+        self.aim = "ready"
+        self.keyState.clear()
+        self.score = 0
+        self.coordinates.clear()
 
     def GetFont(self, size):
         return pygame.font.Font("assets/font.ttf", size)
@@ -352,11 +371,14 @@ class GameWindow:
         self.FillPlayer1Info()
         self.FillPlayer2Info()
         self.loadSelectionAnimation()
-        self.timer = Timer(self.screen, 630, 545, self.GetFont(14), 60)
-        self.timer.start()
-        self.dj = DJ(self.player1.song)
-        self.dj.Play()
-        game_pause = PauseWindow(self.screen, self.width, self.height, self.GetFont(64), self.GetFont(24))
+        if self.gameState:
+            self.dj.Continue()
+        else:
+            self.timer = Timer(self.screen, 630, 545, self.GetFont(14), 60)
+            self.timer.start()
+            self.dj = DJ(self.player1.song)
+            self.dj.Play()
+
         self.gameTurn.player = "Defensor"
 
         clock = pygame.time.Clock()
@@ -438,6 +460,7 @@ class GameWindow:
                     sys.exit()
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
+                        self.gameState = True
                         self.dj.PauseSong()
                         self.adapter.clear()
                         self.adapter.getBlocksInfo([self.woodBlocks, self.ironBlocks, self.concreteBlocks],
@@ -446,10 +469,9 @@ class GameWindow:
                         self.adapter.getTankInfo(self.tank.rect.x, self.tank.rect.y)
                         self.adapter.getAmmoInfo(self.bombAmmo, self.fireAmmo, self.waterAmmo)
                         if self.gameTurn.player == "Defensor":
-                            game_pause.pause_game(self.player1.username, self.player1.email)
+                            return self.player1.username, self.player1.email, "Pause"
                         elif self.gameTurn.player == "Atacante":
-                            game_pause.pause_game(self.player2.username, self.player2.email)
-                        self.dj.Continue()
+                            return self.player2.username, self.player2.email, "Pause"
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:

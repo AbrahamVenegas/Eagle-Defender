@@ -1,33 +1,39 @@
 import pygame
 import sys
 from REST_API.JSONAdapter import JSONAdapter
-from graphics.SaveMenu import SaveMenu
 from REST_API import REST_API
 from REST_API.Loader import Loader
 
 
 class PauseWindow:
+    screen = None
+    varList = []
 
-    def __init__(self, screen, width, height, titleFont, font):
-        self.screen = screen
-        self.width = width
-        self.height = height
-        self.titleFont = titleFont
-        self.font = font
+    def __init__(self):
+        self.width = 800
+        self.height = 576
+        self.titleFont = None
+        self.font = None
         self.adapter = JSONAdapter()
-        self.saveMenu = SaveMenu(screen, width, height, font, titleFont)
         self.loader = Loader()
+
+    def GetFont(self, size):
+        return pygame.font.Font("assets/font.ttf", size)
 
     def VerifySave(self, player, email):
         response = REST_API.check_save_limit(str(email))
         if response:
-            REST_API.save_game(email, str(self.adapter.saveData()))
-            self.saveMenu.showMenu(player, False)
+            #REST_API.save_game(email, str(self.adapter.saveData()))
+            self.varList = [player, email, False]
+            #self.saveMenu.showMenu(player, False)
         else:
-            if self.saveMenu.showMenu(player, True):
-                REST_API.save_game(email, str(self.adapter.saveData()))
+            self.varList = [player, email, True]
 
     def pause_game(self, player, email):  # username
+        pygame.init()
+        self.screen = pygame.display.set_mode((self.width, self.height))
+        self.titleFont = self.GetFont(64)
+        self.font = self.GetFont(24)
         paused = True
         while paused:
             for event in pygame.event.get():
@@ -37,12 +43,12 @@ class PauseWindow:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         # Si se presiona "esc" nuevamente, reanuda el juego y sale de la función de pausa
-                        paused = False
+                        return [], '0', "Game"
                     if event.key == pygame.K_q:
-                        pygame.quit()
-                        sys.exit()
+                        return [], "Back", "Start"
                     if event.key == pygame.K_s:
                         self.VerifySave(player, email)
+                        return self.varList, "No", "SaveMenu"
                     if event.key == pygame.K_l:
                         self.loader.getJSON(email)
 
