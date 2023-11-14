@@ -1,6 +1,5 @@
 import pygame
 from classes.button import Button
-from graphics.StartWindow import StartWindow
 import json
 import sys
 import requests
@@ -90,15 +89,6 @@ class RegisterWindow:
                         for i, active in enumerate(actives):
                             if active:
                                 if event.key == pygame.K_RETURN:
-                                    #print(f"Text {i + 1}: {texts[i]}")
-                                    #data = {f'text{i + 1}': texts[i] for i in range(4)}
-                                    #save_to_file(data)
-                                    #self.username = texts[0]
-                                    #self.password = texts[1]
-                                    #self.email = texts[2]
-                                    #self.age = texts[3]
-                                    #self.photo = texts[4]
-                                    #self.song = texts[5]
                                     print("Username:" + self.username)
                                 elif event.key == pygame.K_BACKSPACE:
                                     texts[i] = texts[i][:-1]
@@ -116,8 +106,7 @@ class RegisterWindow:
                             self.age = texts[3]
                             self.VerifyRegister()
 
-                            startWindow = StartWindow._instance
-                            startWindow.MainScreen()
+                            return "Start"
                         elif photoButton.CheckForInput(registerMousePosition):
 
                             archivoFoto = self.selectPhoto()
@@ -127,7 +116,6 @@ class RegisterWindow:
                             else:
                                 print("Ningún archivo seleccionado")
 
-                            #self.VerifyRegister()
                             data = {f'text{i + 1}': texts[i] for i in range(4)}
                             save_to_file(data)
                         elif songButton.CheckForInput(registerMousePosition):
@@ -139,13 +127,10 @@ class RegisterWindow:
                             else:
                                 print("Ningún archivo seleccionado")
 
-                            #self.VerifyRegister()
                             data = {f'text{i + 1}': texts[i] for i in range(4)}
                             save_to_file(data)
                         elif registerBack.CheckForInput(registerMousePosition):
-                            startWindow = StartWindow._instance
-                            startWindow.MainScreen()
-                            texts = [''] * 6
+                            return "Start"
 
                 self.Screen.fill(("white"))
 

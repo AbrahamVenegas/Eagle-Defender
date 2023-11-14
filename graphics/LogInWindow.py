@@ -2,8 +2,6 @@ import sys
 import pygame
 import requests
 from classes.button import Button
-from graphics.StartWindow import StartWindow
-from graphics.GameWindow import GameWindow
 
 
 def GetFont(size):
@@ -37,7 +35,6 @@ class LogInWindow:
         self.LogIn1 = self.LogIn2 = False
         self.logIn1Failed = self.logIn2Failed = False
         self.bothLoggedIn = False
-        self.gameWindow = GameWindow()
 
     def Start(self):
         pygame.init()
@@ -104,8 +101,7 @@ class LogInWindow:
                         self.VerifyLogIn(player2=True, player1=False)
 
                     if back.CheckForInput(self.mousePos):
-                        startWindow = StartWindow._instance
-                        startWindow.MainScreen()
+                        return "Start"
 
                 if event.type == pygame.KEYDOWN:
                     if self.p1UsernameFlag:
@@ -240,4 +236,4 @@ class LogInWindow:
                 self.logIn2Failed = True
 
         if self.LogIn2 and self.LogIn1:
-            self.gameWindow.Start()
+            return "GameWindow"
