@@ -46,6 +46,7 @@ class PauseWindow:
                     if event.key == pygame.K_s:
                         self.VerifySave(player, email)
                     if event.key == pygame.K_l:
+                        self.loader.empty()
                         self.loader.getJSON(email)
                         if self.loadMenu.showLoadMenu() == "Load":
                             return "Load"

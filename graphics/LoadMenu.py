@@ -1,6 +1,7 @@
 import sys
 import pygame
 from REST_API.Loader import Loader
+from classes.button import Button
 
 
 class LoadMenu:
@@ -19,11 +20,20 @@ class LoadMenu:
         self.screen.fill(color=0)
         loading = True
         while loading:
+            mousePos = pygame.mouse.get_pos()
+            back = Button(image=None, pos=(720, 550), textInput="BACK", font=self.GetFont(24),
+                          baseColor="White",
+                          hoveringColor="Green")
+            back.ChangeColor(mousePos)
+            back.UpdateScreen(self.screen)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    if back.CheckForInput(mousePos):
+                        loading = False
+                        break
                     mouseX, mouseY = pygame.mouse.get_pos()
                     if self.rect1.collidepoint(mouseX, mouseY):
                         self.loader.slot = 1
@@ -37,8 +47,6 @@ class LoadMenu:
                         self.loader.slot = 3
                         loading = False
                         return "Load"
-                if event.type == pygame.K_ESCAPE:
-                    loading = False
             self.LoadingInfo()
             pygame.display.update()
 

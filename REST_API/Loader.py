@@ -27,3 +27,9 @@ class Loader:
             return self.data[1]
         elif self.slot == 3 and len(self.data) > 2:
             return self.data[2]
+
+    def empty(self):
+        self.data.clear()
+        self.date.clear()
+        self.email = ""
+        self.slot = 0

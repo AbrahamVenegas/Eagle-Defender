@@ -86,6 +86,9 @@ class GameWindow:
         self.player2.SetData(datos)
 
     def LoadGame(self):
+        self.woodBlocks.clear()
+        self.ironBlocks.clear()
+        self.concreteBlocks.clear()
         json = self.loader.loadGame()
         print(json)
         count = 0
@@ -97,17 +100,17 @@ class GameWindow:
         if json is not None:
             for block in eval(json['wood']):
                 self.woodBlocks.append(self.BlockFactory.CreateBlock('Wood', block[0]*32, block[1]*32, self.screen))
-                self.woodBlocks[count].updateHP(int(woodLife[count]))
+                self.woodBlocks[count].updateHP(3-(int(woodLife[count])))
                 count += 1
             count = 0
             for block in eval(json['iron']):
                 self.ironBlocks.append(self.BlockFactory.CreateBlock('Iron', block[0]*32, block[1]*32, self.screen))
-                self.ironBlocks[count].updateHP(int(ironLife[count]))
+                self.ironBlocks[count].updateHP(3-(int(ironLife[count])))
                 count += 1
             count = 0
             for block in eval(json['concrete']):
-                self.ironBlocks.append(self.BlockFactory.CreateBlock('Concrete', block[0] * 32, block[1] * 32, self.screen))
-                self.ironBlocks[count].updateHP(int(concreteLife[count]))
+                self.concreteBlocks.append(self.BlockFactory.CreateBlock('Concrete', block[0] * 32, block[1] * 32, self.screen))
+                self.concreteBlocks[count].updateHP(3-(int(concreteLife[count])))
                 count += 1
         self.woodAmmo = json['woodCounter']
         self.ironAmmo = json['ironCounter']
@@ -478,7 +481,7 @@ class GameWindow:
                     if event.key == pygame.K_ESCAPE:
                         self.dj.PauseSong()
                         self.adapter.clear()
-                        self.adapter.getBlocksInfo([self.woodBlocks, self.ironBlocks, self.concreteBlocks],
+                        self.adapter.getBlocksInfo([self.woodBlocks, self.concreteBlocks, self.ironBlocks],
                                                    [self.woodAmmo, self.ironAmmo, self.concreteAmmo])
                         self.adapter.getPlayersInfo(self.gameTurn.player, self.timer.time)
                         self.adapter.getTankInfo(self.tank.rect.x, self.tank.rect.y)
