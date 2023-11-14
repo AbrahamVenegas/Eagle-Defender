@@ -13,7 +13,7 @@ from classes.Timer import Timer
 from classes.DJ import DJ
 from graphics.PauseWindow import PauseWindow
 from classes.AnimationHandler import AnimationHandler
-
+from graphics.FinishWindow import FinishWindow
 
 class GameWindow:
     _instance = None
@@ -22,7 +22,6 @@ class GameWindow:
     player1 = None
     player2 = None
     gameTurn = None
-    index = timeElapsed = 0
     timer = None
     selectionX = 380
     selectionY = 2
@@ -32,7 +31,6 @@ class GameWindow:
     blockSelected = "Wood"
     fire = "ready"
     selectionCount = 1
-    block = None
     BlockFactory = BlockFactory()
     dj = None
 
@@ -269,11 +267,17 @@ class GameWindow:
 
         if self.fire == "fire":
             self.bullet.DrawBullet()
-            if not self.bullet.Trajectory() or self.bullet.is_Collision(self.Eagle.rect):
+            if not self.bullet.Trajectory():
                 self.tank.stopSound()
                 self.bullet.CollisionSound()
                 self.UpdateAmmo()
                 self.fire = "ready"
+            if self.bullet.is_Collision(self.Eagle.rect):
+                self.tank.stopSound()
+                self.bullet.CollisionSound()
+                self.UpdateAmmo()
+                self.fire = "ready"
+                self.Eagle.lifePoints -= 1
         """  --------------------- COLLISIONS ---------------------------------------------- """
         if self.timer.time % 30 == 0 and self.timer.time != 60:
             self.ReloadAmmo()
@@ -304,6 +308,7 @@ class GameWindow:
         self.dj = DJ(self.player1.song)
         self.dj.Play()
         game_pause = PauseWindow(self.screen, self.width, self.height, self.GetFont(64), self.GetFont(24))
+        finish_window = FinishWindow(self.screen, self.GetFont(50), self.GetFont(16))
         self.gameTurn.player = "Defensor"
 
         clock = pygame.time.Clock()
@@ -356,18 +361,28 @@ class GameWindow:
             """  --------------------- TIMER ----------------------------------------------------- """
 
             if self.gameTurn.CheckTurn(self.timer.time):
-                self.gameTurn.player, self.gameTurn.time = self.gameTurn.ChangeTurn(self.gameTurn.player,
+                if self.gameTurn.player == "Defensor":
+                    self.gameTurn.player, self.gameTurn.time = self.gameTurn.ChangeTurn(self.gameTurn.player,
                                                                                     self.player1.song,
                                                                                     self.player2.song)
-                self.timer.reset(60)
+                    self.timer.reset(60)
                 if self.gameTurn.player == "Defensor":
-                    self.dj.Play()
+                    self.dj.Stop()
+                    self.dj.NewSong(self.player1.song)
                 elif self.gameTurn.player == "Atacante":
                     self.dj.Stop()
                     self.dj.NewSong(self.player2.song)
 
             if self.gameTurn.player == "Atacante":
                 self.Player2Turn()
+                if self.Eagle.lifePoints == 0:
+                    self.dj.Stop()
+                    finish_window.FinishGame(self.player2.username, self.player1.username)
+                if self.timer.time == 0:
+                    self.dj.Stop()
+                    self.dj.NewSong("DefaultPlaylist/FinishSong.mp3")
+                    finish_window.FinishGame(self.player1.username, self.player2.username)
+
                 if self.explosionFlag:
                     self.explosionAnimation.playAnimation()
                     self.explosionFlag = self.explosionAnimation.play
