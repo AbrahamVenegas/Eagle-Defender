@@ -320,6 +320,7 @@ class GameWindow:
 
         if (60 - self.timer.time) % 25 == 0:
             for block in self.blocksCollector:
+                block.ResetHP()
                 if isinstance(block, WoodBlock):
                     if block not in self.woodBlocks:
                         self.woodBlocks.append(block)
