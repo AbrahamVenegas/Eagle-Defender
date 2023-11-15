@@ -7,6 +7,9 @@ from classes.Turn import Turn
 from classes.Tank import bullet_sprites
 from classes.Bullets.BulletFactory import BulletFactory
 from classes.Blocks.BlockFactory import BlockFactory
+from classes.Blocks.ConcreteBlock import ConcreteBlock
+from classes.Blocks.WoodBlock import WoodBlock
+from classes.Blocks.IronBlock import IronBlock
 from classes.Eagle import Eagle
 from classes.button import Button
 from classes.Timer import Timer
@@ -63,6 +66,7 @@ class GameWindow:
         self.concreteBlocks = []
         self.woodBlocks = []
         self.coordinates = []
+        self.blocksCollector = []
         self.text1 = self.text2 = self.text3 = None
         self.selectSprites = None
         self.Eagle = Eagle()
@@ -314,7 +318,17 @@ class GameWindow:
             self.reloadFlag = 0 
             self.foraneo = 0
 
-
+        if (60 - self.timer.time) % 25 == 0:
+            for block in self.blocksCollector:
+                if isinstance(block, WoodBlock):
+                    if block not in self.woodBlocks:
+                        self.woodBlocks.append(block)
+                if isinstance(block, ConcreteBlock):
+                    if block not in self.concreteBlocks:
+                        self.concreteBlocks.append(block)
+                if isinstance(block, IronBlock):
+                    if block not in self.ironBlocks:
+                        self.ironBlocks.append(block)
 
     def Player2Shooting(self, keys):
         if keys[pygame.K_SPACE]:
@@ -448,16 +462,19 @@ class GameWindow:
                                     if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
                                         self.coordinates.append((block.BlockX, block.BlockY))
                                         self.woodBlocks.append(block)
+                                        self.blocksCollector.append(block)
                                         self.UpdateAmmo()
                                 if self.blockSelected == "Iron":
                                     if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
                                         self.coordinates.append((block.BlockX, block.BlockY))
                                         self.ironBlocks.append(block)
+                                        self.blocksCollector.append(block)
                                         self.UpdateAmmo()
                                 if self.blockSelected == "Concrete":
                                     if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
                                         self.coordinates.append((block.BlockX, block.BlockY))
                                         self.concreteBlocks.append(block)
+                                        self.blocksCollector.append(block)
                                         self.UpdateAmmo()
 
 
