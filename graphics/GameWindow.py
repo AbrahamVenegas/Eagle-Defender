@@ -13,6 +13,8 @@ from classes.Timer import Timer
 from classes.DJ import DJ
 from graphics.PauseWindow import PauseWindow
 from classes.AnimationHandler import AnimationHandler
+from REST_API.JSONAdapter import JSONAdapter
+from REST_API.Loader import Loader
 
 
 class GameWindow:
@@ -34,7 +36,17 @@ class GameWindow:
     selectionCount = 1
     block = None
     BlockFactory = BlockFactory()
+    loader = Loader()
     dj = None
+    ironBlocks = []
+    concreteBlocks = []
+    woodBlocks = []
+    fireAmmo = 5
+    waterAmmo = 5
+    bombAmmo = 5
+    ironAmmo = 10
+    concreteAmmo = 10
+    woodAmmo = 10
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
@@ -53,15 +65,6 @@ class GameWindow:
         self.GbuttonImage = pygame.transform.scale(pygame.image.load("assets/Buttons/GreenButton.png"), (110, 50))
         self.readyButton = None
         self.tank = Tank()
-        self.fireAmmo = 5
-        self.waterAmmo = 5
-        self.bombAmmo = 5
-        self.ironAmmo = 10
-        self.concreteAmmo = 10
-        self.woodAmmo = 10
-        self.ironBlocks = []
-        self.concreteBlocks = []
-        self.woodBlocks = []
         self.coordinates = []
         self.text1 = self.text2 = self.text3 = None
         self.selectSprites = None
@@ -71,6 +74,7 @@ class GameWindow:
         self.aim = "ready"
         self.keyState = {}
         self.score = 0
+        self.adapter = JSONAdapter()
 
     def GetFont(self, size):
         return pygame.font.Font("assets/font.ttf", size)
@@ -84,6 +88,45 @@ class GameWindow:
         with open("json/player2.json", "r") as jsonFile:
             datos = json.load(jsonFile)
         self.player2.SetData(datos)
+
+    def LoadGame(self):
+        self.woodBlocks.clear()
+        self.ironBlocks.clear()
+        self.concreteBlocks.clear()
+        json = self.loader.loadGame()
+        print(json)
+        count = 0
+        woodLife = eval(json['woodLife'])
+        ironLife = eval(json['ironLife'])
+        concreteLife = eval(json['concreteLife'])
+        bullets = json['Bullets']
+        tankPos = json['Tank']
+        if json is not None:
+            for block in eval(json['wood']):
+                self.woodBlocks.append(self.BlockFactory.CreateBlock('Wood', block[0]*32, block[1]*32, self.screen))
+                self.woodBlocks[count].updateHP(3-(int(woodLife[count])))
+                count += 1
+            count = 0
+            for block in eval(json['iron']):
+                self.ironBlocks.append(self.BlockFactory.CreateBlock('Iron', block[0]*32, block[1]*32, self.screen))
+                self.ironBlocks[count].updateHP(3-(int(ironLife[count])))
+                count += 1
+            count = 0
+            for block in eval(json['concrete']):
+                self.concreteBlocks.append(self.BlockFactory.CreateBlock('Concrete', block[0] * 32, block[1] * 32, self.screen))
+                self.concreteBlocks[count].updateHP(3-(int(concreteLife[count])))
+                count += 1
+        self.woodAmmo = json['woodCounter']
+        self.ironAmmo = json['ironCounter']
+        self.concreteAmmo = json['concreteCounter']
+        self.gameTurn.player = json['turn']
+        self.timer.reset(int(json['time']))
+        self.tank.rect.x = int(tankPos[0])
+        self.tank.rect.y = int(tankPos[1])
+        self.bombAmmo = int(bullets[0])
+        self.fireAmmo = int(bullets[1])
+        self.waterAmmo = int(bullets[2])
+
 
     def SetScore(self):
         scoreText = self.GetFont(16).render("Score: " + str(self.score), True, "White")
@@ -314,8 +357,6 @@ class GameWindow:
             self.reloadFlag = 0 
             self.foraneo = 0
 
-
-
     def Player2Shooting(self, keys):
         if keys[pygame.K_SPACE]:
             if self.fire == "ready" and not self.OutOfAmmo() and self.aim == "ready":
@@ -427,8 +468,20 @@ class GameWindow:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.dj.PauseSong()
-                        game_pause.pause_game()
+                        self.adapter.clear()
+                        self.adapter.getBlocksInfo([self.woodBlocks, self.concreteBlocks, self.ironBlocks],
+                                                   [self.woodAmmo, self.ironAmmo, self.concreteAmmo])
+                        self.adapter.getPlayersInfo(self.gameTurn.player, self.timer.time)
+                        self.adapter.getTankInfo(self.tank.rect.x, self.tank.rect.y)
+                        self.adapter.getAmmoInfo(self.bombAmmo, self.fireAmmo, self.waterAmmo)
+                        load = ""
+                        if self.gameTurn.player == "Defensor":
+                            load = game_pause.pause_game(self.player1.username, self.player1.email)
+                        elif self.gameTurn.player == "Atacante":
+                            load = game_pause.pause_game(self.player2.username, self.player2.email)
                         self.dj.Continue()
+                        if load == "Load":
+                            self.LoadGame()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:

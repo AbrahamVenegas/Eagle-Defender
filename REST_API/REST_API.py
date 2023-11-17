@@ -1,12 +1,19 @@
+import ast
+
 from flask import Flask, request, jsonify
 import psycopg2
 import os
-import ast
+import re
 import json
 from dotenv import load_dotenv
 
 INSERT_PLAYER = "SELECT register_player(%s, %s, %s, %s, %s, %s)"
 LOGIN_PLAYER = "SELECT login_player(%s, %s)"
+GET_LEADERBOARD = "SELECT get_leaderboard()"
+INSERT_LEADERBOARD = "SELECT insert_leaderboard(%s, %s)"
+CHECK_SAVE_LIMIT = "SELECT check_user_limit(%s, %s)"
+SAVE_GAME = "SELECT insert_game_data(%s, %s)"
+GET_SAVED_GAMES = "SELECT get_games_by_user(%s, %s)"
 
 load_dotenv()
 
@@ -100,6 +107,101 @@ def login_player_2():
                 return {"user_data": user_data}, 201
             else:
                 return {"error": "Credentials not valid"}, 401
+
+
+@app.get("/api/getleaderboard")
+def get_leaderboard():
+    with conn:
+        with conn.cursor() as cursor:
+            cursor.execute(GET_LEADERBOARD)
+            response = cursor.fetchall()
+
+            # Procesar las cadenas manualmente
+            leaderboard_data = []
+            for tupla_str, in response:
+                # Eliminar paréntesis y comillas
+                clean_str = tupla_str.strip("()'")
+                # Dividir por comas y obtener los elementos
+                elements = clean_str.split(",")
+                nombre = elements[0]
+                numero = int(elements[1])
+                leaderboard_data.append((nombre, numero, 'NA'))
+            return leaderboard_data
+
+
+@app.post("/api/insertleaderboard")
+def insert_leaderboard(username, time):
+    with conn:
+        with conn.cursor() as cursor:
+            cursor.execute(INSERT_LEADERBOARD, (username, time))
+            response = cursor.fetchall()
+            if response[0][0] == 1:
+                print('True')
+                return True
+            else:
+                print('False')
+                return False
+
+@app.post("/api/checksavelimit")
+def check_save_limit(email):
+    with conn:
+        with conn.cursor() as cursor:
+            cursor.execute(CHECK_SAVE_LIMIT, (email, 0))
+            response = cursor.fetchall()
+            if response[0][0] == 1:
+                return True
+            else:
+                return False
+
+@app.post("/api/savegame")
+def save_game(email, game_json):
+    with conn:
+        with conn.cursor() as cursor:
+            cursor.execute(SAVE_GAME, (email, game_json))
+            response = cursor.fetchall()
+            if response[0][0] == 1:
+                print('True')
+                return True
+            else:
+                print('False')
+                return False
+
+@app.post("/api/getplayersaves")
+def get_player_saves(email, nonvalue):
+    with conn:
+        with conn.cursor() as cursor:
+            cursor.execute(GET_SAVED_GAMES, (email, nonvalue))
+            response = cursor.fetchall()
+
+            processed_data = []
+            for tupla_str, in response:
+                email = ""
+                jsonStr = ""
+                dateStr = ""
+                chainStr = tupla_str.strip("()")
+                for letter in chainStr:  # Obteniendo email
+                    if letter == ',':
+                        chainStr = chainStr[2:]
+                        break
+                    email += letter
+                    chainStr = chainStr[1:]
+
+                for letter in chainStr:  # Obteniendo json string
+                    if letter == '}':
+                        jsonStr += letter
+                        chainStr = chainStr[4:]
+                        break
+                    jsonStr += letter
+                    chainStr = chainStr[1:]
+
+                for letter in chainStr:  # Obteniendo fecha string
+                    if letter == '.':
+                        dateStr = dateStr[:-3]
+                        break
+                    dateStr += letter
+                    chainStr = chainStr[1:]
+                processed_data.append((email, jsonStr, dateStr))
+            return processed_data
 
 
 if __name__ == '__main__':

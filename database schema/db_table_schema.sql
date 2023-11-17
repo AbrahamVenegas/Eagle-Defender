@@ -29,7 +29,7 @@ save_date date
 
 CREATE TABLE leaderboard(
 username varchar(255),
-best_time time,
+best_time integer,
 photo varchar(255)
 );
 
