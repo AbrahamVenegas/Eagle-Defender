@@ -3,6 +3,7 @@ import sys
 from REST_API.JSONAdapter import JSONAdapter
 from REST_API import REST_API
 from REST_API.Loader import Loader
+from graphics.LoadMenu import LoadMenu
 
 
 class PauseWindow:
@@ -16,6 +17,7 @@ class PauseWindow:
         self.font = None
         self.adapter = JSONAdapter()
         self.loader = Loader()
+        self.loadMenu = LoadMenu(screen)
 
     def GetFont(self, size):
         return pygame.font.Font("assets/font.ttf", size)
@@ -50,7 +52,11 @@ class PauseWindow:
                         self.VerifySave(player, email)
                         return self.varList, "No", "SaveMenu"
                     if event.key == pygame.K_l:
+                        self.loader.empty()
                         self.loader.getJSON(email)
+                        if self.loadMenu.showLoadMenu() == "Load":
+                            return "Load"
+
 
             # Lógica para mostrar la ventana de pausa en la pantalla
             self.show_paused_window(player)

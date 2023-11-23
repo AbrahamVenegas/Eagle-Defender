@@ -11,7 +11,10 @@ from classes.Eagle import Eagle
 from classes.button import Button
 from classes.Timer import Timer
 from classes.DJ import DJ
+from graphics.PauseWindow import PauseWindow
+from classes.AnimationHandler import AnimationHandler
 from REST_API.JSONAdapter import JSONAdapter
+from REST_API.Loader import Loader
 
 
 class GameWindow:
@@ -31,7 +34,9 @@ class GameWindow:
     blockSelected = "Wood"
     fire = "ready"
     selectionCount = 1
+    block = None
     BlockFactory = BlockFactory()
+    loader = Loader()
     dj = None
     ironBlocks = []
     concreteBlocks = []
@@ -43,12 +48,19 @@ class GameWindow:
     concreteAmmo = 10
     woodAmmo = 10
 
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
     def __init__(self):
-        self.gameState = False
         self.width = 800
         self.height = 576
         self.player1 = Player(None, None, None, None, None, None, None)
         self.player2 = Player(None, None, None, None, None, None, None)
+        self.selectAnimation = None
+        self.explosionAnimation = None
+        self.explosionFlag = False
         self.gameTurn = Turn(None, None)
         self.GbuttonImage = pygame.transform.scale(pygame.image.load("assets/Buttons/GreenButton.png"), (110, 50))
         self.readyButton = None
@@ -64,31 +76,6 @@ class GameWindow:
         self.score = 0
         self.adapter = JSONAdapter()
 
-    def Reset(self):
-        self.ironBlocks.clear()
-        self.concreteBlocks.clear()
-        self.woodBlocks.clear()
-        self.fireAmmo = 5
-        self.waterAmmo = 5
-        self.bombAmmo = 5
-        self.ironAmmo = 10
-        self.concreteAmmo = 10
-        self.woodAmmo = 10
-        self.bulletSelected = "Fire"
-        self.blockSelected = "Wood"
-        self.fire = "ready"
-        self.selectionCount = 1
-        self.gameTurn = Turn(None, None)
-        self.index = timeElapsed = 0
-        self.selectionX = 380
-        self.selectionY = 2
-        self.reloadFlag = self.blocksDestroyed = 0
-        self.foraneo = 1
-        self.aim = "ready"
-        self.keyState.clear()
-        self.score = 0
-        self.coordinates.clear()
-
     def GetFont(self, size):
         return pygame.font.Font("assets/font.ttf", size)
 
@@ -101,6 +88,45 @@ class GameWindow:
         with open("json/player2.json", "r") as jsonFile:
             datos = json.load(jsonFile)
         self.player2.SetData(datos)
+
+    def LoadGame(self):
+        self.woodBlocks.clear()
+        self.ironBlocks.clear()
+        self.concreteBlocks.clear()
+        json = self.loader.loadGame()
+        print(json)
+        count = 0
+        woodLife = eval(json['woodLife'])
+        ironLife = eval(json['ironLife'])
+        concreteLife = eval(json['concreteLife'])
+        bullets = json['Bullets']
+        tankPos = json['Tank']
+        if json is not None:
+            for block in eval(json['wood']):
+                self.woodBlocks.append(self.BlockFactory.CreateBlock('Wood', block[0]*32, block[1]*32, self.screen))
+                self.woodBlocks[count].updateHP(3-(int(woodLife[count])))
+                count += 1
+            count = 0
+            for block in eval(json['iron']):
+                self.ironBlocks.append(self.BlockFactory.CreateBlock('Iron', block[0]*32, block[1]*32, self.screen))
+                self.ironBlocks[count].updateHP(3-(int(ironLife[count])))
+                count += 1
+            count = 0
+            for block in eval(json['concrete']):
+                self.concreteBlocks.append(self.BlockFactory.CreateBlock('Concrete', block[0] * 32, block[1] * 32, self.screen))
+                self.concreteBlocks[count].updateHP(3-(int(concreteLife[count])))
+                count += 1
+        self.woodAmmo = json['woodCounter']
+        self.ironAmmo = json['ironCounter']
+        self.concreteAmmo = json['concreteCounter']
+        self.gameTurn.player = json['turn']
+        self.timer.reset(int(json['time']))
+        self.tank.rect.x = int(tankPos[0])
+        self.tank.rect.y = int(tankPos[1])
+        self.bombAmmo = int(bullets[0])
+        self.fireAmmo = int(bullets[1])
+        self.waterAmmo = int(bullets[2])
+
 
     def SetScore(self):
         scoreText = self.GetFont(16).render("Score: " + str(self.score), True, "White")
@@ -150,32 +176,6 @@ class GameWindow:
         self.screen.blit(self.text1, rect1)
         self.screen.blit(self.text2, rect2)
         self.screen.blit(self.text3, rect3)
-
-    def loadSelectionAnimation(self):
-        self.selectSprites = [
-            pygame.image.load("assets/SelectionAnimation/Select_01.png"),
-            pygame.image.load("assets/SelectionAnimation/Select_02.png"),
-            pygame.image.load("assets/SelectionAnimation/Select_03.png"),
-            pygame.image.load("assets/SelectionAnimation/Select_04.png"),
-            pygame.image.load("assets/SelectionAnimation/Select_05.png"),
-            pygame.image.load("assets/SelectionAnimation/Select_06.png"),
-            pygame.image.load("assets/SelectionAnimation/Select_07.png"),
-            pygame.image.load("assets/SelectionAnimation/Select_08.png"),
-        ]
-
-    def SelectionAnimation(self):
-        clock = pygame.time.Clock()
-        selectionImg = self.selectSprites[self.index]
-        selectionRect = selectionImg.get_rect()
-        selectionRect.x = self.selectionX
-        selectionRect.y = self.selectionY
-        self.screen.blit(selectionImg, selectionRect)
-        deltaTime = clock.tick(60) / 1000.0
-        self.timeElapsed += deltaTime
-
-        if self.timeElapsed >= 1 / 15.0:
-            self.timeElapsed -= 1 / 15.0
-            self.index = (self.index + 1) % len(self.selectSprites)
 
     def SelectIcon(self):
         keys = pygame.key.get_pressed()
@@ -296,6 +296,8 @@ class GameWindow:
                     self.tank.blockCollide()
                 if self.fire == "fire":
                     if block.isCollision(self.bullet.rect):
+                        self.explosionFlag = True
+                        self.explosionAnimation.updatePos(block.rect.x - 80, block.rect.y - 80)
                         self.tank.stopSound()
                         block.playSound()
                         self.score += 10
@@ -370,15 +372,15 @@ class GameWindow:
         pygame.display.set_caption("Eagle Defender")
         self.FillPlayer1Info()
         self.FillPlayer2Info()
-        self.loadSelectionAnimation()
-        if self.gameState:
-            self.dj.Continue()
-        else:
-            self.timer = Timer(self.screen, 630, 545, self.GetFont(14), 60)
-            self.timer.start()
-            self.dj = DJ(self.player1.song)
-            self.dj.Play()
-
+        self.selectAnimation = AnimationHandler(self.screen, "assets/SelectionAnimation/", self.selectionX
+                                                , self.selectionY, 300)
+        self.explosionAnimation = AnimationHandler(self.screen, "assets/ExplosionAnimation/", 0, 0,
+                                                   16)
+        self.timer = Timer(self.screen, 630, 545, self.GetFont(14), 60)
+        self.timer.start()
+        self.dj = DJ(self.player1.song)
+        self.dj.Play()
+        game_pause = PauseWindow(self.screen, self.width, self.height, self.GetFont(64), self.GetFont(24))
         self.gameTurn.player = "Defensor"
 
         clock = pygame.time.Clock()
@@ -419,7 +421,9 @@ class GameWindow:
             """  --------------------- COUNTERS AND ANIMATIONS ----------------------------------------------------- """
             self.AmmoCounters()
             self.AmmoImg()
-            self.SelectionAnimation()
+            self.selectAnimation.updatePos(self.selectionX, self.selectionY)
+
+            self.selectAnimation.playAnimation()
             self.SetScore()
             """  --------------------- COUNTERS AND ANIMATIONS ----------------------------------------------------- """
 
@@ -448,6 +452,9 @@ class GameWindow:
 
             if self.gameTurn.player == "Atacante":
                 self.Player2Turn()
+                if self.explosionFlag:
+                    self.explosionAnimation.playAnimation()
+                    self.explosionFlag = self.explosionAnimation.play
 
             elif self.gameTurn.player == "Defensor":
                 self.Player1Turn()
@@ -460,18 +467,21 @@ class GameWindow:
                     sys.exit()
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        self.gameState = True
                         self.dj.PauseSong()
                         self.adapter.clear()
-                        self.adapter.getBlocksInfo([self.woodBlocks, self.ironBlocks, self.concreteBlocks],
+                        self.adapter.getBlocksInfo([self.woodBlocks, self.concreteBlocks, self.ironBlocks],
                                                    [self.woodAmmo, self.ironAmmo, self.concreteAmmo])
                         self.adapter.getPlayersInfo(self.gameTurn.player, self.timer.time)
                         self.adapter.getTankInfo(self.tank.rect.x, self.tank.rect.y)
                         self.adapter.getAmmoInfo(self.bombAmmo, self.fireAmmo, self.waterAmmo)
+                        load = ""
                         if self.gameTurn.player == "Defensor":
-                            return self.player1.username, self.player1.email, "Pause"
+                            load = game_pause.pause_game(self.player1.username, self.player1.email)
                         elif self.gameTurn.player == "Atacante":
-                            return self.player2.username, self.player2.email, "Pause"
+                            load = game_pause.pause_game(self.player2.username, self.player2.email)
+                        self.dj.Continue()
+                        if load == "Load":
+                            self.LoadGame()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
