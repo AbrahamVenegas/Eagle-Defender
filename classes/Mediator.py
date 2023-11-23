@@ -12,11 +12,11 @@ class Mediator:
     startWindow = StartWindow()
     logInWindow = LogInWindow()
     helpWindow = HelpWindow()
-    gameWindow = GameWindow()
     registerWindow = RegisterWindow()
     pauseWindow = PauseWindow()
     saveMenu = SaveMenu()
     loadMenu = LoadMenu()
+    gameWindow = None
     username = email = player = flag = Game = None
     stack = []
 
@@ -24,7 +24,7 @@ class Mediator:
         change = [self.startWindow.MainScreen()]
         while True:
             if change[0] == "Start":
-                change = self.startWindow.MainScreen()
+                change = [self.startWindow.MainScreen()]
             if change[0] == "Help":  # Albert
                 pass
             elif change[0] == "Leaderboard":
@@ -34,10 +34,16 @@ class Mediator:
             elif change[0] == "Register":  # Albert
                 pass
             elif change[0] == "Game":
-                if len(change) > 1:
+                if len(change) == 2: # Pause llama a GameWindow
+                    change = self.gameWindow.Start()
+                elif len(change) == 3: # Load llama GameWindow
                     self.gameWindow.LoadGame()
                     print("Game loaded")
-                change = self.gameWindow.Start()
+                    change = self.gameWindow.Start()
+                else:
+                    self.gameWindow = GameWindow()
+                    self.gameWindow.Reset()
+                    change = self.gameWindow.Start()
             elif change[0] == "Pause":
                 change = self.pauseWindow.pause_game(change[1], change[2])
             elif change[0] == "SaveMenu":

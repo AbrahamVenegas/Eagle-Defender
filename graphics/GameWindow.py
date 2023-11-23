@@ -18,7 +18,6 @@ from REST_API.Loader import Loader
 
 
 class GameWindow:
-    _instance = None
     screen = None
     background = None
     player1 = None
@@ -49,11 +48,6 @@ class GameWindow:
     woodAmmo = 10
     gameState = True
 
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
-
     def __init__(self):
         self.width = 800
         self.height = 576
@@ -77,6 +71,10 @@ class GameWindow:
         self.score = 0
         self.adapter = JSONAdapter()
 
+    def Reset(self):
+        self.ironBlocks = []
+        self.concreteBlocks = []
+        self.woodBlocks = []
     def GetFont(self, size):
         return pygame.font.Font("assets/font.ttf", size)
 

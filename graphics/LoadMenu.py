@@ -39,15 +39,15 @@ class LoadMenu:
                     if self.rect1.collidepoint(mouseX, mouseY):
                         self.loader.slot = 1
                         loading = False
-                        return ["Game", True]
+                        return ["Game", 1, 1]
                     elif self.rect2.collidepoint(mouseX, mouseY):
                         self.loader.slot = 2
                         loading = False
-                        return ["Game", True]
+                        return ["Game", 1, 1]
                     elif self.rect3.collidepoint(mouseX, mouseY):
                         self.loader.slot = 3
                         loading = False
-                        return ["Game", True]
+                        return ["Game", 1, 1]
             self.LoadingInfo()
             pygame.display.update()
 

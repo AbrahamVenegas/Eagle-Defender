@@ -43,7 +43,7 @@ class PauseWindow:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         # Si se presiona "esc" nuevamente, reanuda el juego y sale de la función de pausa
-                        return ["Game"]
+                        return ["Game", 1]
                     if event.key == pygame.K_q:
                         return ["Start"]
                     if event.key == pygame.K_s:
