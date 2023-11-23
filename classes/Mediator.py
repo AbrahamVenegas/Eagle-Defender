@@ -18,7 +18,6 @@ class Mediator:
     loadMenu = LoadMenu()
     gameWindow = None
     username = email = player = flag = Game = None
-    stack = []
 
     def run(self):
         change = [self.startWindow.MainScreen()]
@@ -30,15 +29,14 @@ class Mediator:
             elif change[0] == "Leaderboard":
                 pass
             elif change[0] == "Login":  # Albert
-                pass
+                change = self.logInWindow.Start()
             elif change[0] == "Register":  # Albert
-                pass
+                change = self.registerWindow.RegisterScreen()
             elif change[0] == "Game":
                 if len(change) == 2: # Pause llama a GameWindow
                     change = self.gameWindow.Start()
                 elif len(change) == 3: # Load llama GameWindow
                     self.gameWindow.LoadGame()
-                    print("Game loaded")
                     change = self.gameWindow.Start()
                 else:
                     self.gameWindow = GameWindow()

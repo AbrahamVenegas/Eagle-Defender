@@ -130,7 +130,7 @@ class RegisterWindow:
                             data = {f'text{i + 1}': texts[i] for i in range(4)}
                             save_to_file(data)
                         elif registerBack.CheckForInput(registerMousePosition):
-                            return "Start"
+                            return ["Start"]
 
                 self.Screen.fill(("white"))
 

@@ -101,7 +101,7 @@ class LogInWindow:
                         self.VerifyLogIn(player2=True, player1=False)
 
                     if back.CheckForInput(self.mousePos):
-                        return "Start"
+                        return ["Start"]
 
                 if event.type == pygame.KEYDOWN:
                     if self.p1UsernameFlag:
@@ -131,6 +131,9 @@ class LogInWindow:
                         else:
                             self.p2Password += event.unicode
                             self.hiddenPassword2 += '*'
+
+            if self.LogIn2 and self.LogIn1:
+                return ["Game"]
 
             pygame.display.update()
 
@@ -234,6 +237,3 @@ class LogInWindow:
                 self.logIn2Failed = False
             elif response.status_code == 401:
                 self.logIn2Failed = True
-
-        if self.LogIn2 and self.LogIn1:
-            return "GameWindow"
