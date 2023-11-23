@@ -150,7 +150,7 @@ class StartWindow:
                     if registerButton.CheckForInput(menuMousePosition):
                         return "Register"
                     if leaderboardButton.CheckForInput(menuMousePosition):
-                        return "Leaderboard"
+                        self.LeaderboardScreen()
                     if helpButton.CheckForInput(menuMousePosition):
                         return "Help"
                     if quitButton.CheckForInput(menuMousePosition):

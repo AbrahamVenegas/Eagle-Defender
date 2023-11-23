@@ -17,20 +17,17 @@ class Mediator:
     saveMenu = SaveMenu()
     loadMenu = LoadMenu()
     gameWindow = None
-    username = email = player = flag = Game = None
 
     def run(self):
         change = [self.startWindow.MainScreen()]
         while True:
             if change[0] == "Start":
                 change = [self.startWindow.MainScreen()]
-            if change[0] == "Help":  # Albert
-                pass
-            elif change[0] == "Leaderboard":
-                pass
-            elif change[0] == "Login":  # Albert
+            if change[0] == "Help":
+                change = self.helpWindow.HelpScreen()
+            elif change[0] == "Login":
                 change = self.logInWindow.Start()
-            elif change[0] == "Register":  # Albert
+            elif change[0] == "Register":
                 change = self.registerWindow.RegisterScreen()
             elif change[0] == "Game":
                 if len(change) == 2: # Pause llama a GameWindow

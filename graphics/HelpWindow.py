@@ -57,7 +57,7 @@ class HelpWindow:
                     if howToWin.CheckForInput(helpMousePosition):
                         self.HelpHTW()
                     if helpBack.CheckForInput(helpMousePosition):
-                        return "Start"
+                        return ["Start"]
 
             pygame.display.update()
 
