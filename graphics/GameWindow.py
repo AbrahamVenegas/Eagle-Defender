@@ -47,6 +47,7 @@ class GameWindow:
     ironAmmo = 10
     concreteAmmo = 10
     woodAmmo = 10
+    gameState = True
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
@@ -376,11 +377,14 @@ class GameWindow:
                                                 , self.selectionY, 300)
         self.explosionAnimation = AnimationHandler(self.screen, "assets/ExplosionAnimation/", 0, 0,
                                                    16)
-        self.timer = Timer(self.screen, 630, 545, self.GetFont(14), 60)
-        self.timer.start()
-        self.dj = DJ(self.player1.song)
-        self.dj.Play()
-        self.gameTurn.player = "Defensor"
+        if self.gameState:
+            self.timer = Timer(self.screen, 630, 545, self.GetFont(14), 60)
+            self.timer.start()
+            self.dj = DJ(self.player1.song)
+            self.dj.Play()
+            self.gameTurn.player = "Defensor"
+        else:
+            self.dj.Continue()
 
         clock = pygame.time.Clock()
         fps = 60
@@ -466,6 +470,7 @@ class GameWindow:
                     sys.exit()
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
+                        self.gameState = False
                         self.dj.PauseSong()
                         self.adapter.clear()
                         self.adapter.getBlocksInfo([self.woodBlocks, self.concreteBlocks, self.ironBlocks],

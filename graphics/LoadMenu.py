@@ -34,20 +34,20 @@ class LoadMenu:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if back.CheckForInput(mousePos):
                         loading = False
-                        break
+                        return ["Pause", self.loader.username, self.loader.email]
                     mouseX, mouseY = pygame.mouse.get_pos()
                     if self.rect1.collidepoint(mouseX, mouseY):
                         self.loader.slot = 1
                         loading = False
-                        return "Load"
+                        return ["Game", True]
                     elif self.rect2.collidepoint(mouseX, mouseY):
                         self.loader.slot = 2
                         loading = False
-                        return "Load"
+                        return ["Game", True]
                     elif self.rect3.collidepoint(mouseX, mouseY):
                         self.loader.slot = 3
                         loading = False
-                        return "Load"
+                        return ["Game", True]
             self.LoadingInfo()
             pygame.display.update()
 

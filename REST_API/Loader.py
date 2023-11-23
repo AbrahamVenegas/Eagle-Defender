@@ -5,6 +5,7 @@ class Loader:
     _instance = None
     data = []
     email = ""
+    username = ""
     date = []
     slot = 0
 
