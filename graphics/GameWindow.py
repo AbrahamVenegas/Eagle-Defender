@@ -380,7 +380,6 @@ class GameWindow:
         self.timer.start()
         self.dj = DJ(self.player1.song)
         self.dj.Play()
-        game_pause = PauseWindow(self.screen, self.width, self.height, self.GetFont(64), self.GetFont(24))
         self.gameTurn.player = "Defensor"
 
         clock = pygame.time.Clock()
@@ -476,9 +475,9 @@ class GameWindow:
                         self.adapter.getAmmoInfo(self.bombAmmo, self.fireAmmo, self.waterAmmo)
                         load = ""
                         if self.gameTurn.player == "Defensor":
-                            load = game_pause.pause_game(self.player1.username, self.player1.email)
+                            return ["Pause", self.player1.username, self.player1.email]
                         elif self.gameTurn.player == "Atacante":
-                            load = game_pause.pause_game(self.player2.username, self.player2.email)
+                            return ["Pause", self.player2.username, self.player2.email]
                         self.dj.Continue()
                         if load == "Load":
                             self.LoadGame()

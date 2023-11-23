@@ -146,7 +146,7 @@ class StartWindow:
                     if playButton.CheckForInput(menuMousePosition):
                         running = False
                         pygame.quit()
-                        return "Start", "Game"
+                        return "Game"
                     if registerButton.CheckForInput(menuMousePosition):
                         pass
                     if leaderboardButton.CheckForInput(menuMousePosition):

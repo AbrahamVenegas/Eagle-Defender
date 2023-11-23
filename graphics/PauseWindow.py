@@ -17,7 +17,6 @@ class PauseWindow:
         self.font = None
         self.adapter = JSONAdapter()
         self.loader = Loader()
-        self.loadMenu = LoadMenu(screen)
 
     def GetFont(self, size):
         return pygame.font.Font("assets/font.ttf", size)
@@ -25,11 +24,10 @@ class PauseWindow:
     def VerifySave(self, player, email):
         response = REST_API.check_save_limit(str(email))
         if response:
-            #REST_API.save_game(email, str(self.adapter.saveData()))
-            self.varList = [player, email, False]
-            #self.saveMenu.showMenu(player, False)
+            REST_API.save_game(email, str(self.adapter.saveData()))
+            self.varList = ["SaveMenu", player, email, False]
         else:
-            self.varList = [player, email, True]
+            self.varList = ["SaveMenu", player, email, True]
 
     def pause_game(self, player, email):  # username
         pygame.init()
@@ -45,17 +43,17 @@ class PauseWindow:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         # Si se presiona "esc" nuevamente, reanuda el juego y sale de la función de pausa
-                        return [], '0', "Game"
+                        return ["Game"]
                     if event.key == pygame.K_q:
-                        return [], "Back", "Start"
+                        return ["Start"]
                     if event.key == pygame.K_s:
                         self.VerifySave(player, email)
-                        return self.varList, "No", "SaveMenu"
+                        return self.varList
                     if event.key == pygame.K_l:
                         self.loader.empty()
                         self.loader.getJSON(email)
-                        if self.loadMenu.showLoadMenu() == "Load":
-                            return "Load"
+                        #if self.loadMenu.showLoadMenu() == "Load":
+                            #return "Load"
 
 
             # Lógica para mostrar la ventana de pausa en la pantalla

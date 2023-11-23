@@ -32,12 +32,12 @@ class SaveMenu:
                     if event.key == pygame.K_ESCAPE:
                         REST_API.save_game(email, str(self.adapter.saveData()))
                         saving = False
-                        return "Pause"
+                        return ["Pause", player, email]
                     elif event.key == pygame.K_y:
                         flag = False
                     elif event.key == pygame.K_n:
                         saving = False
-                        return "Pause"
+                        return ["Pause", player, email]
 
             self.showGames(player, flag)
             pygame.display.update()

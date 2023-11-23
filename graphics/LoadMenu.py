@@ -5,9 +5,9 @@ from classes.button import Button
 
 
 class LoadMenu:
+    screen = None
 
-    def __init__(self, screen):
-        self.screen = screen
+    def __init__(self):
         self.width = 800
         self.height = 576
         self.rect1 = self.rect2 = self.rect3 = None
@@ -17,7 +17,8 @@ class LoadMenu:
         return pygame.font.Font("assets/font.ttf", size)
 
     def showLoadMenu(self):
-        self.screen.fill(color=0)
+        pygame.init()
+        self.screen = pygame.display.set_mode((self.width, self.height))
         loading = True
         while loading:
             mousePos = pygame.mouse.get_pos()
