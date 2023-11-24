@@ -1,6 +1,8 @@
 import pygame
 import sys
 import json
+import threading
+import serial
 from classes.Player import Player
 from classes.Tank import Tank
 from classes.Turn import Turn
@@ -46,6 +48,12 @@ class GameWindow:
     concreteAmmo = 10
     woodAmmo = 10
     gameState = True
+    global signal
+    signal = ""
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
 
     def __init__(self):
         self.width = 800
@@ -182,7 +190,7 @@ class GameWindow:
 
     def SelectIcon(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_z] and not self.keyState.get(pygame.K_z, False):
+        if keys[pygame.K_z] and not self.keyState.get(pygame.K_z, False) or "BloquesBalas" in str(signal):
             self.keyState[pygame.K_z] = True
             self.selectionCount += 1
             if self.selectionCount > 3:
@@ -292,9 +300,11 @@ class GameWindow:
 
 
     def Player2Turn(self):
+        global signal
         self.tank.draw(self.screen)
         keys = pygame.key.get_pressed()
-        self.aim = self.tank.Movement(keys)
+        self.aim = self.tank.Movement(keys, signal)
+        signal = ""
         self.Player2Shooting(keys)
         self.tank.update()
         self.SelectIcon()
@@ -385,6 +395,49 @@ class GameWindow:
                 if block.type == "Iron" and block not in self.ironBlocks:
                     self.ironBlocks.append(block)
 
+                
+    def receive_data_from_uart(self):
+        def uart_thread_function():
+            # Puertos serie para Linux y Windows
+            SERIAL_PORTS = []
+
+            # Puertos serie en Linux
+            linux_serial_ports = ['/dev/ttyACM0', '/dev/ttyACM1', '/dev/ttyACM2', '/dev/ttyUSB0', '/dev/ttyUSB1',
+                                  '/dev/ttyS0', '/dev/ttyS1']
+
+            # Puertos serie en Windows (los nombres pueden variar)
+            windows_serial_ports = ['COM1', 'COM2', 'COM3', 'COM4','COM7']
+
+            # Agregar puertos serie de Linux a la lista
+            SERIAL_PORTS.extend(linux_serial_ports)
+
+            # Agregar puertos serie de Windows a la lista
+            SERIAL_PORTS.extend(windows_serial_ports)
+
+            BAUD_RATE = 9600
+            global signal
+
+            while True:  # Bucle infinito para seguir escuchando
+                for port in SERIAL_PORTS:
+                    try:
+                        with serial.Serial(port, BAUD_RATE) as ser:
+                            print(f"Conectado a {port}")
+                            while True:  # Bucle infinito para leer datos
+                                data_received = ser.readline().decode().strip()
+                                print(data_received)
+                                if data_received != 'None':
+                                    # Realizar alguna acción con los datos recibidos si es necesario
+                                    signal = data_received
+
+                    except serial.SerialException:
+                        pass  # Puedes agregar manejo de errores aquí si es necesario
+
+        # Creamos un hilo para ejecutar uart_thread_function()
+        uart_thread = threading.Thread(target=uart_thread_function)
+
+        # Iniciamos el hilo
+        uart_thread.start()
+
     def Player2Shooting(self, keys):
         if keys[pygame.K_SPACE]:
             if self.fire == "ready" and not self.OutOfAmmo() and self.aim == "ready":
@@ -416,6 +469,7 @@ class GameWindow:
         clock = pygame.time.Clock()
         fps = 60
 
+        self.receive_data_from_uart()
         while True:
             """  --------------------- PLAYERS INFO ---------------------------------------------- """
             self.screen.blit(self.background, (0, 0))
@@ -505,7 +559,7 @@ class GameWindow:
                     pygame.quit()
                     sys.exit()
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
+                    if event.key == pygame.K_ESCAPE or "Pausa" in str(signal):
                         self.gameState = False
                         self.dj.PauseSong()
                         self.adapter.clear()

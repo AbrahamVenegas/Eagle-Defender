@@ -109,7 +109,7 @@ class RegisterWindow:
                             return "Start"
                         elif photoButton.CheckForInput(registerMousePosition):
 
-                            archivoFoto = self.selectPhoto()
+                            archivoFoto = self.selectPhoto(self.username)
                             if archivoFoto:
                                 print(f"Archivo seleccionado: {archivoFoto}")
                                 self.photo = archivoFoto
@@ -120,7 +120,7 @@ class RegisterWindow:
                             save_to_file(data)
                         elif songButton.CheckForInput(registerMousePosition):
 
-                            archivoDestino = self.selectSong()
+                            archivoDestino = self.selectSong(self.username)
                             if archivoDestino:
                                 print(f"Archivo seleccionado: {archivoDestino}")
                                 self.song = archivoDestino
@@ -171,8 +171,7 @@ class RegisterWindow:
         if response.status_code == 201:
             print(response)
 
-
-    def selectSong(self):
+    def selectSong(self, username):
         root = tk.Tk()
         root.withdraw()  # Oculta la ventana principal de Tkinter
 
@@ -183,14 +182,14 @@ class RegisterWindow:
         )
 
         if selectedArchive:
-            songsFolder = "priv/songs"
+            songsFolder = "priv/songs/" + str(username)
             archiveName = os.path.basename(selectedArchive)
             destinePath = os.path.join(songsFolder, archiveName)
             shutil.copy(selectedArchive, destinePath)
 
-        return os.path.basename(selectedArchive)  #Retorna solo el nombre del archivo
+        return os.path.basename(selectedArchive)  # Retorna solo el nombre del archivo
 
-    def selectPhoto(self):
+    def selectPhoto(self, username):
         root = tk.Tk()
         root.withdraw()  # Oculta la ventana principal de Tkinter
 
@@ -201,7 +200,7 @@ class RegisterWindow:
         )
 
         if selectedImage:
-            imagesFolder = "priv/photos"
+            imagesFolder = "priv/photos/" + str(username)
             imageName = os.path.basename(selectedImage)
             destinePath = os.path.join(imagesFolder, imageName)
             shutil.copy(selectedImage, destinePath)
