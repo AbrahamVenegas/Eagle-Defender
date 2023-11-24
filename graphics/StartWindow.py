@@ -21,34 +21,6 @@ class StartWindow:
     def GetFont(self, size):  # To return it in the desired size
         return pygame.font.Font("assets/font.ttf", size)
 
-    def StartScreen(self):
-        while True:
-            pygame.display.set_caption("Inicio de Sesión")  # To change the title of the window
-            playMousePosition = pygame.mouse.get_pos()
-            # To obtain the position of the mouse, this will be changed for the joystick later
-            self.Screen.fill("black")
-
-            playText = self.GetFont(45).render("This is the LOG IN screen.", True, "White")
-            playRectangle = playText.get_rect(center=(720, 260))
-            # To add text to the screen
-            self.Screen.blit(playText, playRectangle)
-
-            playBack = Button(image=None, pos=(720, 460),
-                              textInput="BACK", font=self.GetFont(75), baseColor="White", hoveringColor="Green")
-            # Button Escape to go back to the last screen
-            playBack.ChangeColor(playMousePosition)
-            playBack.UpdateScreen(self.Screen)
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if playBack.CheckForInput(playMousePosition):
-                        self.MainScreen()
-
-            pygame.display.update()
-
     def LeaderboardScreen(self):
         response = REST_API.get_leaderboard()
         while True:
@@ -93,11 +65,10 @@ class StartWindow:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if leadearboardBack.CheckForInput(leaderboardMousePosition):
-                        self.MainScreen()
+                        return
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_g:
                         REST_API.get_player_saves('marco@gmail.com', 0)
-
 
             pygame.display.update()
 
@@ -146,7 +117,7 @@ class StartWindow:
                     if playButton.CheckForInput(menuMousePosition):
                         running = False
                         pygame.quit()
-                        return "Login"
+                        return "Game"
                     if registerButton.CheckForInput(menuMousePosition):
                         return "Register"
                     if leaderboardButton.CheckForInput(menuMousePosition):

@@ -16,7 +16,6 @@ from classes.AnimationHandler import AnimationHandler
 from REST_API.JSONAdapter import JSONAdapter
 from REST_API.Loader import Loader
 
-from graphics.FinishWindow import FinishWindow
 
 class GameWindow:
     screen = None
@@ -388,8 +387,6 @@ class GameWindow:
             self.gameTurn.player = "Defensor"
         else:
             self.dj.Continue()
-        finish_window = FinishWindow(self.screen, self.GetFont(50), self.GetFont(16))
-        
 
         clock = pygame.time.Clock()
         fps = 60
@@ -464,11 +461,10 @@ class GameWindow:
                 self.Player2Turn()
                 if self.Eagle.lifePoints == 0:
                     self.dj.Stop()
-                    finish_window.FinishGame(self.player2.username, self.player1.username)
+                    return ["Finish", self.player2.username, self.player1.username]
                 if self.timer.time == 0:
                     self.dj.Stop()
-                    self.dj.NewSong("DefaultPlaylist/FinishSong.mp3")
-                    finish_window.FinishGame(self.player1.username, self.player2.username)
+                    return ["Finish", self.player1.username, self.player2.username]
 
                 if self.explosionFlag:
                     self.explosionAnimation.playAnimation()

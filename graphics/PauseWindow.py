@@ -3,7 +3,6 @@ import sys
 from REST_API.JSONAdapter import JSONAdapter
 from REST_API import REST_API
 from REST_API.Loader import Loader
-from graphics.LoadMenu import LoadMenu
 
 
 class PauseWindow:

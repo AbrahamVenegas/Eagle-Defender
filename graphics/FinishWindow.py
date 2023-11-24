@@ -4,15 +4,21 @@ import sys
 from classes.button import Button
 
 class FinishWindow:
+    screen = None
+    titleFont = font = None
 
-    def __init__(self, screen, titleFont, font):
-        self.screen = screen
-        self.titleFont = titleFont
-        self.font = font
+    def __init__(self):
         self.dj = DJ(None)
         self.button = None
+        self.width = 800
+        self.height = 576
+
+    def GetFont(self, size):
+        return pygame.font.Font("assets/font.ttf", size)
 
     def FinishGame(self, winner, looser):
+        pygame.init()
+        self.screen = pygame.display.set_mode((self.width, self.height))
         self.dj.NewSong("DefaultPlaylist/FinishSong.mp3")
         while True:
             mousePos = pygame.mouse.get_pos()
@@ -22,8 +28,8 @@ class FinishWindow:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.button.CheckForInput(mousePos):
-                        pygame.quit()
-                        sys.exit()
+                        self.dj.Stop()
+                        return ["Start"]
             self.show_finish_window(winner, looser)
             self.button.ChangeColor(mousePos)
             self.button.UpdateScreen(self.screen)
@@ -31,6 +37,8 @@ class FinishWindow:
 
     def show_finish_window(self, winner, looser):
         self.screen.fill(color=0)
+        self.titleFont = self.GetFont(50)
+        self.font = self.GetFont(16)
         winnerTitle = self.titleFont.render('WINNER', True, "Green")
         winnerTitleRect = winnerTitle.get_rect(center=(200, 150))
         self.screen.blit(winnerTitle, winnerTitleRect)

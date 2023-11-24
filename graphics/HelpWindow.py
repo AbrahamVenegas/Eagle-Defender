@@ -91,8 +91,7 @@ class HelpWindow:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if helpHTPBack.CheckForInput(helpHTPMousePosition):
-                        self.HelpScreen()
-                        break
+                        return
 
             pygame.display.update()
 
@@ -180,7 +179,6 @@ class HelpWindow:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if helpHTPBack.CheckForInput(helpHTPMousePosition):
-                        self.HelpScreen()
-                        break
+                        return
 
             pygame.display.update()
