@@ -15,7 +15,7 @@ class Cursor:
         if self.flag:
             surface.blit(self.image, self.rect)
 
-    def Movement(self, keys, signal):
+    def Movement(self, signal):
         if "up" in str(signal):
             if self.verifyPos("up") == "move":
                 self.rect.y -= 32

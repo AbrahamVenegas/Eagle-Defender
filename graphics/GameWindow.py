@@ -49,7 +49,6 @@ class GameWindow:
     woodAmmo = 10
     gameState = True
     global signal
-    signal = ""
 
    # def __new__(cls, *args, **kwargs):
    #     if cls._instance is None:
@@ -264,8 +263,7 @@ class GameWindow:
         self.foraneo += 1
 
     def Player1Turn(self):
-        keys = pygame.key.get_pressed()
-        self.cursor.Movement(keys,signal)
+        self.cursor.Movement(signal)
         if self.cursor.flag:
             self.readyButton = Button(self.GbuttonImage, pos=(730, 80),
                                       textInput="Ready", font=self.GetFont(12), baseColor="White",
@@ -296,12 +294,9 @@ class GameWindow:
 
 
     def Player2Turn(self):
-        global signal
         self.tank.draw(self.screen)
-        keys = pygame.key.get_pressed()
-        self.aim = self.tank.Movement(keys)
-        signal = ""
-        self.Player2Shooting(keys)
+        self.aim = self.tank.Movement(signal)
+        self.Player2Shooting(signal)
         self.tank.update()
         self.SelectIcon()
         self.showMusicInfo()
