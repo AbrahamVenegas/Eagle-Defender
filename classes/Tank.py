@@ -87,7 +87,7 @@ class Tank:
     def draw(self, surface):
         surface.blit(self.image, self.rect)
 
-    def Movement(self, keys, signal):
+    def Movement(self, signal):
         if "up" in str(signal):
             self.speed_y -= self.acceleration
             self.direction = "up"
@@ -101,7 +101,7 @@ class Tank:
             if "up" in str(signal):
                 self.direction = "up_left"
                 return "None"
-            elif "right" in str(signal):
+            elif "down" in str(signal):
                 self.direction = "down_left"
                 return "None"
             else:

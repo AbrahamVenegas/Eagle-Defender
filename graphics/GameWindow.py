@@ -190,15 +190,10 @@ class GameWindow:
         self.screen.blit(self.text3, rect3)
 
     def SelectIcon(self):
-        keys = pygame.key.get_pressed()
-        if "BloquesBalas" in str(signal) and not self.keyState.get(pygame.K_z, False):
-            self.keyState[pygame.K_z] = True
+        if "BloquesBalas" in str(signal):
             self.selectionCount += 1
             if self.selectionCount > 3:
                 self.selectionCount = 1
-        if not "BloquesBalas" in str(signal):
-            self.keyState[pygame.K_z] = False
-
         if self.selectionCount == 1:
             if self.gameTurn.player == "Atacante":
                 self.selectionX = 380
@@ -439,7 +434,7 @@ class GameWindow:
         # Iniciamos el hilo
         uart_thread.start()
 
-    def Player2Shooting(self, keys, signal):
+    def Player2Shooting(self, signal):
         if "ColocarReady" in str(signal):
             if self.fire == "ready" and not self.OutOfAmmo() and self.aim == "ready":
                 self.bullet = self.bulletFactory.CreateBullet(
@@ -473,6 +468,7 @@ class GameWindow:
 
         while True:
             """  --------------------- PLAYERS INFO ---------------------------------------------- """
+
             self.screen.blit(self.background, (0, 0))
             self.screen.blit(self.Eagle.sprite, self.Eagle.rect)
             x, y = pygame.mouse.get_pos()
