@@ -440,7 +440,7 @@ class GameWindow:
         uart_thread.start()
 
     def Player2Shooting(self, keys, signal):
-        if keys[pygame.K_SPACE] or "ColocarReady" in str(signal):
+        if "ColocarReady" in str(signal):
             if self.fire == "ready" and not self.OutOfAmmo() and self.aim == "ready":
                 self.bullet = self.bulletFactory.CreateBullet(
                     self.bulletSelected, self.tank.rect.x, self.tank.rect.y, self.tank.direction, self.screen)
@@ -555,75 +555,70 @@ class GameWindow:
                 self.readyButton.ChangeColor((x, y))
                 self.readyButton.UpdateScreen(self.screen)
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE or "Pausa" in str(signal):
-                        self.gameState = False
-                        self.dj.PauseSong()
-                        self.adapter.clear()
-                        self.adapter.getBlocksInfo([self.woodBlocks, self.concreteBlocks, self.ironBlocks],
-                                                   [self.woodAmmo, self.ironAmmo, self.concreteAmmo])
-                        self.adapter.getPlayersInfo(self.gameTurn.player, self.timer.time)
-                        self.adapter.getTankInfo(self.tank.rect.x, self.tank.rect.y)
-                        self.adapter.getAmmoInfo(self.bombAmmo, self.fireAmmo, self.waterAmmo)
-                        load = ""
-                        if self.gameTurn.player == "Defensor":
-                            return ["Pause", self.player1.username, self.player1.email]
-                        elif self.gameTurn.player == "Atacante":
-                            return ["Pause", self.player2.username, self.player2.email]
-                        self.dj.Continue()
-                        if load == "Load":
-                            self.LoadGame()
+            if "ColocarReady" in str(signal):
+                if self.gameTurn.player == "Defensor":
+                    if self.cursor.flag:
+                        cursorX, cursorY = self.cursor.GetPos()
+                        if not self.OutOfAmmo():
+                            block = self.BlockFactory.CreateBlock(self.blockSelected, cursorX, cursorY, self.screen)
+                            if (block.BlockX, block.BlockY) not in self.coordinates and block.flag:
+                                if self.blockSelected == "Wood":
+                                    self.coordinates.append((block.BlockX, block.BlockY))
+                                    self.woodBlocks.append(block)
+                                    self.blocksCollector.append(block)
+                                    self.UpdateAmmo()
+                                if self.blockSelected == "Iron":
+                                    self.coordinates.append((block.BlockX, block.BlockY))
+                                    self.ironBlocks.append(block)
+                                    self.blocksCollector.append(block)
+                                    self.UpdateAmmo()
+                                if self.blockSelected == "Concrete":
+                                    self.coordinates.append((block.BlockX, block.BlockY))
+                                    self.concreteBlocks.append(block)
+                                    self.blocksCollector.append(block)
+                                    self.UpdateAmmo()
+                            '''else:
+                                cursorX = cursorX // 32
+                                cursorY = cursorY // 32
+                                if (cursorX, cursorY) in self.coordinates:
+                                    for blockType in [self.woodBlocks, self.concreteBlocks, self.ironBlocks]:
+                                        for block in blockType:
+                                            if block.BlockX == cursorX and block.BlockY == cursorY:
+                                                blockType.remove(block)
+                                                self.coordinates.remove((block.BlockX, block.BlockY))
+                                                if block.type == "Wood":
+                                                    self.woodAmmo += 1
+                                                if block.type == "Iron":
+                                                    self.ironAmmo += 1
+                                                if block.type == "Concrete":
+                                                    self.concreteAmmo += 1'''
+                    else:
+                        self.gameTurn.player, self.gameTurn.time = self.gameTurn.ChangeTurn(
+                            self.gameTurn.player
+                            , self.player1.song,
+                            self.player2.song)
+                        self.timer.reset(60)
+                        self.dj.Stop()
+                        self.dj.NewSong(self.player2.song)
 
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_c  or "ColocarReady" in str(signal):
-                        if self.gameTurn.player == "Defensor":
-                            if self.cursor.flag:
-                                cursorX, cursorY = self.cursor.GetPos()
-                                if not self.OutOfAmmo():
-                                    block = self.BlockFactory.CreateBlock(self.blockSelected, cursorX, cursorY, self.screen)
-                                    if (block.BlockX, block.BlockY) not in self.coordinates and block.flag:
-                                        if self.blockSelected == "Wood":
-                                            self.coordinates.append((block.BlockX, block.BlockY))
-                                            self.woodBlocks.append(block)
-                                            self.blocksCollector.append(block)
-                                            self.UpdateAmmo()
-                                        if self.blockSelected == "Iron":
-                                            self.coordinates.append((block.BlockX, block.BlockY))
-                                            self.ironBlocks.append(block)
-                                            self.blocksCollector.append(block)
-                                            self.UpdateAmmo()
-                                        if self.blockSelected == "Concrete":
-                                            self.coordinates.append((block.BlockX, block.BlockY))
-                                            self.concreteBlocks.append(block)
-                                            self.blocksCollector.append(block)
-                                            self.UpdateAmmo()
-                                    else:
-                                        cursorX = cursorX // 32
-                                        cursorY = cursorY // 32
-                                        if (cursorX, cursorY) in self.coordinates:
-                                            for blockType in [self.woodBlocks, self.concreteBlocks, self.ironBlocks]:
-                                                for block in blockType:
-                                                    if block.BlockX == cursorX and block.BlockY == cursorY:
-                                                        blockType.remove(block)
-                                                        self.coordinates.remove((block.BlockX, block.BlockY))
-                                                        if block.type == "Wood":
-                                                            self.woodAmmo += 1
-                                                        if block.type == "Iron":
-                                                            self.ironAmmo += 1
-                                                        if block.type == "Concrete":
-                                                            self.concreteAmmo += 1
-                            else:
-                                self.gameTurn.player, self.gameTurn.time = self.gameTurn.ChangeTurn(
-                                    self.gameTurn.player
-                                    , self.player1.song,
-                                    self.player2.song)
-                                self.timer.reset(60)
-                                self.dj.Stop()
-                                self.dj.NewSong(self.player2.song)
+            if "Pausa" in str(signal):
+                self.gameState = False
+                self.dj.PauseSong()
+                self.adapter.clear()
+                self.adapter.getBlocksInfo([self.woodBlocks, self.concreteBlocks, self.ironBlocks],
+                                           [self.woodAmmo, self.ironAmmo, self.concreteAmmo])
+                self.adapter.getPlayersInfo(self.gameTurn.player, self.timer.time)
+                self.adapter.getTankInfo(self.tank.rect.x, self.tank.rect.y)
+                self.adapter.getAmmoInfo(self.bombAmmo, self.fireAmmo, self.waterAmmo)
+                load = ""
+                if self.gameTurn.player == "Defensor":
+                    return ["Pause", self.player1.username, self.player1.email]
+                elif self.gameTurn.player == "Atacante":
+                    return ["Pause", self.player2.username, self.player2.email]
+                self.dj.Continue()
+                if load == "Load":
+                    self.LoadGame()
+
 
             pygame.display.update()
             clock.tick(fps)
