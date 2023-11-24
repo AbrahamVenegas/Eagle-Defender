@@ -57,6 +57,7 @@ class GameWindow:
         self.explosionFlag = False
         self.gameTurn = Turn(None, None)
         self.GbuttonImage = pygame.transform.scale(pygame.image.load("assets/Buttons/GreenButton.png"), (110, 50))
+        self.RbuttonImage = pygame.transform.scale(pygame.image.load("assets/Buttons/RedButton.png"), (110, 50))
         self.readyButton = None
         self.tank = Tank()
         self.cursor = Cursor()
@@ -260,10 +261,16 @@ class GameWindow:
     def Player1Turn(self):
         keys = pygame.key.get_pressed()
         self.cursor.Movement(keys)
+        if self.cursor.flag:
+            self.readyButton = Button(self.GbuttonImage, pos=(730, 80),
+                                      textInput="Ready", font=self.GetFont(12), baseColor="White",
+                                      hoveringColor="Purple")
+        else:
+            self.readyButton = Button(self.RbuttonImage, pos=(730, 80),
+                                      textInput="Ready", font=self.GetFont(12), baseColor="White",
+                                      hoveringColor="Purple")
         self.cursor.draw(self.screen)
         self.SelectIcon()
-        self.readyButton = Button(self.GbuttonImage, pos=(730, 80),
-                                  textInput="Ready", font=self.GetFont(12), baseColor="White", hoveringColor="Purple")
 
     def showMusicInfo(self):
         font = self.GetFont(12)
@@ -505,52 +512,49 @@ class GameWindow:
                         if load == "Load":
                             self.LoadGame()
 
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        if self.gameTurn.player == "Defensor":
-
-                            if self.readyButton.CheckForInput((x, y)):
-                                self.gameTurn.player, self.gameTurn.time = self.gameTurn.ChangeTurn(self.gameTurn.player
-                                                                                                    , self.player1.song,
-                                                                                                    self.player2.song)
-                                self.timer.reset(60)
-                                self.dj.Stop()
-                                self.dj.NewSong(self.player2.song)
-
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_c:
                         if self.gameTurn.player == "Defensor":
-                            cursorX, cursorY = self.cursor.GetPos()
-                            if not self.OutOfAmmo():
-                                block = self.BlockFactory.CreateBlock(self.blockSelected, cursorX, cursorY, self.screen)
-                                if (block.BlockX, block.BlockY) not in self.coordinates and block.flag:
-                                    if self.blockSelected == "Wood":
-                                        self.coordinates.append((block.BlockX, block.BlockY))
-                                        self.woodBlocks.append(block)
-                                        self.UpdateAmmo()
-                                    if self.blockSelected == "Iron":
-                                        self.coordinates.append((block.BlockX, block.BlockY))
-                                        self.ironBlocks.append(block)
-                                        self.UpdateAmmo()
-                                    if self.blockSelected == "Concrete":
-                                        self.coordinates.append((block.BlockX, block.BlockY))
-                                        self.concreteBlocks.append(block)
-                                        self.UpdateAmmo()
-                                else:
-                                    cursorX = cursorX // 32
-                                    cursorY = cursorY // 32
-                                    if (cursorX, cursorY) in self.coordinates:
-                                        for blockType in [self.woodBlocks, self.concreteBlocks, self.ironBlocks]:
-                                            for block in blockType:
-                                                if block.BlockX == cursorX and block.BlockY == cursorY:
-                                                    blockType.remove(block)
-                                                    self.coordinates.remove((block.BlockX, block.BlockY))
-                                                    if block.type == "Wood":
-                                                        self.woodAmmo += 1
-                                                    if block.type == "Iron":
-                                                        self.ironAmmo += 1
-                                                    if block.type == "Concrete":
-                                                        self.concreteAmmo += 1
+                            if self.cursor.flag:
+                                cursorX, cursorY = self.cursor.GetPos()
+                                if not self.OutOfAmmo():
+                                    block = self.BlockFactory.CreateBlock(self.blockSelected, cursorX, cursorY, self.screen)
+                                    if (block.BlockX, block.BlockY) not in self.coordinates and block.flag:
+                                        if self.blockSelected == "Wood":
+                                            self.coordinates.append((block.BlockX, block.BlockY))
+                                            self.woodBlocks.append(block)
+                                            self.UpdateAmmo()
+                                        if self.blockSelected == "Iron":
+                                            self.coordinates.append((block.BlockX, block.BlockY))
+                                            self.ironBlocks.append(block)
+                                            self.UpdateAmmo()
+                                        if self.blockSelected == "Concrete":
+                                            self.coordinates.append((block.BlockX, block.BlockY))
+                                            self.concreteBlocks.append(block)
+                                            self.UpdateAmmo()
+                                    else:
+                                        cursorX = cursorX // 32
+                                        cursorY = cursorY // 32
+                                        if (cursorX, cursorY) in self.coordinates:
+                                            for blockType in [self.woodBlocks, self.concreteBlocks, self.ironBlocks]:
+                                                for block in blockType:
+                                                    if block.BlockX == cursorX and block.BlockY == cursorY:
+                                                        blockType.remove(block)
+                                                        self.coordinates.remove((block.BlockX, block.BlockY))
+                                                        if block.type == "Wood":
+                                                            self.woodAmmo += 1
+                                                        if block.type == "Iron":
+                                                            self.ironAmmo += 1
+                                                        if block.type == "Concrete":
+                                                            self.concreteAmmo += 1
+                            else:
+                                self.gameTurn.player, self.gameTurn.time = self.gameTurn.ChangeTurn(
+                                    self.gameTurn.player
+                                    , self.player1.song,
+                                    self.player2.song)
+                                self.timer.reset(60)
+                                self.dj.Stop()
+                                self.dj.NewSong(self.player2.song)
 
             pygame.display.update()
             clock.tick(fps)
