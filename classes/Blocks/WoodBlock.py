@@ -44,6 +44,10 @@ class WoodBlock(Block, ABC):
         if self.hp > 0:
             self.sprite = pygame.image.load(self.images[self.hp - 1])
 
+    def ResetHP(self):
+        self.hp = 3
+        self.sprite = pygame.image.load(self.images[2])
+
     def playSound(self):
         self.woodSound = pygame.mixer.Sound('assets/SoundEffects/WoodCracking.mp3')
         self.woodSound.set_volume(0.1)

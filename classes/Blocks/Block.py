@@ -19,6 +19,9 @@ class Block(ABC):  # interface class
     def updateHP(self, damage):
         pass
 
+    def ResetHP(self):
+        pass
+
     @abstractmethod
     def playSound(self):
         pass

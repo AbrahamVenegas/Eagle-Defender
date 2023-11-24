@@ -44,6 +44,10 @@ class IronBlock(Block, ABC):
         if self.hp > 0:
             self.sprite = pygame.image.load(self.images[self.hp - 1])
 
+    def ResetHP(self):
+        self.hp = 3
+        self.sprite = pygame.image.load(self.images[2])
+
     def playSound(self):
         self.ironSound = pygame.mixer.Sound('assets/SoundEffects/IronCracking.mp3')
         self.ironSound.set_volume(0.1)
