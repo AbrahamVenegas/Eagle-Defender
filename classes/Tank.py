@@ -88,31 +88,31 @@ class Tank:
         surface.blit(self.image, self.rect)
 
     def Movement(self, signal):
-        if "up" in str(signal):
+        if "up" in signal:
             self.speed_y -= self.acceleration
             self.direction = "up"
             return "ready"
-        if "down" in str(signal):
+        if "down" in signal:
             self.speed_y += self.acceleration
             self.direction = "down"
             return "ready"
-        if "left" in str(signal):
+        if "left" in signal:
             self.speed_x -= self.acceleration
-            if "up" in str(signal):
+            if "up" in signal:
                 self.direction = "up_left"
                 return "None"
-            elif "down" in str(signal):
+            elif "down" in signal:
                 self.direction = "down_left"
                 return "None"
             else:
                 self.direction = "left"
                 return "ready"
-        if "right" in str(signal):
+        if "right" in signal:
             self.speed_x += self.acceleration
-            if "up" in str(signal):
+            if "up" in signal:
                 self.direction = "up_right"
                 return "None"
-            elif "down" in str(signal):
+            elif "down" in signal:
                 self.direction = "down_right"
                 return "None"
             else:
