@@ -1,33 +1,29 @@
-from machine import Pin, ADC
+import machine
 import utime
-import Test
 
-led = Pin(25, Pin.OUT)
-xAxis = ADC(Pin(27))
-yAxis = ADC(Pin(26))
-button1 = Pin(14, Pin.IN, Pin.PULL_DOWN)
-button2 = Pin(15, Pin.IN, Pin.PULL_DOWN)
-def runControl():
-    while True:
-        xValue = xAxis.read_u16()
-        yValue = yAxis.read_u16()
-        buttonValue1 = button1.value()
-        buttonStatus1 = "not pressed"
-        buttonValue2 = button2.value()
-        buttonStatus2 = "not pressed"
+class UARTReceiver:
+    def __init__(self, uart_num, baud_rate, tx_pin, rx_pin):
+        self.uart = machine.UART(uart_num, baud_rate, tx=tx_pin, rx=rx_pin)
 
-        if buttonValue1 == 1:
-            buttonStatus1 = "pressed"
-        if buttonValue2 == 1:
-            buttonStatus2 = "pressed"
-        if xValue > 6500:
-            Test.prueba = "arriba"
+    def start_receiving(self):
+        while True:
+            if self.uart.any():
+                received_data = self.uart.readline()
+                if received_data:
+                    decoded_data = received_data.decode('utf-8').strip()
+                    print("Received:", decoded_data)
+                    # Aquí puedes agregar la lógica para procesar los datos recibidos
+            utime.sleep(0.1)  # Puedes ajustar este valor según tus necesidades
 
-        print(
-            "X: " + str(xValue) + ", Y: " + str(yValue) + " -- button 1 value: " + str(buttonValue1) + " button 1 status: "
-            + buttonStatus1 + " -- button 2 value: " + str(buttonValue2) + " button 2 status: " + buttonStatus2)
-        utime.sleep(0.2)
+def main():
+    # Configuración del puerto UART
+    uart_num = 0  # Número del puerto UART que estás utilizando
+    baud_rate = 9600  # Velocidad de baudios
+    tx_pin = machine.Pin(0)  # Reemplaza el número del pin con el que estás utilizando para TX
+    rx_pin = machine.Pin(1)  # Reemplaza el número del pin con el que estás utilizando para RX
+
+    uart_receiver = UARTReceiver(uart_num, baud_rate, tx_pin, rx_pin)
+    uart_receiver.start_receiving()
 
 if __name__ == "__main__":
-    runControl()
-
+    main()
