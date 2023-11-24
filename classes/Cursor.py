@@ -16,21 +16,21 @@ class Cursor:
             surface.blit(self.image, self.rect)
 
     def Movement(self, keys):
-        if keys[pygame.K_w]:
+        if "up" in str(signal):
             if self.verifyPos("up") == "move":
                 self.rect.y -= 32
                 self.flag = True
             if self.verifyPos("up") == "ready":
                 self.flag = False
-        if keys[pygame.K_s]:
+        if "down" in str(signal):
             if self.verifyPos("down") == "move":
                 self.rect.y += 32
                 self.flag = True
-        if keys[pygame.K_a]:
+        if "left" in str(signal):
             if self.verifyPos("left") == "move":
                 self.rect.x -= 32
                 self.flag = True
-        if keys[pygame.K_d]:
+        if "right" in str(signal):
             if self.verifyPos("right") == "move":
                 self.rect.x += 32
                 self.flag = True
