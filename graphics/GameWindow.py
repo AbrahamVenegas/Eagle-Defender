@@ -50,10 +50,11 @@ class GameWindow:
     gameState = True
     global signal
     signal = ""
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
+
+   # def __new__(cls, *args, **kwargs):
+   #     if cls._instance is None:
+   #        cls._instance = super().__new__(cls)
+   #    return cls._instance
 
     def __init__(self):
         self.width = 800
@@ -188,12 +189,12 @@ class GameWindow:
 
     def SelectIcon(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_z] and not self.keyState.get(pygame.K_z, False) or "BloquesBalas" in str(signal):
+        if "BloquesBalas" in str(signal) and not self.keyState.get(pygame.K_z, False):
             self.keyState[pygame.K_z] = True
             self.selectionCount += 1
             if self.selectionCount > 3:
                 self.selectionCount = 1
-        if not keys[pygame.K_z]:
+        if not "BloquesBalas" in str(signal):
             self.keyState[pygame.K_z] = False
 
         if self.selectionCount == 1:
@@ -267,7 +268,7 @@ class GameWindow:
 
     def Player1Turn(self):
         keys = pygame.key.get_pressed()
-        self.cursor.Movement(keys)
+        self.cursor.Movement(keys, signal)
         self.cursor.draw(self.screen)
         self.SelectIcon()
         self.readyButton = Button(self.GbuttonImage, pos=(730, 80),
@@ -297,7 +298,7 @@ class GameWindow:
         keys = pygame.key.get_pressed()
         self.aim = self.tank.Movement(keys, signal)
         signal = ""
-        self.Player2Shooting(keys)
+        self.Player2Shooting(keys, signal)
         self.tank.update()
         self.SelectIcon()
         self.showMusicInfo()
@@ -387,7 +388,7 @@ class GameWindow:
                                   '/dev/ttyS0', '/dev/ttyS1']
 
             # Puertos serie en Windows (los nombres pueden variar)
-            windows_serial_ports = ['COM1', 'COM2', 'COM3', 'COM4','COM7']
+            windows_serial_ports = ['COM1', 'COM2', 'COM3', 'COM4', 'COM7']
 
             # Agregar puertos serie de Linux a la lista
             SERIAL_PORTS.extend(linux_serial_ports)
@@ -419,8 +420,8 @@ class GameWindow:
         # Iniciamos el hilo
         uart_thread.start()
 
-    def Player2Shooting(self, keys):
-        if keys[pygame.K_SPACE]:
+    def Player2Shooting(self, keys, signal):
+        if keys[pygame.K_SPACE] or "ColocarReady" in str(signal):
             if self.fire == "ready" and not self.OutOfAmmo() and self.aim == "ready":
                 self.bullet = self.bulletFactory.CreateBullet(
                     self.bulletSelected, self.tank.rect.x, self.tank.rect.y, self.tank.direction, self.screen)
@@ -449,8 +450,8 @@ class GameWindow:
 
         clock = pygame.time.Clock()
         fps = 60
-
         self.receive_data_from_uart()
+
         while True:
             """  --------------------- PLAYERS INFO ---------------------------------------------- """
             self.screen.blit(self.background, (0, 0))
@@ -571,7 +572,7 @@ class GameWindow:
                                 self.dj.NewSong(self.player2.song)
 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_c:
+                    if event.key == pygame.K_c or "ColocarReady" in str(signal):
                         if self.gameTurn.player == "Defensor":
                             cursorX, cursorY = self.cursor.GetPos()
                             if not self.OutOfAmmo():

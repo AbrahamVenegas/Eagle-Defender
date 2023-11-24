@@ -1,6 +1,4 @@
 import pygame
-import serial
-import threading
 
 tank_sprites = [
     pygame.image.load("assets/Tank/tank1.png"),
@@ -90,31 +88,31 @@ class Tank:
         surface.blit(self.image, self.rect)
 
     def Movement(self, keys, signal):
-        if keys[pygame.K_w] or "up" in str(signal):
+        if "up" in str(signal):
             self.speed_y -= self.acceleration
             self.direction = "up"
             return "ready"
-        if keys[pygame.K_s] or "down" in str(signal):
+        if "down" in str(signal):
             self.speed_y += self.acceleration
             self.direction = "down"
             return "ready"
-        if keys[pygame.K_a] or "left" in str(signal):
+        if "left" in str(signal):
             self.speed_x -= self.acceleration
-            if keys[pygame.K_w]:
+            if "up" in str(signal):
                 self.direction = "up_left"
                 return "None"
-            elif keys[pygame.K_s] or "right" in str(signal):
+            elif "right" in str(signal):
                 self.direction = "down_left"
                 return "None"
             else:
                 self.direction = "left"
                 return "ready"
-        if keys[pygame.K_d]:
+        if "right" in str(signal):
             self.speed_x += self.acceleration
-            if keys[pygame.K_w]:
+            if "up" in str(signal):
                 self.direction = "up_right"
                 return "None"
-            elif keys[pygame.K_s]:
+            elif "down" in str(signal):
                 self.direction = "down_right"
                 return "None"
             else:
