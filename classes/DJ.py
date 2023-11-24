@@ -4,15 +4,15 @@ import pygame
 
 class DJ:
     _instance = None
+    song = None
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
             cls._instance = super(DJ, cls).__new__(cls)
         return cls._instance
 
-    def __init__(self, songRoute):
+    def __init__(self):
         pygame.mixer.init()
-        self.song = songRoute
         self.tempo = random.randint(1, 10)
         self.popularidad = random.randint(1, 10)
         self.bailabilidad = random.randint(1, 10)
@@ -40,8 +40,8 @@ class DJ:
         return pygame.mixer.music.get_busy()
 
     def PlayLobbyMusic(self):
-        pygame.mixer.music.load("assets/Music/Lobby_music.mp3")
-        pygame.mixer.music.play(-1)
+        self.song = "assets/Music/Lobby_music.mp3"
+        self.Play()
 
     def BeneficioForaneo(self):
         return int(self.popularidad/self.bailabilidad * self.acustico + self.tempo)

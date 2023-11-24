@@ -73,6 +73,9 @@ class GameWindow:
         self.ironBlocks = []
         self.concreteBlocks = []
         self.woodBlocks = []
+        self.tank.rect.x = 700
+        self.tank.rect.y = 260
+
     def GetFont(self, size):
         return pygame.font.Font("assets/font.ttf", size)
 
@@ -91,7 +94,6 @@ class GameWindow:
         self.ironBlocks.clear()
         self.concreteBlocks.clear()
         json = self.loader.loadGame()
-        print(json)
         count = 0
         woodLife = eval(json['woodLife'])
         ironLife = eval(json['ironLife'])
@@ -382,8 +384,8 @@ class GameWindow:
         if self.gameState:
             self.timer = Timer(self.screen, 630, 545, self.GetFont(14), 60)
             self.timer.start()
-            self.dj = DJ(self.player1.song)
-            self.dj.Play()
+            self.dj = DJ()
+            self.dj.NewSong(self.player1.song)
             self.gameTurn.player = "Defensor"
         else:
             self.dj.Continue()

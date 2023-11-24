@@ -8,7 +8,7 @@ class FinishWindow:
     titleFont = font = None
 
     def __init__(self):
-        self.dj = DJ(None)
+        self.dj = DJ()
         self.button = None
         self.width = 800
         self.height = 576
@@ -29,6 +29,7 @@ class FinishWindow:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.button.CheckForInput(mousePos):
                         self.dj.Stop()
+                        pygame.quit()
                         return ["Start"]
             self.show_finish_window(winner, looser)
             self.button.ChangeColor(mousePos)

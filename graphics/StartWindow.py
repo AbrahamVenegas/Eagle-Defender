@@ -9,14 +9,12 @@ class StartWindow:
     _instance = None
     Screen = None
     Background = pygame.image.load("assets/Background.png")
+    DJ = None
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
         return cls._instance
-
-    def __init__(self):
-        self.DJ = DJ("assets/Music/Lobby_Music.mp3")
 
     def GetFont(self, size):  # To return it in the desired size
         return pygame.font.Font("assets/font.ttf", size)
@@ -75,6 +73,7 @@ class StartWindow:
     def MainScreen(self):
         running = True
         pygame.init()  # starts it
+        self.DJ = DJ()
         self.Screen = pygame.display.set_mode((1440, 810))  # To set the parameters of the window
         pygame.display.set_caption("Eagle Defender")  # Window Title
         if not self.DJ.isPlaying():
