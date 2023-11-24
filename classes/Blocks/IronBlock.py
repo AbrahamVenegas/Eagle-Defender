@@ -11,7 +11,7 @@ class IronBlock(Block, ABC):
     ironSound = None
 
     def __init__(self, BlockX, BlockY, surface):
-        self.type = "Concrete"
+        self.type = "Iron"
         self.BlockX = BlockX
         self.BlockY = BlockY
         self.screen = surface

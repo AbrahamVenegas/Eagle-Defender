@@ -523,21 +523,34 @@ class GameWindow:
                             cursorX, cursorY = self.cursor.GetPos()
                             if not self.OutOfAmmo():
                                 block = self.BlockFactory.CreateBlock(self.blockSelected, cursorX, cursorY, self.screen)
-                                if self.blockSelected == "Wood":
-                                    if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
+                                if (block.BlockX, block.BlockY) not in self.coordinates and block.flag:
+                                    if self.blockSelected == "Wood":
                                         self.coordinates.append((block.BlockX, block.BlockY))
                                         self.woodBlocks.append(block)
                                         self.UpdateAmmo()
-                                if self.blockSelected == "Iron":
-                                    if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
+                                    if self.blockSelected == "Iron":
                                         self.coordinates.append((block.BlockX, block.BlockY))
                                         self.ironBlocks.append(block)
                                         self.UpdateAmmo()
-                                if self.blockSelected == "Concrete":
-                                    if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
+                                    if self.blockSelected == "Concrete":
                                         self.coordinates.append((block.BlockX, block.BlockY))
                                         self.concreteBlocks.append(block)
                                         self.UpdateAmmo()
+                                else:
+                                    cursorX = cursorX // 32
+                                    cursorY = cursorY // 32
+                                    if (cursorX, cursorY) in self.coordinates:
+                                        for blockType in [self.woodBlocks, self.concreteBlocks, self.ironBlocks]:
+                                            for block in blockType:
+                                                if block.BlockX == cursorX and block.BlockY == cursorY:
+                                                    blockType.remove(block)
+                                                    self.coordinates.remove((block.BlockX, block.BlockY))
+                                                    if block.type == "Wood":
+                                                        self.woodAmmo += 1
+                                                    if block.type == "Iron":
+                                                        self.ironAmmo += 1
+                                                    if block.type == "Concrete":
+                                                        self.concreteAmmo += 1
 
             pygame.display.update()
             clock.tick(fps)
