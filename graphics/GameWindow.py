@@ -57,6 +57,7 @@ class GameWindow:
         self.explosionFlag = False
         self.gameTurn = Turn(None, None)
         self.GbuttonImage = pygame.transform.scale(pygame.image.load("assets/Buttons/GreenButton.png"), (110, 50))
+        self.RbuttonImage = pygame.transform.scale(pygame.image.load("assets/Buttons/RedButton.png"), (110, 50))
         self.readyButton = None
         self.tank = Tank()
         self.cursor = Cursor()
@@ -260,10 +261,18 @@ class GameWindow:
     def Player1Turn(self):
         keys = pygame.key.get_pressed()
         self.cursor.Movement(keys)
+        if self.cursor.flag:
+            self.readyButton = Button(self.GbuttonImage, pos=(730, 80),
+                                      textInput="Ready", font=self.GetFont(12), baseColor="White",
+                                      hoveringColor="Purple")
+        else:
+            self.readyButton = Button(self.RbuttonImage, pos=(730, 80),
+                                      textInput="Ready", font=self.GetFont(12), baseColor="White",
+                                      hoveringColor="Purple")
+
         self.cursor.draw(self.screen)
         self.SelectIcon()
-        self.readyButton = Button(self.GbuttonImage, pos=(730, 80),
-                                  textInput="Ready", font=self.GetFont(12), baseColor="White", hoveringColor="Purple")
+
 
     def showMusicInfo(self):
         font = self.GetFont(12)
@@ -505,39 +514,35 @@ class GameWindow:
                         if load == "Load":
                             self.LoadGame()
 
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_c:
                         if self.gameTurn.player == "Defensor":
-
-                            if self.readyButton.CheckForInput((x, y)):
+                            if self.cursor.flag:
+                                cursorX, cursorY = self.cursor.GetPos()
+                                if not self.OutOfAmmo():
+                                    block = self.BlockFactory.CreateBlock(self.blockSelected, cursorX, cursorY, self.screen)
+                                    if self.blockSelected == "Wood":
+                                        if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
+                                            self.coordinates.append((block.BlockX, block.BlockY))
+                                            self.woodBlocks.append(block)
+                                            self.UpdateAmmo()
+                                    if self.blockSelected == "Iron":
+                                        if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
+                                            self.coordinates.append((block.BlockX, block.BlockY))
+                                            self.ironBlocks.append(block)
+                                            self.UpdateAmmo()
+                                    if self.blockSelected == "Concrete":
+                                        if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
+                                            self.coordinates.append((block.BlockX, block.BlockY))
+                                            self.concreteBlocks.append(block)
+                                            self.UpdateAmmo()
+                            else:
                                 self.gameTurn.player, self.gameTurn.time = self.gameTurn.ChangeTurn(self.gameTurn.player
                                                                                                     , self.player1.song,
                                                                                                     self.player2.song)
                                 self.timer.reset(60)
                                 self.dj.Stop()
                                 self.dj.NewSong(self.player2.song)
-
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_c:
-                        if self.gameTurn.player == "Defensor":
-                            cursorX, cursorY = self.cursor.GetPos()
-                            if not self.OutOfAmmo():
-                                block = self.BlockFactory.CreateBlock(self.blockSelected, cursorX, cursorY, self.screen)
-                                if self.blockSelected == "Wood":
-                                    if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
-                                        self.coordinates.append((block.BlockX, block.BlockY))
-                                        self.woodBlocks.append(block)
-                                        self.UpdateAmmo()
-                                if self.blockSelected == "Iron":
-                                    if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
-                                        self.coordinates.append((block.BlockX, block.BlockY))
-                                        self.ironBlocks.append(block)
-                                        self.UpdateAmmo()
-                                if self.blockSelected == "Concrete":
-                                    if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
-                                        self.coordinates.append((block.BlockX, block.BlockY))
-                                        self.concreteBlocks.append(block)
-                                        self.UpdateAmmo()
 
             pygame.display.update()
             clock.tick(fps)
