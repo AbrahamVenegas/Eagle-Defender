@@ -194,6 +194,8 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="MicroPython.Flash Control.py" />
+      <item itemvalue="MicroPython.Flash Control.py (1)" />
       <item itemvalue="Python.Test" />
       <item itemvalue="Python.Main" />
       <item itemvalue="Python.REST_API" />
