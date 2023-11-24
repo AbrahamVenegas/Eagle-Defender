@@ -299,9 +299,9 @@ class GameWindow:
         global signal
         self.tank.draw(self.screen)
         keys = pygame.key.get_pressed()
-        self.aim = self.tank.Movement(keys, signal)
+        self.aim = self.tank.Movement(keys)
         signal = ""
-        self.Player2Shooting(keys, signal)
+        self.Player2Shooting(keys)
         self.tank.update()
         self.SelectIcon()
         self.showMusicInfo()
