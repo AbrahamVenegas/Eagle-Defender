@@ -1,4 +1,6 @@
 import pygame
+import serial
+import threading
 
 tank_sprites = [
     pygame.image.load("assets/Tank/tank1.png"),
@@ -40,7 +42,6 @@ class Tank:
     acceleration = 0.5  # Aceleración del movimiento
     friction = 0.2  # Fricción para el movimiento suave
     shootingSound = None
-
     def __int__(self, x, y):
         super().__init__()
         self.images = {
@@ -63,6 +64,7 @@ class Tank:
         self.friction = 0.1  # Fricción para el movimiento suave
         self.direction = "left"
         self.image = self.images[self.direction]
+
 
     def update(self):
         # Aplicar fricción para el movimiento suave
@@ -87,21 +89,21 @@ class Tank:
     def draw(self, surface):
         surface.blit(self.image, self.rect)
 
-    def Movement(self, keys):
-        if keys[pygame.K_w]:
+    def Movement(self, keys, signal):
+        if keys[pygame.K_w] or "up" in str(signal):
             self.speed_y -= self.acceleration
             self.direction = "up"
             return "ready"
-        if keys[pygame.K_s]:
+        if keys[pygame.K_s] or "down" in str(signal):
             self.speed_y += self.acceleration
             self.direction = "down"
             return "ready"
-        if keys[pygame.K_a]:
+        if keys[pygame.K_a] or "left" in str(signal):
             self.speed_x -= self.acceleration
             if keys[pygame.K_w]:
                 self.direction = "up_left"
                 return "None"
-            elif keys[pygame.K_s]:
+            elif keys[pygame.K_s] or "right" in str(signal):
                 self.direction = "down_left"
                 return "None"
             else:
