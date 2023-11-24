@@ -7,6 +7,7 @@ from graphics.PauseWindow import PauseWindow
 from graphics.SaveMenu import SaveMenu
 from graphics.LoadMenu import LoadMenu
 from graphics.FinishWindow import FinishWindow
+from graphics.SettingsWindow import SettingsWindow
 
 
 class Mediator:
@@ -19,6 +20,7 @@ class Mediator:
     loadMenu = LoadMenu()
     gameWindow = None
     finishWindow = FinishWindow()
+    settingsWindow = SettingsWindow()
 
 
     def run(self):
@@ -53,6 +55,8 @@ class Mediator:
                 change = self.loadMenu.showLoadMenu()
             elif change[0] == "Finish":
                 change = self.finishWindow.FinishGame(change[1], change[2], change[3])
+            elif change[0] == "Settings":
+                change = self.settingsWindow.showSettings()
             elif change[0] == "Quit":
                 break
 
