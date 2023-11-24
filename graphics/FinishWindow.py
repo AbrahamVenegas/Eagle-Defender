@@ -16,7 +16,7 @@ class FinishWindow:
     def GetFont(self, size):
         return pygame.font.Font("assets/font.ttf", size)
 
-    def FinishGame(self, winner, looser):
+    def FinishGame(self, winner, looser, time):
         pygame.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.dj.NewSong("DefaultPlaylist/FinishSong.mp3")

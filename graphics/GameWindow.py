@@ -463,10 +463,10 @@ class GameWindow:
                 self.Player2Turn()
                 if self.Eagle.lifePoints == 0:
                     self.dj.Stop()
-                    return ["Finish", self.player2.username, self.player1.username]
+                    return ["Finish", self.player2.username, self.player1.username, self.timer.time]
                 if self.timer.time == 0:
                     self.dj.Stop()
-                    return ["Finish", self.player1.username, self.player2.username]
+                    return ["Finish", self.player1.username, self.player2.username, self.timer.time]
 
                 if self.explosionFlag:
                     self.explosionAnimation.playAnimation()

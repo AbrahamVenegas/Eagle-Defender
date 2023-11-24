@@ -49,7 +49,7 @@ class Mediator:
             elif change[0] == "LoadMenu":
                 change = self.loadMenu.showLoadMenu()
             elif change[0] == "Finish":
-                change = self.finishWindow.FinishGame(change[1], change[2])
+                change = self.finishWindow.FinishGame(change[1], change[2], change[3])
             elif change[0] == "Quit":
                 break
 
