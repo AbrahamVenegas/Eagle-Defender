@@ -4,6 +4,7 @@ import pygame
 class Timer:
     _instance = None
     time = 60
+    defender = attacker = 0
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
