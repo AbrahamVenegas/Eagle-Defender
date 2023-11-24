@@ -15,6 +15,7 @@ from graphics.PauseWindow import PauseWindow
 from classes.AnimationHandler import AnimationHandler
 from REST_API.JSONAdapter import JSONAdapter
 from REST_API.Loader import Loader
+from classes.Cursor import Cursor
 
 
 class GameWindow:
@@ -58,6 +59,7 @@ class GameWindow:
         self.GbuttonImage = pygame.transform.scale(pygame.image.load("assets/Buttons/GreenButton.png"), (110, 50))
         self.readyButton = None
         self.tank = Tank()
+        self.cursor = Cursor()
         self.coordinates = []
         self.text1 = self.text2 = self.text3 = None
         self.selectSprites = None
@@ -256,6 +258,9 @@ class GameWindow:
         self.foraneo += 1
 
     def Player1Turn(self):
+        keys = pygame.key.get_pressed()
+        self.cursor.Movement(keys)
+        self.cursor.draw(self.screen)
         self.SelectIcon()
         self.readyButton = Button(self.GbuttonImage, pos=(730, 80),
                                   textInput="Ready", font=self.GetFont(12), baseColor="White", hoveringColor="Purple")
@@ -512,8 +517,12 @@ class GameWindow:
                                 self.dj.Stop()
                                 self.dj.NewSong(self.player2.song)
 
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_c:
+                        if self.gameTurn.player == "Defensor":
+                            cursorX, cursorY = self.cursor.GetPos()
                             if not self.OutOfAmmo():
-                                block = self.BlockFactory.CreateBlock(self.blockSelected, x, y, self.screen)
+                                block = self.BlockFactory.CreateBlock(self.blockSelected, cursorX, cursorY, self.screen)
                                 if self.blockSelected == "Wood":
                                     if block.flag and (block.BlockX, block.BlockY) not in self.coordinates:
                                         self.coordinates.append((block.BlockX, block.BlockY))
@@ -529,7 +538,6 @@ class GameWindow:
                                         self.coordinates.append((block.BlockX, block.BlockY))
                                         self.concreteBlocks.append(block)
                                         self.UpdateAmmo()
-
 
             pygame.display.update()
             clock.tick(fps)
