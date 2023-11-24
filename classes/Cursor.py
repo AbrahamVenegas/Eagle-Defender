@@ -9,31 +9,23 @@ class Cursor:
         self.rect = self.image.get_rect()
         self.rect.x = 640
         self.rect.y = 256
-        self.flag = True
 
     def draw(self, surface):
-        if self.flag:
-            surface.blit(self.image, self.rect)
+        surface.blit(self.image, self.rect)
 
     def Movement(self, keys):
         if keys[pygame.K_w]:
-            if self.verifyPos("up") == "move":
+            if self.verifyPos("up"):
                 self.rect.y -= 32
-                self.flag = True
-            if self.verifyPos("up") == "ready":
-                self.flag = False
         if keys[pygame.K_s]:
-            if self.verifyPos("down") == "move":
+            if self.verifyPos("down"):
                 self.rect.y += 32
-                self.flag = True
         if keys[pygame.K_a]:
-            if self.verifyPos("left") == "move":
+            if self.verifyPos("left"):
                 self.rect.x -= 32
-                self.flag = True
         if keys[pygame.K_d]:
-            if self.verifyPos("right") == "move":
+            if self.verifyPos("right"):
                 self.rect.x += 32
-                self.flag = True
 
     def verifyPos(self, direction):
         posY = self.rect.y // 32
@@ -48,10 +40,9 @@ class Cursor:
             posX += 1
 
         if (8 <= posY <= 10 and 3 <= posX <= 6) or (7 <= posY <= 10 and 21 <= posX <= 24) or posX > 24:
-            return "noMove"
-        elif posY == 3 and 21 <= posX <= 24:
-            return "ready"
+            return False
         elif 3 < posY < 15 and posX > 1:
-            return "move"
+            return True
+
     def GetPos(self):
         return self.rect.x, self.rect.y
