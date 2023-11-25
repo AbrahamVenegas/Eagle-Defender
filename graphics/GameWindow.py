@@ -49,6 +49,7 @@ class GameWindow:
     woodAmmo = 10
     gameState = True
     signal = ""
+    gameTime = 0
 
     def __init__(self):
         self.width = 800
@@ -360,7 +361,11 @@ class GameWindow:
                 self.fire = "ready"
                 self.Eagle.lifePoints -= 1
         """  --------------------- COLLISIONS ---------------------------------------------- """
-        if self.timer.time % 30 == 0 and self.timer.time != 60:
+        if self.timer.attacker == 0:
+            self.gameTime = 60
+        else:
+            self.gameTime = self.timer.attacker
+        if (self.gameTime - self.timer.time) % 30 == 0 and self.timer.time != 60:
             halfBlocks = int((30 - (self.ironAmmo + self.concreteAmmo + self.woodAmmo))/2)
             if self.blocksDestroyed <= halfBlocks:
                 self.ForaneoBuff(True)
@@ -368,18 +373,29 @@ class GameWindow:
         elif self.timer.time == 20:
             self.ForaneoBuff(False)
         else:
-            self.reloadFlag = 0 
+            self.reloadFlag = 0
             self.foraneo = 0
 
-        if (60 - self.timer.time) % 25 == 0:
-            for block in self.blocksCollector:
-                block.ResetHP()
-                if block.type == "Wood" and block not in self.woodBlocks:
-                    self.woodBlocks.append(block)
-                if block.type == "Concrete" and block not in self.concreteBlocks:
-                    self.concreteBlocks.append(block)
-                if block.type == "Iron" and block not in self.ironBlocks:
-                    self.ironBlocks.append(block)
+        if self.timer.attacker == 0:
+            if (60 - self.timer.time) % 25 == 0:
+                for block in self.blocksCollector:
+                    block.ResetHP()
+                    if block.type == "Wood" and block not in self.woodBlocks:
+                        self.woodBlocks.append(block)
+                    if block.type == "Concrete" and block not in self.concreteBlocks:
+                        self.concreteBlocks.append(block)
+                    if block.type == "Iron" and block not in self.ironBlocks:
+                        self.ironBlocks.append(block)
+        else:
+            if (self.timer.attacker - self.timer.time) % 25 == 0:
+                for block in self.blocksCollector:
+                    block.ResetHP()
+                    if block.type == "Wood" and block not in self.woodBlocks:
+                        self.woodBlocks.append(block)
+                    if block.type == "Concrete" and block not in self.concreteBlocks:
+                        self.concreteBlocks.append(block)
+                    if block.type == "Iron" and block not in self.ironBlocks:
+                        self.ironBlocks.append(block)
 
                 
     def receive_data_from_uart(self):
@@ -443,7 +459,8 @@ class GameWindow:
         self.explosionAnimation = AnimationHandler(self.screen, "assets/ExplosionAnimation/", 0, 0,
                                                    16)
         if self.gameState:
-            self.timer = Timer(self.screen, 630, 545, self.GetFont(14), 60)
+            self.timer = Timer()
+            self.timer.defenderTime()
             self.timer.start()
             self.dj = DJ()
             self.dj.NewSong(self.player1.song)
@@ -499,7 +516,7 @@ class GameWindow:
 
             """  --------------------- TIMER ----------------------------------------------------- """
             self.timer.update()
-            self.timer.draw()
+            self.timer.draw(self.screen, self.GetFont(14), 630, 545)
             """  --------------------- TIMER ----------------------------------------------------- """
 
             if self.gameTurn.CheckTurn(self.timer.time):
@@ -507,7 +524,7 @@ class GameWindow:
                     self.gameTurn.player, self.gameTurn.time = self.gameTurn.ChangeTurn(self.gameTurn.player,
                                                                                     self.player1.song,
                                                                                     self.player2.song)
-                    self.timer.reset(60)
+                    self.timer.attackTime()
                 if self.gameTurn.player == "Defensor":
                     self.dj.Stop()
                     self.dj.NewSong(self.player1.song)
@@ -526,10 +543,19 @@ class GameWindow:
                 self.Player2Turn()
                 if self.Eagle.lifePoints == 0:
                     self.dj.Stop()
-                    return ["Finish", self.player2.username, self.player1.username, self.timer.time]
+                    if self.timer.attacker == 0:  # Default time
+                        return ["Finish", self.player2.username, self.player1.username,
+                                60 - self.timer.time]
+                    else:
+                        return ["Finish", self.player2.username, self.player1.username,
+                                self.timer.attacker - self.timer.time]
+
                 if self.timer.time == 0:
                     self.dj.Stop()
-                    return ["Finish", self.player1.username, self.player2.username, self.timer.time]
+                    if self.timer.attacker == 0:
+                        return ["Finish", self.player1.username, self.player2.username, 60 - self.timer.time]
+                    else:
+                        return ["Finish", self.player1.username, self.player2.username, self.timer.attacker]
 
                 if self.explosionFlag:
                     self.explosionAnimation.playAnimation()
@@ -583,7 +609,7 @@ class GameWindow:
                             self.gameTurn.player
                             , self.player1.song,
                             self.player2.song)
-                        self.timer.reset(60)
+                        self.timer.attackTime()
                         self.dj.Stop()
                         self.dj.NewSong(self.player2.song)
             if "Pausa" in str(self.signal):

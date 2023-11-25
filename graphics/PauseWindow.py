@@ -3,6 +3,7 @@ import sys
 from REST_API.JSONAdapter import JSONAdapter
 from REST_API import REST_API
 from REST_API.Loader import Loader
+from classes.button import Button
 
 
 class PauseWindow:
@@ -35,6 +36,11 @@ class PauseWindow:
         self.font = self.GetFont(24)
         paused = True
         while paused:
+            self.show_paused_window(player)
+            helpButton = Button(image=None, pos=(26 + 40, 26 + 8),
+                                textInput="HELP", font=self.GetFont(26), baseColor="White", hoveringColor="Green")
+            helpButton.ChangeColor(pygame.mouse.get_pos())
+            helpButton.UpdateScreen(self.screen)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -53,10 +59,9 @@ class PauseWindow:
                         self.loader.empty()
                         self.loader.getJSON(email)
                         return ["LoadMenu"]
-
-
-            # Lógica para mostrar la ventana de pausa en la pantalla
-            self.show_paused_window(player)
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if helpButton.CheckForInput(pygame.mouse.get_pos()):
+                        return ["Help", 1, player, email]
             pygame.display.update()
 
     def show_paused_window(self, player):

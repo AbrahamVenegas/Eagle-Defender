@@ -2,12 +2,16 @@ import pygame
 
 
 class Timer:
-    def __init__(self, screen, x, y, font, time_limit_seconds):
-        self.screen = screen
-        self.x = x
-        self.y = y
-        self.font = font
-        self.time = time_limit_seconds
+    _instance = None
+    time = 60
+    defender = attacker = 0
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(Timer, cls).__new__(cls)
+        return cls._instance
+
+    def __init__(self):
         self.time_elapsed = 0
         self.running = False
 
@@ -28,6 +32,30 @@ class Timer:
                 self.time -= 1
                 self.time_elapsed = actual_Time
 
-    def draw(self):
-        text = self.font.render(f"Tiempo: {self.time}s", True, "White")
-        self.screen.blit(text, (self.x, self.y))
+    def setDefenderTime(self, time):
+        if self.defender + time < 0:
+            pass
+        else:
+            self.defender += time
+
+    def setAttackerTime(self, time):
+        if self.attacker + time < 0:
+            pass
+        else:
+            self.attacker += time
+
+    def attackTime(self):
+        if self.attacker == 0:
+            self.time = 60
+        else:
+            self.time = self.attacker
+
+    def defenderTime(self):
+        if self.defender == 0:
+            self.time = 60
+        else:
+            self.time = self.defender
+
+    def draw(self, screen, font, x, y):
+        text = font.render(f"Tiempo: {self.time}s", True, "White")
+        screen.blit(text, (x, y))
