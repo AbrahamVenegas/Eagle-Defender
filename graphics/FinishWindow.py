@@ -34,9 +34,18 @@ class FinishWindow:
                         pygame.quit()
                         return ["Start"]
             self.show_finish_window(winner, looser)
+            self.LeaderboardMsg(response)
             self.button.ChangeColor(mousePos)
             self.button.UpdateScreen(self.screen)
             pygame.display.update()
+
+    def LeaderboardMsg(self, Flag):
+        if Flag:
+            text = self.font.render("New record! :D", True, "White")
+            self.screen.blit(text, (280, 360))
+        else:
+            text = self.font.render("Try your best next time :(", True, "White")
+            self.screen.blit(text, (200, 360))
 
     def show_finish_window(self, winner, looser):
         self.screen.fill(color=0)
