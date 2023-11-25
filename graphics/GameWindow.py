@@ -48,7 +48,6 @@ class GameWindow:
     concreteAmmo = 10
     woodAmmo = 10
     gameState = True
-    global signal
     signal = ""
 
     def __init__(self):
@@ -76,6 +75,7 @@ class GameWindow:
         self.keyState = {}
         self.score = 0
         self.adapter = JSONAdapter()
+        self.signal = ""
 
     def Reset(self):
         self.ironBlocks = []
@@ -185,7 +185,7 @@ class GameWindow:
         self.screen.blit(self.text3, rect3)
 
     def SelectIcon(self):
-        if "BloquesBalas" in str(signal):
+        if "BloquesBalas" in str(self.signal):
             self.selectionCount += 1
             if self.selectionCount > 3:
                 self.selectionCount = 1
@@ -210,7 +210,6 @@ class GameWindow:
             elif self.gameTurn.player == "Defensor":
                 self.selectionX = 380 - 80
                 self.blockSelected = "Iron"
-
     def OutOfAmmo(self):
         if self.selectionCount == 1:
             if self.gameTurn.player == "Atacante":
@@ -259,7 +258,7 @@ class GameWindow:
         self.foraneo += 1
 
     def Player1Turn(self):
-        self.cursor.Movement(signal)
+        self.cursor.Movement(self.signal)
         if self.cursor.flag:
             self.readyButton = Button(self.GbuttonImage, pos=(730, 80),
                                       textInput="Ready", font=self.GetFont(12), baseColor="White",
@@ -291,8 +290,8 @@ class GameWindow:
 
     def Player2Turn(self):
         self.tank.draw(self.screen)
-        self.aim = self.tank.Movement(signal)
-        self.Player2Shooting(signal)
+        self.aim = self.tank.Movement(self.signal)
+        self.Player2Shooting()
         self.tank.update()
         self.SelectIcon()
         self.showMusicInfo()
@@ -402,7 +401,6 @@ class GameWindow:
             SERIAL_PORTS.extend(windows_serial_ports)
 
             BAUD_RATE = 9600
-            global signal
 
             while True:  # Bucle infinito para seguir escuchando
                 for port in SERIAL_PORTS:
@@ -414,7 +412,7 @@ class GameWindow:
                                 print(data_received)
                                 if data_received != 'None':
                                     # Realizar alguna acción con los datos recibidos si es necesario
-                                    signal = data_received
+                                    self.signal = data_received
 
                     except serial.SerialException:
                         pass  # Puedes agregar manejo de errores aquí si es necesario
@@ -425,8 +423,8 @@ class GameWindow:
         # Iniciamos el hilo
         uart_thread.start()
 
-    def Player2Shooting(self, signal):
-        if "ColocarReady" in str(signal):
+    def Player2Shooting(self):
+        if "ColocarReady" in str(self.signal):
             if self.fire == "ready" and not self.OutOfAmmo() and self.aim == "ready":
                 self.bullet = self.bulletFactory.CreateBullet(
                     self.bulletSelected, self.tank.rect.x, self.tank.rect.y, self.tank.direction, self.screen)
@@ -542,7 +540,8 @@ class GameWindow:
                 self.readyButton.ChangeColor((x, y))
                 self.readyButton.UpdateScreen(self.screen)
 
-            if "ColocarReady" in str(signal):
+            if "ColocarReady" in str(self.signal):
+
                 if self.gameTurn.player == "Defensor":
                     if self.cursor.flag:
                         cursorX, cursorY = self.cursor.GetPos()
@@ -564,7 +563,7 @@ class GameWindow:
                                     self.concreteBlocks.append(block)
                                     self.blocksCollector.append(block)
                                     self.UpdateAmmo()
-                            '''else:
+                            else:
                                 cursorX = cursorX // 32
                                 cursorY = cursorY // 32
                                 if (cursorX, cursorY) in self.coordinates:
@@ -578,7 +577,7 @@ class GameWindow:
                                                 if block.type == "Iron":
                                                     self.ironAmmo += 1
                                                 if block.type == "Concrete":
-                                                    self.concreteAmmo += 1'''
+                                                    self.concreteAmmo += 1
                     else:
                         self.gameTurn.player, self.gameTurn.time = self.gameTurn.ChangeTurn(
                             self.gameTurn.player
@@ -587,8 +586,7 @@ class GameWindow:
                         self.timer.reset(60)
                         self.dj.Stop()
                         self.dj.NewSong(self.player2.song)
-
-            if "Pausa" in str(signal):
+            if "Pausa" in str(self.signal):
                 self.gameState = False
                 self.dj.PauseSong()
                 self.adapter.clear()
@@ -606,6 +604,7 @@ class GameWindow:
                 if load == "Load":
                     self.LoadGame()
 
+            self.signal = ""
 
             pygame.display.update()
             clock.tick(fps)

@@ -21,7 +21,6 @@ def main():
     baud_rate = 9600  # Velocidad de baudios
     tx_pin = machine.Pin(0)  # Reemplaza el número del pin con el que estás utilizando para TX
     rx_pin = machine.Pin(1)  # Reemplaza el número del pin con el que estás utilizando para RX
-
     uart_receiver = UARTReceiver(uart_num, baud_rate, tx_pin, rx_pin)
     uart_receiver.start_receiving()
 
