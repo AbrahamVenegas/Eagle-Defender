@@ -99,11 +99,13 @@ class StartWindow:
                                 textInput="HELP", font=self.GetFont(50), baseColor="#d7fcd4", hoveringColor="Purple")
             quitButton = Button(image=pygame.image.load("assets/QuitRectangle.png"), pos=(720, 715),
                                 textInput="QUIT", font=self.GetFont(50), baseColor="#d7fcd4", hoveringColor="Purple")
+            settingsButton = Button(None, (1300, 780), "SETTINGS", self.GetFont(30),
+                                    "#d7fcd4", "Purple")
             # Set the button for each Screen
 
             self.Screen.blit(menuText, menuRectangle)
 
-            for button in [playButton, registerButton, leaderboardButton, quitButton, helpButton]:
+            for button in [playButton, registerButton, leaderboardButton, quitButton, helpButton, settingsButton]:
                 button.ChangeColor(menuMousePosition)
                 button.UpdateScreen(self.Screen)
             # Changes the color when the mouse is on top of the text
@@ -126,5 +128,7 @@ class StartWindow:
                     if quitButton.CheckForInput(menuMousePosition):
                         pygame.quit()
                         sys.exit()
+                    if settingsButton.CheckForInput(menuMousePosition):
+                        return "Settings"
                     # When the text is clicked it goes to the specific page
             pygame.display.update()

@@ -405,7 +405,8 @@ class GameWindow:
         self.explosionAnimation = AnimationHandler(self.screen, "assets/ExplosionAnimation/", 0, 0,
                                                    16)
         if self.gameState:
-            self.timer = Timer(self.screen, 630, 545, self.GetFont(14), 60)
+            self.timer = Timer()
+            self.timer.defenderTime()
             self.timer.start()
             self.dj = DJ()
             self.dj.NewSong(self.player1.song)
@@ -459,7 +460,7 @@ class GameWindow:
 
             """  --------------------- TIMER ----------------------------------------------------- """
             self.timer.update()
-            self.timer.draw()
+            self.timer.draw(self.screen, self.GetFont(14), 630, 545)
             """  --------------------- TIMER ----------------------------------------------------- """
 
             if self.gameTurn.CheckTurn(self.timer.time):
@@ -467,7 +468,7 @@ class GameWindow:
                     self.gameTurn.player, self.gameTurn.time = self.gameTurn.ChangeTurn(self.gameTurn.player,
                                                                                     self.player1.song,
                                                                                     self.player2.song)
-                    self.timer.reset(60)
+                    self.timer.attackTime()
                 if self.gameTurn.player == "Defensor":
                     self.dj.Stop()
                     self.dj.NewSong(self.player1.song)

@@ -15,7 +15,7 @@ class HelpWindow:
     def GetFont(self, size):  # To return it in the desired size
         return pygame.font.Font("assets/font.ttf", size)
 
-    def HelpScreen(self):
+    def HelpScreen(self, window, player, email):
         pygame.init()  # starts it
         self.Screen = pygame.display.set_mode((1440, 810))  # To set the parameters of the window
         pygame.display.set_caption("Eagle Defender")  # Window Title
@@ -57,7 +57,10 @@ class HelpWindow:
                     if howToWin.CheckForInput(helpMousePosition):
                         self.HelpHTW()
                     if helpBack.CheckForInput(helpMousePosition):
-                        return ["Start"]
+                        if window == 0:
+                            return ["Start"]
+                        else:
+                            return ["Pause", player, email]
 
             pygame.display.update()
 
