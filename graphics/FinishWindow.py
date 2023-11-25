@@ -1,6 +1,7 @@
 from classes.DJ import DJ
 import pygame
 import sys
+from REST_API import REST_API
 from classes.button import Button
 
 class FinishWindow:
@@ -18,6 +19,7 @@ class FinishWindow:
 
     def FinishGame(self, winner, looser, time):
         pygame.init()
+        response = REST_API.insert_leaderboard(winner, time)
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.dj.NewSong("DefaultPlaylist/FinishSong.mp3")
         while True:
