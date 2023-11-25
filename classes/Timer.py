@@ -32,6 +32,18 @@ class Timer:
                 self.time -= 1
                 self.time_elapsed = actual_Time
 
+    def setDefenderTime(self, time):
+        if self.defender + time < 0:
+            pass
+        else:
+            self.defender += time
+
+    def setAttackerTime(self, time):
+        if self.attacker + time < 0:
+            pass
+        else:
+            self.attacker += time
+
     def draw(self, screen, font, x, y):
         text = font.render(f"Tiempo: {self.time}s", True, "White")
         screen.blit(text, (x, y))
