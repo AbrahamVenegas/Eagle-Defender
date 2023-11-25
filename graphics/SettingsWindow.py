@@ -20,6 +20,7 @@ class SettingsWindow:
         running = True
         pygame.init()
         self.Timer = Timer()
+        self.Time = 0
         self.Screen = pygame.display.set_mode((800, 576))
         pygame.display.set_caption("Eagle Defender")
         self.Background = pygame.transform.scale(self.Background, (800, 576))
